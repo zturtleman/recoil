@@ -25,10 +25,13 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 static tg_interface_t tgi;
 static qboolean _inited = qfalse;
-static HINSTANCE lib;
+static DYNLIBTYPE lib;
 static const char *lastScriptUsed;
 
 static cvar_t *r_texgen_detail;
+
+qboolean DynlibOpen(DYNLIBTYPE *lib, char *name);
+void *DynlibGetAddress(DYNLIBTYPE lib, char *name);
 
 void MyLogError(const char *format, ...)
 {
@@ -51,14 +54,15 @@ void InitTexgenModule(void)
     tgi.Print = MyLogMessage;
     tgi.Malloc = CL_RefMalloc;
 
-    lib = LoadLibrary("texgen.dll");
-    TexgenLibExport = (PFNTEXGENLIBEXPORTPROC)GetProcAddress(lib, "TexgenLibExport");
+    if(DynlibOpen(&lib, "texgen"))
+    {
+        TexgenLibExport = (PFNTEXGENLIBEXPORTPROC)DynlibGetAddress(lib, "TexgenLibExport");
+        TexgenLibExport(&tgi);
 
-    TexgenLibExport(&tgi);
+        lastScriptUsed = NULL;
 
-    lastScriptUsed = NULL;
-
-    _inited = qtrue;
+        _inited = qtrue;
+    }
 }
 
 void LoadTexgenImages(const char *name, const char *slots[], void **pics[], int numSlots, int *width, int *height)

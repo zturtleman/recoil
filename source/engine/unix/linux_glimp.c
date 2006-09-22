@@ -55,11 +55,9 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #include <sys/types.h>
 #include <unistd.h>
 
-#include "../renderer/tr_local.h"
-#include "../client/client.h"
+#include "../tr_local.h"
+#include "../client.h"
 #include "linux_local.h" // bk001130
-
-#include "unix_glw.h"
 
 #include <GL/glx.h>
 
@@ -1431,7 +1429,7 @@ void GLimp_Init( void )
   Cvar_Set( "r_lastValidRenderer", glConfig.renderer_string );
 
   // initialize extensions
-  GLW_InitExtensions();
+  R_InitExtenstions();
   GLW_InitGamma();
 
   InitSig(); // not clear why this is at begin & end of function

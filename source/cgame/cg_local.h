@@ -1183,8 +1183,8 @@ void CG_UpdateCvars( void );
 int CG_CrosshairPlayer( void );
 int CG_LastAttacker( void );
 void CG_LoadMenus(const char *menuFile);
-void CG_KeyEvent(int key, qboolean down);
-void CG_MouseEvent(int x, int y);
+//void CG_KeyEvent(int key, qboolean down);
+//void CG_MouseEvent(int x, int y);
 void CG_EventHandling(int type);
 void CG_RankRunFrame( void );
 void CG_SetScoreSelection(void *menu);
@@ -1528,6 +1528,6 @@ void	CL_GetCurrentSnapshotNumber( int *snapshotNumber, int *serverTime );
 void S_Respatialize( int entityNum, const vec3_t head, vec3_t axis[3], int inwater );
 void CL_SetUserCmdValue( int userCmdValue, float sensitivityScale );
 
-void clFireWeapon(centity_t *ent);
+void clFireWeapon(centity_t *ent, qboolean alt);
 qhandle_t clAmmoIcon(centity_t *ent);
 qhandle_t clAmmoModel(centity_t *ent);

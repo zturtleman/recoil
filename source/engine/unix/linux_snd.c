@@ -35,8 +35,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #endif
 #include <stdio.h>
 
-#include "../game/q_shared.h"
-#include "../client/snd_local.h"
+#include "../../game/q_shared.h"
+#include "../snd_local.h"
 
 int audio_fd;
 int snd_inited=0;

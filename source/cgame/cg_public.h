@@ -193,8 +193,8 @@ qboolean CG_ConsoleCommand(void);
 void CG_DrawActiveFrame(int serverTime, stereoFrame_t stereoView, qboolean demoPlayback);
 int CG_CrosshairPlayer(void);
 int CG_LastAttacker(void);
-void CG_KeyEvent(int arg0, int arg1);
-void CG_MouseEvent(int arg0, qboolean arg1);
+void CG_KeyEvent(int key, qboolean down);
+void CG_MouseEvent(int x, int y);
 void CG_EventHandling(int arg0);
 cvar_t *Cvar_Get( const char *var_name, const char *var_value, int flags );
 

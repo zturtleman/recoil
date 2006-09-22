@@ -19,7 +19,7 @@ static void script_tokenclear()
 	curtoken = temptoken;
 }
 
-static byte *script_gettoken(char **start, char *end)
+static unsigned char *script_gettoken(char **start, char *end)
 {
 	char *in = *start, *out, *temp;
 	if (in >= end)
@@ -148,11 +148,11 @@ static sccommand_t script_command[] =
 	{NULL, NULL, NULL, 0, 0} // end of the list
 };
 
-void script_execute(byte *script, unsigned int scriptsize, int width, int height)
+void script_execute(unsigned char *script, unsigned int scriptsize, int width, int height)
 {
 	int i, len;
 	char *in, *end, *token;
-	byte *data;
+	unsigned char *data;
 
 	in = script;
 	end = script + scriptsize;

@@ -50,7 +50,7 @@ static int		allocPoint, outOfMemory;
 ===============
 UI_Alloc
 ===============
-*/
+*
 void *UI_Alloc( int size )
 {
     char	*p;
@@ -72,7 +72,7 @@ void *UI_Alloc( int size )
 ===============
 UI_InitMemory
 ===============
-*/
+*
 void UI_InitMemory( void )
 {
     allocPoint = 0;

@@ -30,8 +30,11 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  *	AH - Created on 08 Dec 2000
  */
 
-#include <unistd.h>   // AH - for size_t
+#include <unistd.h>
+#include <sys/types.h>
+
 #include <string.h>
+#include <dlfcn.h>
 
 // bk001207 - we need something under Linux, too. Mac?
 #if 1 // defined(C_ONLY) // bk010102 - dedicated?

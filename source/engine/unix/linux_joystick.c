@@ -37,7 +37,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #include <unistd.h>  // bk001204
 
 
-#include "../client/client.h"
+#include "../client.h"
 #include "linux_local.h"
 
 /* We translate axes movement into keypresses. */
@@ -203,5 +203,3 @@ void IN_JoyMove( void )
   /* Save for future generations. */
   old_axes = axes;
 }
-
-

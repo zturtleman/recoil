@@ -44,7 +44,7 @@ slot_t *allocSlot(const char *slotname);
 slot_t *getSlot(const char *slotname, int allocate);
 unsigned short *noise(int width, int height, int grid);
 
-void script_execute(byte *script, unsigned int scriptsize, int width, int height);
+void script_execute(unsigned char *script, unsigned int scriptsize, int width, int height);
 
 void tgBind(const char *name);
 void tgClear(float cr, float cg, float cb, float ca, float cd);
@@ -69,3 +69,4 @@ extern char *ErrorString;
         ErrorString = str;\
         tgi->Error(str);\
     } while(0)
+

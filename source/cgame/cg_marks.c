@@ -322,6 +322,7 @@ void CG_AddMarks( void )
     }
 }
 
+#if 0
 // cg_particles.c
 
 #define BLOODRED	2
@@ -2343,3 +2344,4 @@ void CG_ParticleMisc (qhandle_t pshader, vec3_t origin, int size, int duration, 
     p->rotate = qfalse;
 }
 
+#endif

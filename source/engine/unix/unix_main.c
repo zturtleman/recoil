@@ -49,14 +49,50 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 // FIXME TTimo should we gard this? most *nix system should comply?
 #include <termios.h>
 
-#include "../game/q_shared.h"
-#include "../qcommon/qcommon.h"
-#include "../renderer/tr_public.h"
+#include "../../game/q_shared.h"
+#include "../qcommon.h"
+#include "../tr_public.h"
 
 #include "linux_local.h" // bk001204
 
+qboolean DynlibOpen(DYNLIBTYPE *lib, char *name)
+{
+    *lib = dlopen(name, RTLD_LAZY|RTLD_GLOBAL);
+    if(!(*lib))
+    {		
+        extern uid_t saved_euid; // unix_main.c
+
+        // if we are not setuid, try current directory
+        if (getuid() == saved_euid) {
+            char *fn = malloc(sizeof(char) * 1024);
+
+            getcwd(fn, sizeof(char) * 1024);
+            Q_strcat(fn, sizeof(char) * 1024, "/");
+            Q_strcat(fn, sizeof(char) * 1024, name);
+
+            *lib = dlopen(fn, RTLD_LAZY|RTLD_GLOBAL);
+
+            free(fn);
+        }
+    }
+
+    if(*lib)
+        return qtrue;
+    else
+        return qfalse;
+}
+
+void *DynlibGetAddress(DYNLIBTYPE lib, char *name)
+{
+	return (lib) ? dlsym(lib, name) : NULL;
+}
+
+void DynlibClose(DYNLIBTYPE lib)
+{
+	dlclose(lib);
+}
+
 // Structure containing functions exported from refresh DLL
-refexport_t re;
 
 unsigned  sys_frame_time;
 
@@ -462,53 +498,53 @@ void floating_point_exception_handler(int whatever)
 // initialize the console input (tty mode if wanted and possible)
 void Sys_ConsoleInputInit()
 {
-  struct termios tc;
-
-  // TTimo 
-  // https://zerowing.idsoftware.com/bugzilla/show_bug.cgi?id=390
-  // ttycon 0 or 1, if the process is backgrounded (running non interactively)
-  // then SIGTTIN or SIGTOU is emitted, if not catched, turns into a SIGSTP
-  signal(SIGTTIN, SIG_IGN);
-  signal(SIGTTOU, SIG_IGN);
-
-  // FIXME TTimo initialize this in Sys_Init or something?
-  ttycon = Cvar_Get("ttycon", "1", 0);
-  if (ttycon && ttycon->value)
-  {
-    if (isatty(STDIN_FILENO)!=1)
+    struct termios tc;
+    
+    // TTimo 
+    // https://zerowing.idsoftware.com/bugzilla/show_bug.cgi?id=390
+    // ttycon 0 or 1, if the process is backgrounded (running non interactively)
+    // then SIGTTIN or SIGTOU is emitted, if not catched, turns into a SIGSTP
+    signal(SIGTTIN, SIG_IGN);
+    signal(SIGTTOU, SIG_IGN);
+    
+    // FIXME TTimo initialize this in Sys_Init or something?
+    ttycon = Cvar_Get("ttycon", "1", 0);
+    if (ttycon && ttycon->value)
     {
-      Com_Printf("stdin is not a tty, tty console mode failed\n");
-      Cvar_Set("ttycon", "0");
-      ttycon_on = qfalse;
-      return;
-    }
-    Com_Printf("Started tty console (use +set ttycon 0 to disable)\n");
-    Field_Clear(&tty_con);
-    tcgetattr (0, &tty_tc);
-    tty_erase = tty_tc.c_cc[VERASE];
-    tty_eof = tty_tc.c_cc[VEOF];
-    tc = tty_tc;
-    /*
-     ECHO: don't echo input characters
-     ICANON: enable canonical mode.  This  enables  the  special
-              characters  EOF,  EOL,  EOL2, ERASE, KILL, REPRINT,
-              STATUS, and WERASE, and buffers by lines.
-     ISIG: when any of the characters  INTR,  QUIT,  SUSP,  or
-              DSUSP are received, generate the corresponding sig­
-              nal
-    */              
-    tc.c_lflag &= ~(ECHO | ICANON);
-    /*
-     ISTRIP strip off bit 8
-     INPCK enable input parity checking
-     */
-    tc.c_iflag &= ~(ISTRIP | INPCK);
-    tc.c_cc[VMIN] = 1;
-    tc.c_cc[VTIME] = 0;
-    tcsetattr (0, TCSADRAIN, &tc);    
-    ttycon_on = qtrue;
-  } else
-    ttycon_on = qfalse;
+        if (isatty(STDIN_FILENO)!=1)
+        {
+        Com_Printf("stdin is not a tty, tty console mode failed\n");
+        Cvar_Set("ttycon", "0");
+        ttycon_on = qfalse;
+        return;
+        }
+        Com_Printf("Started tty console (use +set ttycon 0 to disable)\n");
+        Field_Clear(&tty_con);
+        tcgetattr (0, &tty_tc);
+        tty_erase = tty_tc.c_cc[VERASE];
+        tty_eof = tty_tc.c_cc[VEOF];
+        tc = tty_tc;
+        /*
+        ECHO: don't echo input characters
+        ICANON: enable canonical mode.  This  enables  the  special
+                characters  EOF,  EOL,  EOL2, ERASE, KILL, REPRINT,
+                STATUS, and WERASE, and buffers by lines.
+        ISIG: when any of the characters  INTR,  QUIT,  SUSP,  or
+                DSUSP are received, generate the corresponding sig
+                nal
+        */              
+        tc.c_lflag &= ~(ECHO | ICANON);
+        /*
+        ISTRIP strip off bit 8
+        INPCK enable input parity checking
+        */
+        tc.c_iflag &= ~(ISTRIP | INPCK);
+        tc.c_cc[VMIN] = 1;
+        tc.c_cc[VTIME] = 0;
+        tcsetattr (0, TCSADRAIN, &tc);    
+        ttycon_on = qtrue;
+    } else
+        ttycon_on = qfalse;
 }
 
 char *Sys_ConsoleInput(void)
@@ -1217,57 +1253,56 @@ void Sys_ParseArgs( int argc, char* argv[] ) {
   }
 }
 
-#include "../client/client.h"
+#include "../client.h"
 extern clientStatic_t cls;
 
 int main ( int argc, char* argv[] )
 {
-  // int 	oldtime, newtime; // bk001204 - unused
-  int   len, i;
-  char  *cmdline;
-  void Sys_SetDefaultCDPath(const char *path);
+    // int 	oldtime, newtime; // bk001204 - unused
+    int   len, i;
+    char  *cmdline;
+    void Sys_SetDefaultCDPath(const char *path);
 
-  // go back to real user for config loads
-  saved_euid = geteuid();
-  seteuid(getuid());
+    // go back to real user for config loads
+    saved_euid = geteuid();
+    seteuid(getuid());
 
-  Sys_ParseArgs( argc, argv );  // bk010104 - added this for support
+    Sys_ParseArgs( argc, argv );  // bk010104 - added this for support
 
-  Sys_SetDefaultCDPath(argv[0]);
+    Sys_SetDefaultCDPath(argv[0]);
 
-  // merge the command line, this is kinda silly
-  for (len = 1, i = 1; i < argc; i++)
-    len += strlen(argv[i]) + 1;
-  cmdline = malloc(len);
-  *cmdline = 0;
-  for (i = 1; i < argc; i++)
-  {
-    if (i > 1)
-      strcat(cmdline, " ");
-    strcat(cmdline, argv[i]);
-  }
+    // merge the command line, this is kinda silly
+    for (len = 1, i = 1; i < argc; i++)
+        len += strlen(argv[i]) + 1;
+    cmdline = malloc(len);
+    *cmdline = 0;
+    for (i = 1; i < argc; i++)
+    {
+        if (i > 1)
+        strcat(cmdline, " ");
+        strcat(cmdline, argv[i]);
+    }
 
-  // bk000306 - clear queues
-  memset( &eventQue[0], 0, MAX_QUED_EVENTS*sizeof(sysEvent_t) ); 
-  memset( &sys_packetReceived[0], 0, MAX_MSGLEN*sizeof(byte) );
+    // bk000306 - clear queues
+    memset( &eventQue[0], 0, MAX_QUED_EVENTS*sizeof(sysEvent_t) ); 
+    memset( &sys_packetReceived[0], 0, MAX_MSGLEN*sizeof(byte) );
 
-  Com_Init(cmdline);
-  NET_Init();
+    Com_Init(cmdline);
+    NET_Init();
 
-  Sys_ConsoleInputInit();
+    Sys_ConsoleInputInit();
 
-  fcntl(0, F_SETFL, fcntl (0, F_GETFL, 0) | FNDELAY);
-	
+    fcntl(0, F_SETFL, fcntl (0, F_GETFL, 0) | FNDELAY);
+
 #ifdef DEDICATED
-	// init here for dedicated, as we don't have GLimp_Init
-	InitSig();
+    // init here for dedicated, as we don't have GLimp_Init
+    InitSig();
 #endif
 
-  while (1)
-  {
+    while(1) {
 #ifdef __linux__
-    Sys_ConfigureFPU();
+        Sys_ConfigureFPU();
 #endif
-    Com_Frame ();
-  }
+        Com_Frame();
+    }
 }
