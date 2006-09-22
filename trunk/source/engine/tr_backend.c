@@ -1124,7 +1124,6 @@ const void	*RB_SwapBuffers(const void *data)
         Hunk_FreeTempMemory(stencilReadback);
     }
 
-
     if(!glState.finishCalled)
         qglFinish();
 

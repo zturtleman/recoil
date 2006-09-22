@@ -24,6 +24,9 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #ifndef TR_LOCAL_H
 #define TR_LOCAL_H
 
+// for dynlib
+#define DYNLIBTYPE void *
+
 #include "../game/q_shared.h"
 #include "qfiles.h"
 #include "qcommon.h"
@@ -1868,5 +1871,31 @@ void Shader_setConstantArray2f(const char *name, const float *constant, unsigned
 void Shader_setConstantArray3f(const char *name, const float *constant, unsigned int count);
 void Shader_setConstantArray4f(const char *name, const float *constant, unsigned int count);
 void Shader_Convert(shader_t *pShader);
+
+typedef struct
+{
+#if defined( _WIN32 )
+    WNDPROC		wndproc;
+
+    HDC     hDC;			// handle to device context
+    HGLRC   hGLRC;			// handle to GL rendering context
+
+    qboolean allowdisplaydepthchange;
+    qboolean pixelFormatSet;
+    qboolean pixelFormatARB;
+
+    int		 desktopBitsPixel;
+    int		 desktopWidth, desktopHeight;
+
+    qboolean	cdsFullscreen;
+#endif
+
+    DYNLIBTYPE openglLibrary;
+
+    FILE *log_fp;
+}
+glwstate_t;
+
+extern glwstate_t glw_state;
 
 #endif //TR_LOCAL_H

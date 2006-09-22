@@ -30,27 +30,66 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 ** QGL_Shutdown() - unloads libraries, NULLs function pointers
 */
 
-// bk001204
-#include <unistd.h>
-#include <sys/types.h>
-
-
 #include <float.h>
-#include "../renderer/tr_local.h"
-#include "unix_glw.h"
+#include "tr_local.h"
 
-// bk001129 - from cvs1.17 (mkv)
-//#if defined(__FX__)
-//#include <GL/fxmesa.h>
-//#endif
-//#include <GL/glx.h> // bk010216 - FIXME: all of the above redundant? renderer/qgl.h
+void QGL_EnableLogging( qboolean enable );
 
-#include <dlfcn.h>
+#if defined( _WIN32 )
+// WGL_ARB_extensions_string
+qboolean WGL_ARB_extensions_string_supported;
+PFNWGLGETEXTENSIONSSTRINGARBPROC qwglGetExtensionsStringARB;
 
+// WGL_ARB_pixel_format
+qboolean WGL_ARB_pixel_format_supported;
+PFNWGLGETPIXELFORMATATTRIBIVARBPROC qwglGetPixelFormatAttribivARB;
+PFNWGLGETPIXELFORMATATTRIBFVARBPROC qwglGetPixelFormatAttribfvARB;
+PFNWGLCHOOSEPIXELFORMATARBPROC qwglChoosePixelFormatARB;
 
-// bk001129 - from cvs1.17 (mkv)
+// WGL_ARB_pixel_format_float
+qboolean WGL_ARB_pixel_format_float_supported;
+
+// WGL_ARB_pbuffer
+qboolean WGL_ARB_pbuffer_supported;
+PFNWGLCREATEPBUFFERARBPROC qwglCreatePbufferARB;
+PFNWGLGETPBUFFERDCARBPROC qwglGetPbufferDCARB;
+PFNWGLRELEASEPBUFFERDCARBPROC qwglReleasePbufferDCARB;
+PFNWGLDESTROYPBUFFERARBPROC qwglDestroyPbufferARB;
+PFNWGLQUERYPBUFFERARBPROC qwglQueryPbufferARB;
+
+// WGL_ARB_render_texture
+qboolean WGL_ARB_render_texture_supported;
+PFNWGLBINDTEXIMAGEARBPROC qwglBindTexImageARB;
+PFNWGLRELEASETEXIMAGEARBPROC qwglReleaseTexImageARB;
+PFNWGLSETPBUFFERATTRIBARBPROC qwglSetPbufferAttribARB;
+
+int ( WINAPI * qwglSwapIntervalEXT)( int interval );
+BOOL  ( WINAPI * qwglGetDeviceGammaRamp3DFX)( HDC, LPVOID );
+BOOL  ( WINAPI * qwglSetDeviceGammaRamp3DFX)( HDC, LPVOID );
+int   ( WINAPI * qwglChoosePixelFormat )(HDC, CONST PIXELFORMATDESCRIPTOR *);
+int   ( WINAPI * qwglDescribePixelFormat) (HDC, int, UINT, LPPIXELFORMATDESCRIPTOR);
+int   ( WINAPI * qwglGetPixelFormat)(HDC);
+BOOL  ( WINAPI * qwglSetPixelFormat)(HDC, int, CONST PIXELFORMATDESCRIPTOR *);
+BOOL  ( WINAPI * qwglSwapBuffers)(HDC);
+BOOL  ( WINAPI * qwglCopyContext)(HGLRC, HGLRC, UINT);
+HGLRC ( WINAPI * qwglCreateContext)(HDC);
+HGLRC ( WINAPI * qwglCreateLayerContext)(HDC, int);
+BOOL  ( WINAPI * qwglDeleteContext)(HGLRC);
+HGLRC ( WINAPI * qwglGetCurrentContext)(VOID);
+HDC   ( WINAPI * qwglGetCurrentDC)(VOID);
+PROC  ( WINAPI * qwglGetProcAddress)(LPCSTR);
+BOOL  ( WINAPI * qwglMakeCurrent)(HDC, HGLRC);
+BOOL  ( WINAPI * qwglShareLists)(HGLRC, HGLRC);
+BOOL  ( WINAPI * qwglUseFontBitmaps)(HDC, DWORD, DWORD, DWORD);
+BOOL  ( WINAPI * qwglUseFontOutlines)(HDC, DWORD, DWORD, DWORD, FLOAT, FLOAT, int, LPGLYPHMETRICSFLOAT);
+BOOL ( WINAPI * qwglDescribeLayerPlane)(HDC, int, int, UINT, LPLAYERPLANEDESCRIPTOR);
+int  ( WINAPI * qwglSetLayerPaletteEntries)(HDC, int, int, int, CONST COLORREF *);
+int  ( WINAPI * qwglGetLayerPaletteEntries)(HDC, int, int, int, COLORREF *);
+BOOL ( WINAPI * qwglRealizeLayerPalette)(HDC, int, BOOL);
+BOOL ( WINAPI * qwglSwapLayerBuffers)(HDC, UINT);
+#elif defined( __linux__ )
+
 #if defined(__FX__)
-//FX Mesa Functions
 fxMesaContext (*qfxMesaCreateContext)(GLuint win, GrScreenResolution_t, GrScreenRefresh_t, const GLint attribList[]);
 fxMesaContext (*qfxMesaCreateBestContext)(GLuint win, GLint width, GLint height, const GLint attribList[]);
 void (*qfxMesaDestroyContext)(fxMesaContext ctx);
@@ -59,13 +98,13 @@ fxMesaContext (*qfxMesaGetCurrentContext)(void);
 void (*qfxMesaSwapBuffers)(void);
 #endif
 
-//GLX Functions
 XVisualInfo * (*qglXChooseVisual)( Display *dpy, int screen, int *attribList );
 GLXContext (*qglXCreateContext)( Display *dpy, XVisualInfo *vis, GLXContext shareList, Bool direct );
 void (*qglXDestroyContext)( Display *dpy, GLXContext ctx );
 Bool (*qglXMakeCurrent)( Display *dpy, GLXDrawable drawable, GLXContext ctx);
 void (*qglXCopyContext)( Display *dpy, GLXContext src, GLXContext dst, GLuint mask );
 void (*qglXSwapBuffers)( Display *dpy, GLXDrawable drawable );
+#endif
 
 void ( APIENTRY * qglAccum )(GLenum op, GLfloat value);
 void ( APIENTRY * qglAlphaFunc )(GLenum func, GLclampf ref);
@@ -2645,13 +2684,13 @@ static void APIENTRY logViewport(GLint x, GLint y, GLsizei width, GLsizei height
 */
 void QGL_Shutdown( void )
 {
-	if ( glw_state.OpenGLLib )
+	if ( glw_state.openglLibrary )
 	{
-		dlclose ( glw_state.OpenGLLib );
-		glw_state.OpenGLLib = NULL;
+		DynlibClose(glw_state.openglLibrary);
+		glw_state.openglLibrary = NULL;
 	}
 
-	glw_state.OpenGLLib = NULL;
+	glw_state.openglLibrary = NULL;
 
 	qglAccum                     = NULL;
 	qglAlphaFunc                 = NULL;
@@ -2990,7 +3029,31 @@ void QGL_Shutdown( void )
 	qglVertexPointer             = NULL;
 	qglViewport                  = NULL;
 
-// bk001129 - from cvs1.17 (mkv)
+#if defined( _WIN32 )
+	qwglCopyContext              = NULL;
+	qwglCreateContext            = NULL;
+	qwglCreateLayerContext       = NULL;
+	qwglDeleteContext            = NULL;
+	qwglDescribeLayerPlane       = NULL;
+	qwglGetCurrentContext        = NULL;
+	qwglGetCurrentDC             = NULL;
+	qwglGetLayerPaletteEntries   = NULL;
+	qwglGetProcAddress           = NULL;
+	qwglMakeCurrent              = NULL;
+	qwglRealizeLayerPalette      = NULL;
+	qwglSetLayerPaletteEntries   = NULL;
+	qwglShareLists               = NULL;
+	qwglSwapLayerBuffers         = NULL;
+	qwglUseFontBitmaps           = NULL;
+	qwglUseFontOutlines          = NULL;
+	
+	qwglChoosePixelFormat        = NULL;
+	qwglDescribePixelFormat      = NULL;
+	qwglGetPixelFormat           = NULL;
+	qwglSetPixelFormat           = NULL;
+	qwglSwapBuffers              = NULL;
+#elif defined( __linux__ )
+
 #if defined(__FX__)
 	qfxMesaCreateContext         = NULL;
 	qfxMesaCreateBestContext     = NULL;
@@ -3006,14 +3069,15 @@ void QGL_Shutdown( void )
 	qglXMakeCurrent              = NULL;
 	qglXCopyContext              = NULL;
 	qglXSwapBuffers              = NULL;
+#endif
 }
 
-#define GPA( a ) dlsym( glw_state.OpenGLLib, a )
+#define GPA( a ) DynlibGetAddress(glw_state.openglLibrary, a)
 
 void *qwglGetProcAddress(char *symbol)
 {
-	if (glw_state.OpenGLLib)
-		return GPA ( symbol );
+	if (glw_state.openglLibrary)
+		return GPA(symbol);
 	return NULL;
 }
 
@@ -3021,35 +3085,15 @@ void *qwglGetProcAddress(char *symbol)
 ** QGL_Init
 **
 ** This is responsible for binding our qgl function pointers to 
-** the appropriate GL stuff.  In Windows this means doing a 
-** LoadLibrary and a bunch of calls to GetProcAddress.  On other
-** operating systems we need to do the right thing, whatever that
-** might be.
+** the appropriate GL stuff. 
 ** 
 */
-
 qboolean QGL_Init( const char *dllname )
 {
-	if ( ( glw_state.OpenGLLib = dlopen( dllname, RTLD_LAZY|RTLD_GLOBAL ) ) == 0 )
+	if(!DynlibOpen(&glw_state.openglLibrary, dllname))
 	{
-		char	fn[1024];
-		// FILE *fp; // bk001204 - unused
-		extern uid_t saved_euid; // unix_main.c
-
-		// if we are not setuid, try current directory
-		if (getuid() == saved_euid) {
-			getcwd(fn, sizeof(fn));
-			Q_strcat(fn, sizeof(fn), "/");
-			Q_strcat(fn, sizeof(fn), dllname);
-
-			if ( ( glw_state.OpenGLLib = dlopen( fn, RTLD_LAZY ) ) == 0 ) {
-				CL_RefPrintf(PRINT_ALL, "QGL_Init: Can't load %s from /etc/ld.so.conf or current dir: %s\n", dllname, dlerror());
-				return qfalse;
-			}
-		} else {
-			CL_RefPrintf(PRINT_ALL, "QGL_Init: Can't load %s from /etc/ld.so.conf: %s\n", dllname, dlerror());
-			return qfalse;
-		}
+		CL_RefPrintf(PRINT_ALL, "QGL_Init: Can't load %s from /etc/ld.so.conf or current dir: %s\n", dllname, dlerror());
+		return qfalse;
 	}
 
 	qglAccum                     = dllAccum = GPA( "glAccum" );
@@ -3387,7 +3431,62 @@ qboolean QGL_Init( const char *dllname )
 	qglVertexPointer             = 	dllVertexPointer             = GPA( "glVertexPointer" );
 	qglViewport                  = 	dllViewport                  = GPA( "glViewport" );
 
-// bk001129 - from cvs1.17 (mkv)
+#if defined( _WIN32 )
+	qwglCopyContext              = GPA( "wglCopyContext" );
+	qwglCreateContext            = GPA( "wglCreateContext" );
+	qwglCreateLayerContext       = GPA( "wglCreateLayerContext" );
+	qwglDeleteContext            = GPA( "wglDeleteContext" );
+	qwglDescribeLayerPlane       = GPA( "wglDescribeLayerPlane" );
+	qwglGetCurrentContext        = GPA( "wglGetCurrentContext" );
+	qwglGetCurrentDC             = GPA( "wglGetCurrentDC" );
+	qwglGetLayerPaletteEntries   = GPA( "wglGetLayerPaletteEntries" );
+	qwglGetProcAddress           = GPA( "wglGetProcAddress" );
+	qwglMakeCurrent              = GPA( "wglMakeCurrent" );
+	qwglRealizeLayerPalette      = GPA( "wglRealizeLayerPalette" );
+	qwglSetLayerPaletteEntries   = GPA( "wglSetLayerPaletteEntries" );
+	qwglShareLists               = GPA( "wglShareLists" );
+	qwglSwapLayerBuffers         = GPA( "wglSwapLayerBuffers" );
+	qwglUseFontBitmaps           = GPA( "wglUseFontBitmapsA" );
+	qwglUseFontOutlines          = GPA( "wglUseFontOutlinesA" );
+	
+	qwglChoosePixelFormat        = GPA( "wglChoosePixelFormat" );
+	qwglDescribePixelFormat      = GPA( "wglDescribePixelFormat" );
+	qwglGetPixelFormat           = GPA( "wglGetPixelFormat" );
+	qwglSetPixelFormat           = GPA( "wglSetPixelFormat" );
+	qwglSwapBuffers              = GPA( "wglSwapBuffers" );
+
+	// WGL_ARB_extensions_string
+	WGL_ARB_extensions_string_supported = qfalse;
+	qwglGetExtensionsStringARB = 0;
+	
+	// WGL_ARB_pixel_format
+	WGL_ARB_pixel_format_supported = qfalse;
+	qwglGetPixelFormatAttribivARB = 0;
+	qwglGetPixelFormatAttribfvARB = 0;
+	qwglChoosePixelFormatARB = 0;
+	
+	// WGL_ARB_pixel_format_float
+	WGL_ARB_pixel_format_float_supported = qfalse;
+	
+	// WGL_ARB_pbuffer
+	WGL_ARB_pbuffer_supported = qfalse;
+	qwglCreatePbufferARB = 0;
+	qwglGetPbufferDCARB = 0;
+	qwglReleasePbufferDCARB = 0;
+	qwglDestroyPbufferARB = 0;
+	qwglQueryPbufferARB = 0;
+	
+	// WGL_ARB_render_texture
+	WGL_ARB_render_texture_supported = qfalse;
+	qwglBindTexImageARB = 0;
+	qwglReleaseTexImageARB = 0;
+	qwglSetPbufferAttribARB = 0;
+	
+	qwglSwapIntervalEXT = 0;
+	qwglGetDeviceGammaRamp3DFX = NULL;
+	qwglSetDeviceGammaRamp3DFX = NULL;
+#elif defined( __linux__ )
+
 #if defined(__FX__)
 	qfxMesaCreateContext         =  GPA("fxMesaCreateContext");
 	qfxMesaCreateBestContext     =  GPA("fxMesaCreateBestContext");
@@ -3402,62 +3501,58 @@ qboolean QGL_Init( const char *dllname )
 	qglXDestroyContext           =  GPA("glXDestroyContext");
 	qglXMakeCurrent              =  GPA("glXMakeCurrent");
 	qglXCopyContext              =  GPA("glXCopyContext");
-	qglXSwapBuffers              =  GPA("glXSwapBuffers");
+        qglXSwapBuffers              =  GPA("glXSwapBuffers");
+#endif
 
-	qglLockArraysEXT = 0;
-	qglUnlockArraysEXT = 0;
-	qglPointParameterfEXT = 0;
-	qglPointParameterfvEXT = 0;
-	qglColorTableEXT = 0;
-	qgl3DfxSetPaletteEXT = 0;
-	qglSelectTextureSGIS = 0;
-	qglMTexCoord2fSGIS = 0;
+	// check logging
+	QGL_EnableLogging( r_logFile->integer );
 
 	return qtrue;
 }
 
 void QGL_EnableLogging( qboolean enable ) {
-  // bk001205 - fixed for new countdown
-  static qboolean isEnabled = qfalse; // init
-  
-  // return if we're already active
-  if ( isEnabled && enable ) {
-    // decrement log counter and stop if it has reached 0
-    Cvar_Set( "r_logFile", va("%d", r_logFile->integer - 1 ) );
-    if ( r_logFile->integer ) {
-      return;
-    }
-    enable = qfalse;
-  }
-
-  // return if we're already disabled
-  if ( !enable && !isEnabled )
-    return;
-
-  isEnabled = enable;
-
-  // bk001205 - old code starts here
-  if ( enable ) {
-    if ( !glw_state.log_fp ) {
-      struct tm *newtime;
-      time_t aclock;
-      char buffer[1024];
-      cvar_t	*basedir;
-      
-      time( &aclock );
-      newtime = localtime( &aclock );
-      
-      asctime( newtime );
-      
-      basedir = Cvar_Get( "fs_basepath", "", 0 ); // FIXME: userdir?
-      assert(basedir);
-      Com_sprintf( buffer, sizeof(buffer), "%s/gl.log", basedir->string ); 
-      glw_state.log_fp = fopen( buffer, "wt" );
-      assert(glw_state.log_fp);
-      CL_RefPrintf(PRINT_ALL, "QGL_EnableLogging(%d): writing %s\n", r_logFile->integer, buffer );
-
-      fprintf( glw_state.log_fp, "%s\n", asctime( newtime ) );
-    }
+	// bk001205 - fixed for new countdown
+	static qboolean isEnabled = qfalse; // init
+	
+	// return if we're already active
+	if ( isEnabled && enable )
+	{
+		// decrement log counter and stop if it has reached 0
+		Cvar_Set( "r_logFile", va("%d", r_logFile->integer - 1 ) );
+		if ( r_logFile->integer ) {
+			return;
+		}
+		enable = qfalse;
+	}
+	
+	// return if we're already disabled
+	if ( !enable && !isEnabled )
+		return;
+	
+	isEnabled = enable;
+	
+	// bk001205 - old code starts here
+	if ( enable ) {
+		if ( !glw_state.log_fp ) {
+			struct tm *newtime;
+			time_t aclock;
+			char buffer[1024];
+			cvar_t	*basedir;
+			
+			time( &aclock );
+			newtime = localtime( &aclock );
+			
+			asctime( newtime );
+			
+			basedir = Cvar_Get( "fs_basepath", "", 0 ); // FIXME: userdir?
+			assert(basedir);
+			Com_sprintf( buffer, sizeof(buffer), "%s/gl.log", basedir->string ); 
+			glw_state.log_fp = fopen( buffer, "wt" );
+			assert(glw_state.log_fp);
+			CL_RefPrintf(PRINT_ALL, "QGL_EnableLogging(%d): writing %s\n", r_logFile->integer, buffer );
+			
+			fprintf( glw_state.log_fp, "%s\n", asctime( newtime ) );
+		}
 
                 qglAccum                     = logAccum;
                 qglAlphaFunc                 = logAlphaFunc;
@@ -3535,7 +3630,7 @@ void QGL_EnableLogging( qboolean enable ) {
 		qglEnableClientState         = 	logEnableClientState         ;
 		qglEnd                       = 	logEnd                       ;
 		qglEndList                   = 	logEndList                   ;
-		qglEvalCoord1d				 = 	logEvalCoord1d				 ;
+		qglEvalCoord1d               = 	logEvalCoord1d               ;
 		qglEvalCoord1dv              = 	logEvalCoord1dv              ;
 		qglEvalCoord1f               = 	logEvalCoord1f               ;
 		qglEvalCoord1fv              = 	logEvalCoord1fv              ;
@@ -3874,7 +3969,7 @@ void QGL_EnableLogging( qboolean enable ) {
 		qglEnableClientState         = 	dllEnableClientState         ;
 		qglEnd                       = 	dllEnd                       ;
 		qglEndList                   = 	dllEndList                   ;
-		qglEvalCoord1d				 = 	dllEvalCoord1d				 ;
+		qglEvalCoord1d               = 	dllEvalCoord1d               ;
 		qglEvalCoord1dv              = 	dllEvalCoord1dv              ;
 		qglEvalCoord1f               = 	dllEvalCoord1f               ;
 		qglEvalCoord1fv              = 	dllEvalCoord1fv              ;
@@ -4137,10 +4232,7 @@ void QGL_EnableLogging( qboolean enable ) {
 	}
 }
 
-
 void GLimp_LogNewFrame( void )
 {
 	fprintf( glw_state.log_fp, "*** R_BeginFrame ***\n" );
 }
-
-

@@ -844,9 +844,7 @@ int BoxOnPlaneSide2 (vec3_t emins, vec3_t emaxs, struct cplane_s *p)
 ==================
 */
 
-#if !( (defined __linux__ || __FreeBSD__) && (defined __i386__) && (!defined C_ONLY)) // rb010123
-
-#if defined __LCC__ || defined C_ONLY || !id386 || defined __VECTORC
+#if 1
 
 int BoxOnPlaneSide (vec3_t emins, vec3_t emaxs, struct cplane_s *p)
 {
@@ -911,6 +909,7 @@ int BoxOnPlaneSide (vec3_t emins, vec3_t emaxs, struct cplane_s *p)
 
     return sides;
 }
+
 #else
 #pragma warning( disable: 4035 )
 
@@ -1145,7 +1144,6 @@ __declspec( naked ) int BoxOnPlaneSide (vec3_t emins, vec3_t emaxs, struct cplan
             }
 #pragma warning( default: 4035 )
 
-#endif
 #endif
 
 /*

@@ -46,19 +46,19 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #include "glext.h"
 #include "wglext.h"
 #elif defined(MACOS_X)
-//	#include "macosx_glimp.h"
+	#include "macosx_glimp.h"
 #elif defined( __linux__ )
 #include <GL/gl.h>
-//	#include <GL/glx.h>
+	#include <GL/glx.h>
 // bk001129 - from cvs1.17 (mkv)
 #if defined(__FX__)
-//	#include <GL/fxmesa.h>
+	#include <GL/fxmesa.h>
 #endif
 #elif defined( __FreeBSD__ ) // rb010123
 #include <GL/gl.h>
-//	#include <GL/glx.h>
+	#include <GL/glx.h>
 #if defined(__FX__)
-//		#include <GL/fxmesa.h>
+		#include <GL/fxmesa.h>
 #endif
 #else
 #include <gl.h>
@@ -808,7 +808,7 @@ extern qboolean GL_S3_s3tc_supported;
 extern qboolean GL_EXT_texture_env_add_supported;
 
 // GL_EXT_compiled_vertex_array
-extern GL_EXT_compiled_vertex_array_supported;
+extern qboolean GL_EXT_compiled_vertex_array_supported;
 qglExtern(PFNGLLOCKARRAYSEXTPROC, glLockArraysEXT);
 qglExtern(PFNGLUNLOCKARRAYSEXTPROC, glUnlockArraysEXT);
 

@@ -450,9 +450,10 @@ static char varying[BUILD_STRING_SIZE];
 
 void Replace_Char(char *str, int look, int set)
 {
+	char l = (char)look;
 	do
 	{
-		char *pch = strstr(str, &((char)look));
+		char *pch = strstr(str, &l);
 		if(!pch)
 			break;
 		pch[0] = (char)set;

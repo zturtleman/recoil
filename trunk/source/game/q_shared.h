@@ -1492,6 +1492,16 @@ typedef enum _flag_status {
 #define SAY_TEAM	1
 #define SAY_TELL	2
 
+#define min(a, b) (((a) < (b)) ? (a) : (b))
 #define clamp(v, i, a) ((v > a) ? a : (v < i) ? i : v)
+
+#if defined( _WIN32 )
+#define DYNLIBTYPE int *
+#else
+#define DYNLIBTYPE void *
+#endif
+qboolean DynlibOpen(DYNLIBTYPE *lib, char *name);
+void *DynlibGetAddress(DYNLIBTYPE lib, char *name);
+void DynlibClose(DYNLIBTYPE lib);
 
 #endif	// __Q_SHARED_H

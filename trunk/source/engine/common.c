@@ -2857,10 +2857,6 @@ void Com_Frame( void )
     int           timeBeforeClient;
     int           timeAfter;
 
-
-
-
-
     if ( setjmp (abortframe) )
     {
         return;			// an ERR_DROP was thrown
@@ -2873,7 +2869,6 @@ void Com_Frame( void )
     timeBeforeEvents =0;
     timeBeforeClient = 0;
     timeAfter = 0;
-
 
     // old net chan encryption key
     key = 0x87243987;

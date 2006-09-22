@@ -2,8 +2,6 @@
 #define __cdecl
 #endif
 
-typedef unsigned char byte;
-
 typedef struct
 {
 	// generic use

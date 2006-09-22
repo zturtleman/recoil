@@ -631,7 +631,7 @@ void R_InitExtenstions(void)
     qglGetFunction(PFNGLUNLOCKARRAYSEXTPROC, glUnlockArraysEXT);
     EndLoad();
 
-//	Load(GL_EXT_framebuffer_object, 1);
+    Load(GL_EXT_framebuffer_object, 1);
     GL_EXT_framebuffer_object_supported = qtrue;
     qglGetFunction(PFNGLISRENDERBUFFEREXTPROC, glIsRenderbufferEXT);
     qglGetFunction(PFNGLBINDRENDERBUFFEREXTPROC, glBindRenderbufferEXT);
@@ -650,5 +650,5 @@ void R_InitExtenstions(void)
     qglGetFunction(PFNGLFRAMEBUFFERRENDERBUFFEREXTPROC, glFramebufferRenderbufferEXT);
     qglGetFunction(PFNGLGETFRAMEBUFFERATTACHMENTPARAMETERIVEXTPROC, glGetFramebufferAttachmentParameterivEXT);
     qglGetFunction(PFNGLGENERATEMIPMAPEXTPROC, glGenerateMipmapEXT);
-//	EndLoad();
+    EndLoad();
 }

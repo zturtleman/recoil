@@ -12,35 +12,35 @@
 #include "wx/wxprec.h"
 
 #ifdef __BORLANDC__
-    #pragma hdrstop
+#pragma hdrstop
 #endif
 
 #ifndef WX_PRECOMP
-    #include "wx/wx.h"
+#include "wx/wx.h"
 #endif
 
 #if wxUSE_CLIPBOARD
-    #include "wx/dataobj.h"
-    #include "wx/clipbrd.h"
-#endif
-
-#if wxUSE_FILE
-    #include "wx/file.h"
+#include "wx/dataobj.h"
+#include "wx/clipbrd.h"
 #endif
 
 // We test for wxUSE_DRAG_AND_DROP also, because data objects may not be
 // implemented for compilers that can't cope with the OLE parts in
 // wxUSE_DRAG_AND_DROP.
 #if !wxUSE_DRAG_AND_DROP
-    #undef wxUSE_CLIPBOARD
-    #define wxUSE_CLIPBOARD 0
+#undef wxUSE_CLIPBOARD
+#define wxUSE_CLIPBOARD 0
 #endif
 
 #include "wx/colordlg.h"
 #include "wx/fontdlg.h"
-#include "wx/numdlg.h"
 
-#include "wx/rawbmp.h"
+#include "wx/image.h"
+#include "wx/file.h"
+#include "wx/mstream.h"
+#include "wx/wfstream.h"
+#include "wx/quantize.h"
+
 #include "wx/dynlib.h"
 #include <wx/tokenzr.h>
 #include "../texgen/tg_shared.h"
@@ -48,7 +48,7 @@
 #ifdef _WINDOWS
 #define TEXGEN_LIB_NAME "texgen.dll"
 #else
-#define TEXGEN_LIB_NAME "texgen.so"
+#define TEXGEN_LIB_NAME "libtexgen.so"
 #endif
 
 enum

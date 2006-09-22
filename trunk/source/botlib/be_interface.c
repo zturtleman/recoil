@@ -68,7 +68,7 @@ int botlibsetup = qfalse;
 //
 //===========================================================================
 
-void QDECL Com_Printf( const char *fmt, ... )
+/*void QDECL Com_Printf( const char *fmt, ... )
 {
 }
 
@@ -84,7 +84,7 @@ void Com_Memset (void* dest, const int val, const size_t count)
 void Com_Memcpy (void* dest, const void* src, const size_t count)
 {
 	memcpy(dest, src, count);
-}
+}*/
 
 //===========================================================================
 //

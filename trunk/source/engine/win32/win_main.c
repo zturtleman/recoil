@@ -33,6 +33,22 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #include <io.h>
 #include <conio.h>
 
+qboolean DynlibOpen(DYNLIBTYPE *lib, char *name)
+{
+	*lib = LoadLibrary(name);
+	return (*lib);
+}
+
+void *DynlibGetAddress(DYNLIBTYPE lib, char *name)
+{
+	return (lib) ? GetProcAddress(lib, name) : NULL;
+}
+
+void DynlibClose(DYNLIBTYPE lib)
+{
+	FreeLibrary(lib);
+}
+
 #define	CD_BASEDIR	"quake3"
 #define	CD_EXE		"quake3.exe"
 #define	CD_BASEDIR_LINUX	"bin\\x86\\glibc-2.1"
