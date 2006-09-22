@@ -15,6 +15,7 @@ tools: $(EF)tgEdit$(BINEXT)
 
 clean:
 	rm engine/bin/*
+	rm texgen/bin/*
 
 ## LINUX
 LIBEXT=.so
@@ -274,8 +275,8 @@ RECOILOBJS=\
 ## remember to add windows objects using RECOILOBJECTS += (whatever it needs)
 ## if i convert to SDL i can use the same files for windows and linux! SDL threads
 
-$(EF)recoil$(ARCH)$(BINEXT): $(RECOILOBJS) $(EF)libtexgen$(LIBEXT)
-	$(CC) -o $@ $(RECOILOBJS) $(LDFLAGS) $(GLLDFLAGS)
+$(EF)recoil$(ARCH)$(BINEXT): $(RECOILOBJS) /usr/lib/libtexgen$(LIBEXT)
+	$(CC) -o $@ $(RECOILOBJS) $(LDFLAGS) $(GLLDFLAGS) -ltexgen
 
 TG=texgen/bin/
 TEXGENOBJS=\
@@ -286,8 +287,8 @@ TEXGENOBJS=\
 	$(TG)script.o\
 	$(TG)util.o
 
-$(EF)libtexgen$(LIBEXT): $(TEXGENOBJS)
-	$(CC) -shared $@ $(TEXGENOBJS)
+/usr/lib/libtexgen$(LIBEXT): $(TEXGENOBJS)
+	$(CC) -shared -W1,-soname,$@ -o $@ $(TEXGENOBJS)
 
 TE=tgEdit/bin/
 TGEDITOROBJS=\

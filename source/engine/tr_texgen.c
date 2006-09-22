@@ -41,6 +41,8 @@ void MyLogMessage(const char *format, ...)
 {
 }
 
+#define LIBTEXGEN "bin/libtexgen.so"
+
 void InitTexgenModule(void)
 {
     PFNTEXGENLIBEXPORTPROC TexgenLibExport;
@@ -54,7 +56,7 @@ void InitTexgenModule(void)
     tgi.Print = MyLogMessage;
     tgi.Malloc = CL_RefMalloc;
 
-    if(DynlibOpen(&lib, "texgen"))
+    if(DynlibOpen(&lib, LIBTEXGEN))
     {
         TexgenLibExport = (PFNTEXGENLIBEXPORTPROC)DynlibGetAddress(lib, "TexgenLibExport");
         TexgenLibExport(&tgi);
@@ -62,7 +64,8 @@ void InitTexgenModule(void)
         lastScriptUsed = NULL;
 
         _inited = qtrue;
-    }
+    } else
+        Com_Printf("Could not load " LIBTEXGEN);
 }
 
 void LoadTexgenImages(const char *name, const char *slots[], void **pics[], int numSlots, int *width, int *height)
