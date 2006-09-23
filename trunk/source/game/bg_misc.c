@@ -1288,10 +1288,12 @@ typedef struct
     // server
     void (*svFireWeapon)(gentity_t *ent, qboolean alt);
 
+#ifndef DEDICATED
     // client
     void (*clFireWeapon)(centity_t *cent, qboolean alt);
     qhandle_t (*clAmmoIcon)(int weapon);
     qhandle_t (*clAmmoModel)(int weapon);
+#endif
 } chartypeInfo_t;
 
 chartypeInfo_t chars[] =
@@ -1300,9 +1302,11 @@ chartypeInfo_t chars[] =
         "Defualt",
         Defualt_BG_GetAttackTime,
         Defualt_SV_FireWeapon,
+#ifndef DEDICATED
         Defualt_CL_FireWeapon,
         Defualt_CL_AmmoIcon,
         Defualt_CL_AmmoModel
+#endif
     }
 };
 
@@ -1332,6 +1336,7 @@ void svFireWeapon(gentity_t *ent, qboolean alt)
 }
 
 // CLIENT
+#ifndef DEDICATED
 void clFireWeapon(centity_t *ent, qboolean alt)
 {
     GetChar(ent->currentState.clientNum)->clFireWeapon(ent, alt);
@@ -1346,3 +1351,4 @@ qhandle_t clAmmoModel(centity_t *ent)
 {
     return GetChar(ent->currentState.clientNum)->clAmmoModel(ent->currentState.weapon);
 }
+#endif
