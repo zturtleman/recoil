@@ -184,6 +184,7 @@ void Defualt_CL_FireWeapon(centity_t *ent, qboolean alt)
     }*/
 }
 
+#ifndef DEDICATED
 qhandle_t Defualt_CL_AmmoIcon(int weapon)
 {
     switch(weapon)
@@ -213,3 +214,4 @@ qhandle_t Defualt_CL_AmmoModel(int weapon)
 
     return 0;
 }
+#endif
