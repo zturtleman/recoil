@@ -431,6 +431,8 @@ endif #SunOS
 SO=source/
 BN=bin/
 
+TARGETS += $(LIBSDIR)libtexgen.$(ARCH)$(SHLIBEXT)
+
 ifneq ($(BUILD_SERVER),0)
   TARGETS += $(BN)recoil-ded.$(ARCH)$(BINEXT)
 endif
@@ -766,10 +768,10 @@ else
 		$(RBC)linux_glimp_smp.o
 endif
 
-$(BN)recoil.$(ARCH)$(BINEXT): $(LIBSDIR)libtexgen.$(ARCH)$(SHLIBEXT) $(RECOILOBJS) $(RECOILOBJS_SP)
+$(BN)recoil.$(ARCH)$(BINEXT): $(RECOILOBJS) $(RECOILOBJS_SP)
 	$(CC) -o $@ $(RECOILOBJS) $(RECOILOBJS_SP) $(CLIENT_LDFLAGS) $(LDFLAGS)
 
-$(BN)recoil-smp.$(ARCH)$(BINEXT): $(LIBSDIR)libtexgen.$(ARCH)$(SHLIBEXT) $(RECOILOBJS) $(RECOILOBJS_SMP)
+$(BN)recoil-smp.$(ARCH)$(BINEXT): $(RECOILOBJS) $(RECOILOBJS_SMP)
 	$(CC) -o $@ $(RECOILOBJS) $(RECOILOBJS_SMP) $(CLIENT_LDFLAGS) $(THREAD_LDFLAGS) $(LDFLAGS)
 
 $(RBC)jcapimin.o: $(SO)engine/jpeg-6/jcapimin.c; $(DO_CC)
@@ -1264,3 +1266,19 @@ $(TG)generic.o: $(SO)texgen/generic.c; $(DO_SHLIB_CC)
 $(TG)main.o: $(SO)texgen/main.c; $(DO_SHLIB_CC)
 $(TG)script.o: $(SO)texgen/script.c; $(DO_SHLIB_CC)
 $(TG)util.o: $(SO)texgen/util.c; $(DO_SHLIB_CC)
+
+#################################################################
+## Clean and other misc
+#################################################################
+
+clean: clean-debug clean-release
+
+clean2:
+	rm -f $(TEXGENOBJS) $(RECOILDOBJS) $(RECOILOBJS) $(RECOILOBJS_SP) $(RECOILOBJS_SMP)
+	rm -f $(TARGETS)
+
+clean-debug:
+	$(MAKE) clean2 B=$(BD) CFLAGS="$(DEBUG_CFLAGS)"
+
+clean-release:
+	$(MAKE) clean2 B=$(BR) CFLAGS="$(RELEASE_CFLAGS)"
