@@ -112,7 +112,7 @@ void Think_Target_Delay( gentity_t *ent )
 
 void Use_Target_Delay( gentity_t *ent, gentity_t *other, gentity_t *activator )
 {
-    ent->nextthink = level.time + ( ent->wait + ent->random * crandom() ) * 1000;
+    ent->nextthink = (int)(level.time + ( ent->wait + ent->random * crandom() ) * 1000);
     ent->think = Think_Target_Delay;
     ent->activator = activator;
 }
@@ -265,8 +265,8 @@ void SP_target_speaker( gentity_t *ent )
     // a repeating speaker can be done completely client side
     ent->s.eType = ET_SPEAKER;
     ent->s.eventParm = ent->noise_index;
-    ent->s.frame = ent->wait * 10;
-    ent->s.clientNum = ent->random * 10;
+    ent->s.frame = (int)(ent->wait * 10);
+    ent->s.clientNum = (int)(ent->random * 10);
 
 
     // check for prestarted looping sound
@@ -278,9 +278,7 @@ void SP_target_speaker( gentity_t *ent )
     ent->use = Use_Target_Speaker;
 
     if (ent->spawnflags & 4)
-    {
         ent->r.svFlags |= SVF_BROADCAST;
-    }
 
     VectorCopy( ent->s.origin, ent->s.pos.trBase );
 

@@ -69,8 +69,8 @@ Converts newlines to "\n" so a line prints nicer
 */
 char	*SV_ExpandNewlines( char *in )
 {
-    static	char	string[1024];
-    int		l;
+    static char     string[1024];
+    unsigned int    l;
 
     l = 0;
     while ( *in && l < sizeof(string) - 3 )
@@ -139,9 +139,9 @@ void SV_AddServerCommand( client_t *client, const char *cmd )
 
     // this is very ugly but it's also a waste to for instance send multiple config string updates
     // for the same config string index in one snapshot
-//	if ( SV_ReplacePendingServerCommands( client, cmd ) ) {
-//		return;
-//	}
+    //	if ( SV_ReplacePendingServerCommands( client, cmd ) ) {
+    //		return;
+    //	}
 
     client->reliableSequence++;
     // if we would be losing an old command that hasn't been acknowledged,
@@ -331,20 +331,18 @@ the simple info query.
 */
 void SVC_Status( netadr_t from )
 {
-    char	player[1024];
-    char	status[MAX_MSGLEN];
-    int		i;
-    client_t	*cl;
-    playerState_t	*ps;
-    int		statusLength;
-    int		playerLength;
-    char	infostring[MAX_INFO_STRING];
+    char            player[1024];
+    char            status[MAX_MSGLEN];
+    int             i;
+    client_t        *cl;
+    playerState_t   *ps;
+    unsigned int    statusLength;
+    unsigned int    playerLength;
+    char            infostring[MAX_INFO_STRING];
 
     // ignore if we are in single player
     if ( Cvar_VariableValue( "g_gametype" ) == GT_SINGLE_PLAYER )
-    {
         return;
-    }
 
     strcpy( infostring, Cvar_InfoString( CVAR_SERVERINFO ) );
 

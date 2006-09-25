@@ -518,7 +518,7 @@ void BotCTFSeekGoals(bot_state_t *bs)
                     bs->ltgtype = LTG_TEAMACCOMPANY;
                     bs->formation_dist = 3.5 * 32;		//3.5 meter
                     BotSetTeamStatus(bs);
-                    bs->owndecision_time = FloatTime() + 5;
+                    bs->owndecision_time = (int)FloatTime() + 5;
                 }
             }
         }
@@ -567,7 +567,7 @@ void BotCTFSeekGoals(bot_state_t *bs)
                 BotGetAlternateRouteGoal(bs, BotOppositeTeam(bs));
                 //
                 BotSetTeamStatus(bs);
-                bs->owndecision_time = FloatTime() + 5;
+                bs->owndecision_time = (int)FloatTime() + 5;
             }
         }
         return;
@@ -606,7 +606,7 @@ void BotCTFSeekGoals(bot_state_t *bs)
                     bs->formation_dist = 3.5 * 32;		//3.5 meter
                     //
                     BotSetTeamStatus(bs);
-                    bs->owndecision_time = FloatTime() + 5;
+                    bs->owndecision_time = (int)FloatTime() + 5;
                 }
                 else
                 {
@@ -623,7 +623,7 @@ void BotCTFSeekGoals(bot_state_t *bs)
                     BotGetAlternateRouteGoal(bs, BotOppositeTeam(bs));
                     //
                     BotSetTeamStatus(bs);
-                    bs->owndecision_time = FloatTime() + 5;
+                    bs->owndecision_time = (int)FloatTime() + 5;
                 }
             }
         }
@@ -726,7 +726,7 @@ void BotCTFSeekGoals(bot_state_t *bs)
         bs->ctfroam_time = FloatTime() + CTF_ROAM_TIME;
         BotSetTeamStatus(bs);
     }
-    bs->owndecision_time = FloatTime() + 5;
+    bs->owndecision_time = (int)FloatTime() + 5;
 #ifdef DEBUG
     BotPrintTeamGoal(bs);
 #endif //DEBUG
@@ -1084,9 +1084,9 @@ void BotUpdateInventory(bot_state_t *bs)
     bs->inventory[INVENTORY_BFG10K] = bs->cur_ps.powerups[PW_BFG] != 0;
     bs->inventory[INVENTORY_GRAPPLINGHOOK] = bs->cur_ps.powerups[PW_GRAPPLING_HOOK] != 0;
     //ammo
-    bs->inventory[INVENTORY_SHELLS] = bs->cur_ps.weaponAmmo[WP_MELEE] * 100;
-    bs->inventory[INVENTORY_BULLETS] = bs->cur_ps.weaponAmmo[WP_RANGE] * 100;
-    bs->inventory[INVENTORY_GRENADES] = bs->cur_ps.weaponAmmo[WP_SPECIAL] * 100;
+    bs->inventory[INVENTORY_SHELLS] = (int)(bs->cur_ps.weaponAmmo[WP_MELEE] * 100);
+    bs->inventory[INVENTORY_BULLETS] = (int)(bs->cur_ps.weaponAmmo[WP_RANGE] * 100);
+    bs->inventory[INVENTORY_GRENADES] = (int)(bs->cur_ps.weaponAmmo[WP_SPECIAL] * 100);
     /*bs->inventory[INVENTORY_CELLS] = bs->cur_ps.ammo[WP_PLASMAGUN];
     bs->inventory[INVENTORY_LIGHTNINGAMMO] = bs->cur_ps.ammo[WP_LIGHTNING];
     bs->inventory[INVENTORY_ROCKETS] = bs->cur_ps.ammo[WP_ROCKET_LAUNCHER];
@@ -1353,18 +1353,18 @@ BotFeelingBad
 */
 float BotFeelingBad(bot_state_t *bs)
 {
-//    if (bs->weaponnum == WP_GAUNTLET)
-//    {
-//        return 100;
-//    }
+    //    if (bs->weaponnum == WP_GAUNTLET)
+    //    {
+    //        return 100;
+    //    }
     if (bs->inventory[INVENTORY_HEALTH] < 40)
     {
         return 100;
     }
-//    if (bs->weaponnum == WP_MACHINEGUN)
-//    {
-//        return 90;
-//    }
+    //    if (bs->weaponnum == WP_MACHINEGUN)
+    //    {
+    //        return 90;
+    //    }
     if (bs->inventory[INVENTORY_HEALTH] < 60)
     {
         return 80;
@@ -1851,7 +1851,7 @@ bot_moveresult_t BotAttackMove(bot_state_t *bs, int tfl)
         bs->attackstrafe_time = 0;
     }
     //bot couldn't do any usefull movement
-//	bs->attackchase_time = AAS_Time() + 6;
+    //	bs->attackchase_time = AAS_Time() + 6;
     return moveresult;
 }
 
@@ -2348,42 +2348,42 @@ void BotAimAtEnemy(bot_state_t *bs)
     //get the weapon information
     botlib_export->ai.BotGetWeaponInfo(bs->ws, bs->weaponnum, &wi);
     //get the weapon specific aim accuracy and or aim skill
-/*    if (wi.number == WP_MACHINEGUN)
-    {
-        aim_accuracy = botlib_export->ai.Characteristic_BFloat(bs->character, CHARACTERISTIC_AIM_ACCURACY_MACHINEGUN, 0, 1);
-    }
-    else if (wi.number == WP_SHOTGUN)
-    {
-        aim_accuracy = botlib_export->ai.Characteristic_BFloat(bs->character, CHARACTERISTIC_AIM_ACCURACY_SHOTGUN, 0, 1);
-    }
-    else if (wi.number == WP_GRENADE_LAUNCHER)
-    {
-        aim_accuracy = botlib_export->ai.Characteristic_BFloat(bs->character, CHARACTERISTIC_AIM_ACCURACY_GRENADELAUNCHER, 0, 1);
-        aim_skill = botlib_export->ai.Characteristic_BFloat(bs->character, CHARACTERISTIC_AIM_SKILL_GRENADELAUNCHER, 0, 1);
-    }
-    else if (wi.number == WP_ROCKET_LAUNCHER)
-    {
-        aim_accuracy = botlib_export->ai.Characteristic_BFloat(bs->character, CHARACTERISTIC_AIM_ACCURACY_ROCKETLAUNCHER, 0, 1);
-        aim_skill = botlib_export->ai.Characteristic_BFloat(bs->character, CHARACTERISTIC_AIM_SKILL_ROCKETLAUNCHER, 0, 1);
-    }
-    else if (wi.number == WP_LIGHTNING)
-    {
-        aim_accuracy = botlib_export->ai.Characteristic_BFloat(bs->character, CHARACTERISTIC_AIM_ACCURACY_LIGHTNING, 0, 1);
-    }
-    else if (wi.number == WP_RAILGUN)
-    {
-        aim_accuracy = botlib_export->ai.Characteristic_BFloat(bs->character, CHARACTERISTIC_AIM_ACCURACY_RAILGUN, 0, 1);
-    }
-    else if (wi.number == WP_PLASMAGUN)
-    {
-        aim_accuracy = botlib_export->ai.Characteristic_BFloat(bs->character, CHARACTERISTIC_AIM_ACCURACY_PLASMAGUN, 0, 1);
-        aim_skill = botlib_export->ai.Characteristic_BFloat(bs->character, CHARACTERISTIC_AIM_SKILL_PLASMAGUN, 0, 1);
-    }
-    else if (wi.number == WP_BFG)
-    {
-        aim_accuracy = botlib_export->ai.Characteristic_BFloat(bs->character, CHARACTERISTIC_AIM_ACCURACY_BFG10K, 0, 1);
-        aim_skill = botlib_export->ai.Characteristic_BFloat(bs->character, CHARACTERISTIC_AIM_SKILL_BFG10K, 0, 1);
-    }*/
+    /*    if (wi.number == WP_MACHINEGUN)
+        {
+            aim_accuracy = botlib_export->ai.Characteristic_BFloat(bs->character, CHARACTERISTIC_AIM_ACCURACY_MACHINEGUN, 0, 1);
+        }
+        else if (wi.number == WP_SHOTGUN)
+        {
+            aim_accuracy = botlib_export->ai.Characteristic_BFloat(bs->character, CHARACTERISTIC_AIM_ACCURACY_SHOTGUN, 0, 1);
+        }
+        else if (wi.number == WP_GRENADE_LAUNCHER)
+        {
+            aim_accuracy = botlib_export->ai.Characteristic_BFloat(bs->character, CHARACTERISTIC_AIM_ACCURACY_GRENADELAUNCHER, 0, 1);
+            aim_skill = botlib_export->ai.Characteristic_BFloat(bs->character, CHARACTERISTIC_AIM_SKILL_GRENADELAUNCHER, 0, 1);
+        }
+        else if (wi.number == WP_ROCKET_LAUNCHER)
+        {
+            aim_accuracy = botlib_export->ai.Characteristic_BFloat(bs->character, CHARACTERISTIC_AIM_ACCURACY_ROCKETLAUNCHER, 0, 1);
+            aim_skill = botlib_export->ai.Characteristic_BFloat(bs->character, CHARACTERISTIC_AIM_SKILL_ROCKETLAUNCHER, 0, 1);
+        }
+        else if (wi.number == WP_LIGHTNING)
+        {
+            aim_accuracy = botlib_export->ai.Characteristic_BFloat(bs->character, CHARACTERISTIC_AIM_ACCURACY_LIGHTNING, 0, 1);
+        }
+        else if (wi.number == WP_RAILGUN)
+        {
+            aim_accuracy = botlib_export->ai.Characteristic_BFloat(bs->character, CHARACTERISTIC_AIM_ACCURACY_RAILGUN, 0, 1);
+        }
+        else if (wi.number == WP_PLASMAGUN)
+        {
+            aim_accuracy = botlib_export->ai.Characteristic_BFloat(bs->character, CHARACTERISTIC_AIM_ACCURACY_PLASMAGUN, 0, 1);
+            aim_skill = botlib_export->ai.Characteristic_BFloat(bs->character, CHARACTERISTIC_AIM_SKILL_PLASMAGUN, 0, 1);
+        }
+        else if (wi.number == WP_BFG)
+        {
+            aim_accuracy = botlib_export->ai.Characteristic_BFloat(bs->character, CHARACTERISTIC_AIM_ACCURACY_BFG10K, 0, 1);
+            aim_skill = botlib_export->ai.Characteristic_BFloat(bs->character, CHARACTERISTIC_AIM_SKILL_BFG10K, 0, 1);
+        }*/
     //
     if (aim_accuracy <= 0) aim_accuracy = 0.0001f;
     //get the enemy entity information
@@ -2420,7 +2420,7 @@ void BotAimAtEnemy(bot_state_t *bs)
         }
     }
     //check visibility of enemy
-    enemyvisible = BotEntityVisible(bs->entitynum, bs->eye, bs->viewangles, 360, bs->enemy);
+    enemyvisible = (int)BotEntityVisible(bs->entitynum, bs->eye, bs->viewangles, 360, bs->enemy);
     //if the enemy is visible
     if (enemyvisible)
     {
@@ -2469,9 +2469,9 @@ void BotAimAtEnemy(bot_state_t *bs)
                     VectorClear(cmdmove);
                     //AAS_ClearShownDebugLines();
                     botlib_export->aas.AAS_PredictClientMovement(&move, bs->enemy, origin,
-                                                   PRESENCE_CROUCH, qfalse,
-                                                   dir, cmdmove, 0,
-                                                   dist * 10 / wi.speed, 0.1f, 0, 0, qfalse);
+                            PRESENCE_CROUCH, qfalse,
+                            dir, cmdmove, 0,
+                            (int)(dist * 10 / wi.speed), 0.1f, 0, 0, qfalse);
                     VectorCopy(move.endpos, bestorigin);
                     //BotAI_Print(PRT_MESSAGE, "%1.1f predicted speed = %f, frames = %f\n", FloatTime(), VectorLength(dir), dist * 10 / wi.speed);
                 }
@@ -2545,28 +2545,28 @@ void BotAimAtEnemy(bot_state_t *bs)
         if (aim_skill > 0.5)
         {
             //do prediction shots around corners
-/*            if (wi.number == WP_BFG ||
-                    wi.number == WP_ROCKET_LAUNCHER ||
-                    wi.number == WP_GRENADE_LAUNCHER)
-            {
-                //create the chase goal
-                goal.entitynum = bs->client;
-                goal.areanum = bs->areanum;
-                VectorCopy(bs->eye, goal.origin);
-                VectorSet(goal.mins, -8, -8, -8);
-                VectorSet(goal.maxs, 8, 8, 8);
-                //
-                if (botlib_export->ai.BotPredictVisiblePosition(bs->lastenemyorigin, bs->lastenemyareanum, &goal, TFL_DEFAULT, target))
-                {
-                    VectorSubtract(target, bs->eye, dir);
-                    if (VectorLengthSquared(dir) > Square(80))
-                    {
-                        VectorCopy(target, bestorigin);
-                        bestorigin[2] -= 20;
-                    }
-                }
-                aim_accuracy = 1;
-            }*/
+            /*            if (wi.number == WP_BFG ||
+                                wi.number == WP_ROCKET_LAUNCHER ||
+                                wi.number == WP_GRENADE_LAUNCHER)
+                        {
+                            //create the chase goal
+                            goal.entitynum = bs->client;
+                            goal.areanum = bs->areanum;
+                            VectorCopy(bs->eye, goal.origin);
+                            VectorSet(goal.mins, -8, -8, -8);
+                            VectorSet(goal.maxs, 8, 8, 8);
+                            //
+                            if (botlib_export->ai.BotPredictVisiblePosition(bs->lastenemyorigin, bs->lastenemyareanum, &goal, TFL_DEFAULT, target))
+                            {
+                                VectorSubtract(target, bs->eye, dir);
+                                if (VectorLengthSquared(dir) > Square(80))
+                                {
+                                    VectorCopy(target, bestorigin);
+                                    bestorigin[2] -= 20;
+                                }
+                            }
+                            aim_accuracy = 1;
+                        }*/
         }
     }
     //
@@ -2582,17 +2582,17 @@ void BotAimAtEnemy(bot_state_t *bs)
     //get aim direction
     VectorSubtract(bestorigin, bs->eye, dir);
     //
-/*    if (wi.number == WP_MACHINEGUN ||
-            wi.number == WP_SHOTGUN ||
-            wi.number == WP_LIGHTNING ||
-            wi.number == WP_RAILGUN)
-    {
-        //distance towards the enemy
-        dist = VectorLength(dir);
-        if (dist > 150) dist = 150;
-        f = 0.6 + dist / 150 * 0.4;
-        aim_accuracy *= f;
-    }*/
+    /*    if (wi.number == WP_MACHINEGUN ||
+                wi.number == WP_SHOTGUN ||
+                wi.number == WP_LIGHTNING ||
+                wi.number == WP_RAILGUN)
+        {
+            //distance towards the enemy
+            dist = VectorLength(dir);
+            if (dist > 150) dist = 150;
+            f = 0.6 + dist / 150 * 0.4;
+            aim_accuracy *= f;
+        }*/
     //add some random stuff to the aim direction depending on the aim accuracy
     if (aim_accuracy < 0.8)
     {
@@ -3741,9 +3741,9 @@ int BotAIPredictObstacles(bot_state_t *bs, bot_goal_t *goal)
 
     // predict at most 100 areas or 10 seconds ahead
     botlib_export->aas.AAS_PredictRoute(&route, bs->areanum, bs->origin,
-                          goal->areanum, bs->tfl, 100, 1000,
-                          RSE_USETRAVELTYPE|RSE_ENTERCONTENTS,
-                          AREACONTENTS_MOVER, TFL_BRIDGE, 0);
+                                        goal->areanum, bs->tfl, 100, 1000,
+                                        RSE_USETRAVELTYPE|RSE_ENTERCONTENTS,
+                                        AREACONTENTS_MOVER, TFL_BRIDGE, 0);
     // if bot has to travel through an area with a mover
     if (route.stopevent & RSE_ENTERCONTENTS)
     {
@@ -3871,10 +3871,10 @@ void BotCheckConsoleMessages(bot_state_t *bs)
                     botlib_export->BotLibVarSet("bot_testrchat", "1");
                     //if bot replies with a chat message
                     if (botlib_export->ai.BotReplyChat(bs->cs, message, context, CONTEXT_REPLY,
-                                          NULL, NULL,
-                                          NULL, NULL,
-                                          NULL, NULL,
-                                          botname, netname))
+                                                       NULL, NULL,
+                                                       NULL, NULL,
+                                                       NULL, NULL,
+                                                       botname, netname))
                     {
                         BotAI_Print(PRT_MESSAGE, "------------------------\n");
                     }
@@ -3891,10 +3891,10 @@ void BotCheckConsoleMessages(bot_state_t *bs)
                     {
                         //if bot replies with a chat message
                         if (botlib_export->ai.BotReplyChat(bs->cs, message, context, CONTEXT_REPLY,
-                                              NULL, NULL,
-                                              NULL, NULL,
-                                              NULL, NULL,
-                                              botname, netname))
+                                                           NULL, NULL,
+                                                           NULL, NULL,
+                                                           NULL, NULL,
+                                                           botname, netname))
                         {
                             //remove the console message
                             botlib_export->ai.BotRemoveConsoleMessage(bs->cs, handle);
@@ -3920,10 +3920,10 @@ BotCheckEvents
 void BotCheckForGrenades(bot_state_t *bs, entityState_t *state)
 {
     // if this is not a grenade
-//    if (state->eType != ET_MISSILE || state->weapon != WP_GRENADE_LAUNCHER)
-        return;
+    //    if (state->eType != ET_MISSILE || state->weapon != WP_GRENADE_LAUNCHER)
+    return;
     // try to avoid the grenade
-//    botlib_export->ai.BotAddAvoidSpot(bs->ms, state->pos.trBase, 160, AVOID_ALWAYS);
+    //    botlib_export->ai.BotAddAvoidSpot(bs->ms, state->pos.trBase, 160, AVOID_ALWAYS);
 }
 
 /*
@@ -3957,139 +3957,139 @@ void BotCheckEvents(bot_state_t *bs, entityState_t *state)
     {
         //client obituary event
     case EV_OBITUARY:
-    {
-        int target, attacker, mod;
+        {
+            int target, attacker, mod;
 
-        target = state->otherEntityNum;
-        attacker = state->otherEntityNum2;
-        mod = state->eventParm;
-        //
-        if (target == bs->client)
-        {
-            bs->botdeathtype = mod;
-            bs->lastkilledby = attacker;
+            target = state->otherEntityNum;
+            attacker = state->otherEntityNum2;
+            mod = state->eventParm;
             //
-            if (target == attacker ||
-                    target == ENTITYNUM_NONE ||
-                    target == ENTITYNUM_WORLD) bs->botsuicide = qtrue;
-            else bs->botsuicide = qfalse;
+            if (target == bs->client)
+            {
+                bs->botdeathtype = mod;
+                bs->lastkilledby = attacker;
+                //
+                if (target == attacker ||
+                        target == ENTITYNUM_NONE ||
+                        target == ENTITYNUM_WORLD) bs->botsuicide = qtrue;
+                else bs->botsuicide = qfalse;
+                //
+                bs->num_deaths++;
+            }
+            //else if this client was killed by the bot
+            else if (attacker == bs->client)
+            {
+                bs->enemydeathtype = mod;
+                bs->lastkilledplayer = target;
+                bs->killedenemy_time = FloatTime();
+                //
+                bs->num_kills++;
+            }
+            else if (attacker == bs->enemy && target == attacker)
+            {
+                bs->enemysuicide = qtrue;
+            }
             //
-            bs->num_deaths++;
-        }
-        //else if this client was killed by the bot
-        else if (attacker == bs->client)
-        {
-            bs->enemydeathtype = mod;
-            bs->lastkilledplayer = target;
-            bs->killedenemy_time = FloatTime();
-            //
-            bs->num_kills++;
-        }
-        else if (attacker == bs->enemy && target == attacker)
-        {
-            bs->enemysuicide = qtrue;
-        }
-        //
-        break;
-    }
-    case EV_GLOBAL_SOUND:
-    {
-        if (state->eventParm < 0 || state->eventParm > MAX_SOUNDS)
-        {
-            BotAI_Print(PRT_ERROR, "EV_GLOBAL_SOUND: eventParm (%d) out of range\n", state->eventParm);
             break;
         }
-        SV_GetConfigstring(CS_SOUNDS + state->eventParm, buf, sizeof(buf));
-        /*
-        if (!strcmp(buf, "sound/teamplay/flagret_red.wav")) {
-        	//red flag is returned
-        	bs->redflagstatus = 0;
-        	bs->flagstatuschanged = qtrue;
-        }
-        else if (!strcmp(buf, "sound/teamplay/flagret_blu.wav")) {
-        	//blue flag is returned
-        	bs->blueflagstatus = 0;
-        	bs->flagstatuschanged = qtrue;
-        }
-        else*/
+    case EV_GLOBAL_SOUND:
+        {
+            if (state->eventParm < 0 || state->eventParm > MAX_SOUNDS)
+            {
+                BotAI_Print(PRT_ERROR, "EV_GLOBAL_SOUND: eventParm (%d) out of range\n", state->eventParm);
+                break;
+            }
+            SV_GetConfigstring(CS_SOUNDS + state->eventParm, buf, sizeof(buf));
+            /*
+            if (!strcmp(buf, "sound/teamplay/flagret_red.wav")) {
+            	//red flag is returned
+            	bs->redflagstatus = 0;
+            	bs->flagstatuschanged = qtrue;
+            }
+            else if (!strcmp(buf, "sound/teamplay/flagret_blu.wav")) {
+            	//blue flag is returned
+            	bs->blueflagstatus = 0;
+            	bs->flagstatuschanged = qtrue;
+            }
+            else*/
             if (!strcmp(buf, "sound/items/poweruprespawn.wav"))
             {
                 //powerup respawned... go get it
                 BotGoForPowerups(bs);
             }
-        break;
-    }
-    case EV_GLOBAL_TEAM_SOUND:
-    {
-        if (gametype == GT_CTF)
-        {
-            switch(state->eventParm)
-            {
-            case GTS_RED_CAPTURE:
-                bs->blueflagstatus = 0;
-                bs->redflagstatus = 0;
-                bs->flagstatuschanged = qtrue;
-                break; //see BotMatch_CTF
-            case GTS_BLUE_CAPTURE:
-                bs->blueflagstatus = 0;
-                bs->redflagstatus = 0;
-                bs->flagstatuschanged = qtrue;
-                break; //see BotMatch_CTF
-            case GTS_RED_RETURN:
-                //blue flag is returned
-                bs->blueflagstatus = 0;
-                bs->flagstatuschanged = qtrue;
-                break;
-            case GTS_BLUE_RETURN:
-                //red flag is returned
-                bs->redflagstatus = 0;
-                bs->flagstatuschanged = qtrue;
-                break;
-            case GTS_RED_TAKEN:
-                //blue flag is taken
-                bs->blueflagstatus = 1;
-                bs->flagstatuschanged = qtrue;
-                break; //see BotMatch_CTF
-            case GTS_BLUE_TAKEN:
-                //red flag is taken
-                bs->redflagstatus = 1;
-                bs->flagstatuschanged = qtrue;
-                break; //see BotMatch_CTF
-            }
+            break;
         }
-        break;
-    }
-    case EV_PLAYER_TELEPORT_IN:
-    {
-        VectorCopy(state->origin, lastteleport_origin);
-        lastteleport_time = FloatTime();
-        break;
-    }
-    case EV_GENERAL_SOUND:
-    {
-        //if this sound is played on the bot
-        if (state->number == bs->client)
+    case EV_GLOBAL_TEAM_SOUND:
         {
-            if (state->eventParm < 0 || state->eventParm > MAX_SOUNDS)
+            if (gametype == GT_CTF)
             {
-                BotAI_Print(PRT_ERROR, "EV_GENERAL_SOUND: eventParm (%d) out of range\n", state->eventParm);
-                break;
-            }
-            //check out the sound
-            SV_GetConfigstring(CS_SOUNDS + state->eventParm, buf, sizeof(buf));
-            //if falling into a death pit
-            if (!strcmp(buf, "*falling1.wav"))
-            {
-                //if the bot has a personal teleporter
-                if (bs->inventory[INVENTORY_TELEPORTER] > 0)
+                switch(state->eventParm)
                 {
-                    //use the holdable item
-                    botlib_export->ea.EA_Use(bs->client);
+                case GTS_RED_CAPTURE:
+                    bs->blueflagstatus = 0;
+                    bs->redflagstatus = 0;
+                    bs->flagstatuschanged = qtrue;
+                    break; //see BotMatch_CTF
+                case GTS_BLUE_CAPTURE:
+                    bs->blueflagstatus = 0;
+                    bs->redflagstatus = 0;
+                    bs->flagstatuschanged = qtrue;
+                    break; //see BotMatch_CTF
+                case GTS_RED_RETURN:
+                    //blue flag is returned
+                    bs->blueflagstatus = 0;
+                    bs->flagstatuschanged = qtrue;
+                    break;
+                case GTS_BLUE_RETURN:
+                    //red flag is returned
+                    bs->redflagstatus = 0;
+                    bs->flagstatuschanged = qtrue;
+                    break;
+                case GTS_RED_TAKEN:
+                    //blue flag is taken
+                    bs->blueflagstatus = 1;
+                    bs->flagstatuschanged = qtrue;
+                    break; //see BotMatch_CTF
+                case GTS_BLUE_TAKEN:
+                    //red flag is taken
+                    bs->redflagstatus = 1;
+                    bs->flagstatuschanged = qtrue;
+                    break; //see BotMatch_CTF
                 }
             }
+            break;
         }
-        break;
-    }
+    case EV_PLAYER_TELEPORT_IN:
+        {
+            VectorCopy(state->origin, lastteleport_origin);
+            lastteleport_time = FloatTime();
+            break;
+        }
+    case EV_GENERAL_SOUND:
+        {
+            //if this sound is played on the bot
+            if (state->number == bs->client)
+            {
+                if (state->eventParm < 0 || state->eventParm > MAX_SOUNDS)
+                {
+                    BotAI_Print(PRT_ERROR, "EV_GENERAL_SOUND: eventParm (%d) out of range\n", state->eventParm);
+                    break;
+                }
+                //check out the sound
+                SV_GetConfigstring(CS_SOUNDS + state->eventParm, buf, sizeof(buf));
+                //if falling into a death pit
+                if (!strcmp(buf, "*falling1.wav"))
+                {
+                    //if the bot has a personal teleporter
+                    if (bs->inventory[INVENTORY_TELEPORTER] > 0)
+                    {
+                        //use the holdable item
+                        botlib_export->ea.EA_Use(bs->client);
+                    }
+                }
+            }
+            break;
+        }
     case EV_FOOTSTEP:
     case EV_FOOTSTEP_METAL:
     case EV_FOOTSPLASH:
@@ -4114,7 +4114,7 @@ void BotCheckEvents(bot_state_t *bs, entityState_t *state)
     case EV_NOAMMO:
     case EV_CHANGE_WEAPON:
     case EV_FIRE_WEAPON:
-	case EV_FIRE_ALTERNATE:
+    case EV_FIRE_ALTERNATE:
         //FIXME: either add to sound queue or mark player as someone making noise
         break;
     case EV_USE_ITEM0:
@@ -4239,7 +4239,7 @@ int BotGetAlternateRouteGoal(bot_state_t *bs, int base)
     }
     if (!numaltroutegoals)
         return qfalse;
-    rnd = (float) random() * numaltroutegoals;
+    rnd = (int) random() * numaltroutegoals;
     if (rnd >= numaltroutegoals)
         rnd = numaltroutegoals-1;
     goal = &bs->altroutegoal;

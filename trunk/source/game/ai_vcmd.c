@@ -148,26 +148,26 @@ BotVoiceChat_Defend
 */
 void BotVoiceChat_Defend(bot_state_t *bs, int client, int mode)
 {
-        if (gametype == GT_CTF
-           )
+    if (gametype == GT_CTF
+       )
+    {
+        //
+        switch(BotTeam(bs))
         {
-            //
-            switch(BotTeam(bs))
-            {
-            case TEAM_RED:
-                memcpy(&bs->teamgoal, &ctf_redflag, sizeof(bot_goal_t));
-                break;
-            case TEAM_BLUE:
-                memcpy(&bs->teamgoal, &ctf_blueflag, sizeof(bot_goal_t));
-                break;
-            default:
-                return;
-            }
-        }
-        else
-        {
+        case TEAM_RED:
+            memcpy(&bs->teamgoal, &ctf_redflag, sizeof(bot_goal_t));
+            break;
+        case TEAM_BLUE:
+            memcpy(&bs->teamgoal, &ctf_blueflag, sizeof(bot_goal_t));
+            break;
+        default:
             return;
         }
+    }
+    else
+    {
+        return;
+    }
     //
     bs->decisionmaker = client;
     bs->ordered = qtrue;

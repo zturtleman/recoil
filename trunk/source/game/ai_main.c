@@ -105,35 +105,35 @@ void QDECL BotAI_Print(int type, char *fmt, ...)
     switch(type)
     {
     case PRT_MESSAGE:
-    {
-        Com_Printf("%s", str);
-        break;
-    }
+        {
+            Com_Printf("%s", str);
+            break;
+        }
     case PRT_WARNING:
-    {
-        Com_Printf( S_COLOR_YELLOW "Warning: %s", str );
-        break;
-    }
+        {
+            Com_Printf( S_COLOR_YELLOW "Warning: %s", str );
+            break;
+        }
     case PRT_ERROR:
-    {
-        Com_Printf( S_COLOR_RED "Error: %s", str );
-        break;
-    }
+        {
+            Com_Printf( S_COLOR_RED "Error: %s", str );
+            break;
+        }
     case PRT_FATAL:
-    {
-        Com_Printf( S_COLOR_RED "Fatal: %s", str );
-        break;
-    }
+        {
+            Com_Printf( S_COLOR_RED "Fatal: %s", str );
+            break;
+        }
     case PRT_EXIT:
-    {
-        Com_Error(ERR_DROP, S_COLOR_RED "Exit: %s", str );
-        break;
-    }
+        {
+            Com_Error(ERR_DROP, S_COLOR_RED "Exit: %s", str );
+            break;
+        }
     default:
-    {
-        Com_Printf( "unknown print type\n" );
-        break;
-    }
+        {
+            Com_Printf( "unknown print type\n" );
+            break;
+        }
     }
 }
 
@@ -317,76 +317,76 @@ void BotReportStatus(bot_state_t *bs)
     switch(bs->ltgtype)
     {
     case LTG_TEAMHELP:
-    {
-        EasyClientName(bs->teammate, goalname, sizeof(goalname));
-        BotAI_Print(PRT_MESSAGE, "%-20s%s%s: helping %s\n", netname, leader, flagstatus, goalname);
-        break;
-    }
+        {
+            EasyClientName(bs->teammate, goalname, sizeof(goalname));
+            BotAI_Print(PRT_MESSAGE, "%-20s%s%s: helping %s\n", netname, leader, flagstatus, goalname);
+            break;
+        }
     case LTG_TEAMACCOMPANY:
-    {
-        EasyClientName(bs->teammate, goalname, sizeof(goalname));
-        BotAI_Print(PRT_MESSAGE, "%-20s%s%s: accompanying %s\n", netname, leader, flagstatus, goalname);
-        break;
-    }
+        {
+            EasyClientName(bs->teammate, goalname, sizeof(goalname));
+            BotAI_Print(PRT_MESSAGE, "%-20s%s%s: accompanying %s\n", netname, leader, flagstatus, goalname);
+            break;
+        }
     case LTG_DEFENDKEYAREA:
-    {
-        botlib_export->ai.BotGoalName(bs->teamgoal.number, goalname, sizeof(goalname));
-        BotAI_Print(PRT_MESSAGE, "%-20s%s%s: defending %s\n", netname, leader, flagstatus, goalname);
-        break;
-    }
+        {
+            botlib_export->ai.BotGoalName(bs->teamgoal.number, goalname, sizeof(goalname));
+            BotAI_Print(PRT_MESSAGE, "%-20s%s%s: defending %s\n", netname, leader, flagstatus, goalname);
+            break;
+        }
     case LTG_GETITEM:
-    {
-        botlib_export->ai.BotGoalName(bs->teamgoal.number, goalname, sizeof(goalname));
-        BotAI_Print(PRT_MESSAGE, "%-20s%s%s: getting item %s\n", netname, leader, flagstatus, goalname);
-        break;
-    }
+        {
+            botlib_export->ai.BotGoalName(bs->teamgoal.number, goalname, sizeof(goalname));
+            BotAI_Print(PRT_MESSAGE, "%-20s%s%s: getting item %s\n", netname, leader, flagstatus, goalname);
+            break;
+        }
     case LTG_KILL:
-    {
-        ClientName(bs->teamgoal.entitynum, goalname, sizeof(goalname));
-        BotAI_Print(PRT_MESSAGE, "%-20s%s%s: killing %s\n", netname, leader, flagstatus, goalname);
-        break;
-    }
+        {
+            ClientName(bs->teamgoal.entitynum, goalname, sizeof(goalname));
+            BotAI_Print(PRT_MESSAGE, "%-20s%s%s: killing %s\n", netname, leader, flagstatus, goalname);
+            break;
+        }
     case LTG_CAMP:
     case LTG_CAMPORDER:
-    {
-        BotAI_Print(PRT_MESSAGE, "%-20s%s%s: camping\n", netname, leader, flagstatus);
-        break;
-    }
+        {
+            BotAI_Print(PRT_MESSAGE, "%-20s%s%s: camping\n", netname, leader, flagstatus);
+            break;
+        }
     case LTG_PATROL:
-    {
-        BotAI_Print(PRT_MESSAGE, "%-20s%s%s: patrolling\n", netname, leader, flagstatus);
-        break;
-    }
+        {
+            BotAI_Print(PRT_MESSAGE, "%-20s%s%s: patrolling\n", netname, leader, flagstatus);
+            break;
+        }
     case LTG_GETFLAG:
-    {
-        BotAI_Print(PRT_MESSAGE, "%-20s%s%s: capturing flag\n", netname, leader, flagstatus);
-        break;
-    }
+        {
+            BotAI_Print(PRT_MESSAGE, "%-20s%s%s: capturing flag\n", netname, leader, flagstatus);
+            break;
+        }
     case LTG_RUSHBASE:
-    {
-        BotAI_Print(PRT_MESSAGE, "%-20s%s%s: rushing base\n", netname, leader, flagstatus);
-        break;
-    }
+        {
+            BotAI_Print(PRT_MESSAGE, "%-20s%s%s: rushing base\n", netname, leader, flagstatus);
+            break;
+        }
     case LTG_RETURNFLAG:
-    {
-        BotAI_Print(PRT_MESSAGE, "%-20s%s%s: returning flag\n", netname, leader, flagstatus);
-        break;
-    }
+        {
+            BotAI_Print(PRT_MESSAGE, "%-20s%s%s: returning flag\n", netname, leader, flagstatus);
+            break;
+        }
     case LTG_ATTACKENEMYBASE:
-    {
-        BotAI_Print(PRT_MESSAGE, "%-20s%s%s: attacking the enemy base\n", netname, leader, flagstatus);
-        break;
-    }
+        {
+            BotAI_Print(PRT_MESSAGE, "%-20s%s%s: attacking the enemy base\n", netname, leader, flagstatus);
+            break;
+        }
     case LTG_HARVEST:
-    {
-        BotAI_Print(PRT_MESSAGE, "%-20s%s%s: harvesting\n", netname, leader, flagstatus);
-        break;
-    }
+        {
+            BotAI_Print(PRT_MESSAGE, "%-20s%s%s: harvesting\n", netname, leader, flagstatus);
+            break;
+        }
     default:
-    {
-        BotAI_Print(PRT_MESSAGE, "%-20s%s%s: roaming\n", netname, leader, flagstatus);
-        break;
-    }
+        {
+            BotAI_Print(PRT_MESSAGE, "%-20s%s%s: roaming\n", netname, leader, flagstatus);
+            break;
+        }
     }
 }
 
@@ -461,78 +461,78 @@ void BotSetInfoConfigString(bot_state_t *bs)
     switch(bs->ltgtype)
     {
     case LTG_TEAMHELP:
-    {
-        EasyClientName(bs->teammate, goalname, sizeof(goalname));
-        Com_sprintf(action, sizeof(action), "helping %s", goalname);
-        break;
-    }
+        {
+            EasyClientName(bs->teammate, goalname, sizeof(goalname));
+            Com_sprintf(action, sizeof(action), "helping %s", goalname);
+            break;
+        }
     case LTG_TEAMACCOMPANY:
-    {
-        EasyClientName(bs->teammate, goalname, sizeof(goalname));
-        Com_sprintf(action, sizeof(action), "accompanying %s", goalname);
-        break;
-    }
+        {
+            EasyClientName(bs->teammate, goalname, sizeof(goalname));
+            Com_sprintf(action, sizeof(action), "accompanying %s", goalname);
+            break;
+        }
     case LTG_DEFENDKEYAREA:
-    {
-        botlib_export->ai.BotGoalName(bs->teamgoal.number, goalname, sizeof(goalname));
-        Com_sprintf(action, sizeof(action), "defending %s", goalname);
-        break;
-    }
+        {
+            botlib_export->ai.BotGoalName(bs->teamgoal.number, goalname, sizeof(goalname));
+            Com_sprintf(action, sizeof(action), "defending %s", goalname);
+            break;
+        }
     case LTG_GETITEM:
-    {
-        botlib_export->ai.BotGoalName(bs->teamgoal.number, goalname, sizeof(goalname));
-        Com_sprintf(action, sizeof(action), "getting item %s", goalname);
-        break;
-    }
+        {
+            botlib_export->ai.BotGoalName(bs->teamgoal.number, goalname, sizeof(goalname));
+            Com_sprintf(action, sizeof(action), "getting item %s", goalname);
+            break;
+        }
     case LTG_KILL:
-    {
-        ClientName(bs->teamgoal.entitynum, goalname, sizeof(goalname));
-        Com_sprintf(action, sizeof(action), "killing %s", goalname);
-        break;
-    }
+        {
+            ClientName(bs->teamgoal.entitynum, goalname, sizeof(goalname));
+            Com_sprintf(action, sizeof(action), "killing %s", goalname);
+            break;
+        }
     case LTG_CAMP:
     case LTG_CAMPORDER:
-    {
-        Com_sprintf(action, sizeof(action), "camping");
-        break;
-    }
+        {
+            Com_sprintf(action, sizeof(action), "camping");
+            break;
+        }
     case LTG_PATROL:
-    {
-        Com_sprintf(action, sizeof(action), "patrolling");
-        break;
-    }
+        {
+            Com_sprintf(action, sizeof(action), "patrolling");
+            break;
+        }
     case LTG_GETFLAG:
-    {
-        Com_sprintf(action, sizeof(action), "capturing flag");
-        break;
-    }
+        {
+            Com_sprintf(action, sizeof(action), "capturing flag");
+            break;
+        }
     case LTG_RUSHBASE:
-    {
-        Com_sprintf(action, sizeof(action), "rushing base");
-        break;
-    }
+        {
+            Com_sprintf(action, sizeof(action), "rushing base");
+            break;
+        }
     case LTG_RETURNFLAG:
-    {
-        Com_sprintf(action, sizeof(action), "returning flag");
-        break;
-    }
+        {
+            Com_sprintf(action, sizeof(action), "returning flag");
+            break;
+        }
     case LTG_ATTACKENEMYBASE:
-    {
-        Com_sprintf(action, sizeof(action), "attacking the enemy base");
-        break;
-    }
+        {
+            Com_sprintf(action, sizeof(action), "attacking the enemy base");
+            break;
+        }
     case LTG_HARVEST:
-    {
-        Com_sprintf(action, sizeof(action), "harvesting");
-        break;
-    }
+        {
+            Com_sprintf(action, sizeof(action), "harvesting");
+            break;
+        }
     default:
-    {
-        botlib_export->ai.BotGetTopGoal(bs->gs, &goal);
-        botlib_export->ai.BotGoalName(goal.number, goalname, sizeof(goalname));
-        Com_sprintf(action, sizeof(action), "roaming %s", goalname);
-        break;
-    }
+        {
+            botlib_export->ai.BotGetTopGoal(bs->gs, &goal);
+            botlib_export->ai.BotGoalName(goal.number, goalname, sizeof(goalname));
+            Com_sprintf(action, sizeof(action), "roaming %s", goalname);
+            break;
+        }
     }
     cs = va("l\\%s\\c\\%s\\a\\%s",
             leader,
@@ -697,7 +697,7 @@ void BotInterbreeding(void)
     for (i = 0; i < bot_interbreedbots->integer; i++)
     {
         Cbuf_ExecuteText(EXEC_APPEND, va("addbot %s 4 free %i %s%d\n",
-                                 bot_interbreedchar->string, i * 50, bot_interbreedchar->string, i) );
+                                         bot_interbreedchar->string, i * 50, bot_interbreedchar->string, i) );
     }
     //
     Cvar_Set("bot_interbreedchar", "");
@@ -822,7 +822,7 @@ void BotChangeViewAngles(bot_state_t *bs, float thinktime)
         if (bot_challenge->integer)
         {
             //smooth slowdown view model
-            diff = abs(AngleDifference(bs->viewangles[i], bs->ideal_viewangles[i]));
+            diff = fabs(AngleDifference(bs->viewangles[i], bs->ideal_viewangles[i]));
             anglespeed = diff * factor;
             if (anglespeed > maxchange) anglespeed = maxchange;
             bs->viewangles[i] = BotChangeViewAngle(bs->viewangles[i],
@@ -922,9 +922,9 @@ void BotInputToUserCommand(bot_input_t *bi, usercmd_t *ucmd, int delta_angles[3]
     //bot input speed is in the range [0, 400]
     bi->speed = bi->speed * 127 / 400;
     //set the view independent movement
-    ucmd->forwardmove = DotProduct(forward, bi->dir) * bi->speed;
-    ucmd->rightmove = DotProduct(right, bi->dir) * bi->speed;
-    ucmd->upmove = abs(forward[2]) * bi->dir[2] * bi->speed;
+    ucmd->forwardmove = (signed char)(DotProduct(forward, bi->dir) * bi->speed);
+    ucmd->rightmove = (signed char)(DotProduct(right, bi->dir) * bi->speed);
+    ucmd->upmove = (signed char)(fabs(forward[2]) * bi->dir[2] * bi->speed);
     //normal keyboard movement
     if (bi->actionflags & ACTION_MOVEFORWARD) ucmd->forwardmove += 127;
     if (bi->actionflags & ACTION_MOVEBACK) ucmd->forwardmove -= 127;
@@ -1218,7 +1218,7 @@ int BotAISetupClient(int client, struct bot_settings_s *settings, qboolean resta
     bot_state_t *bs;
     int errnum;
 
-    if (!botstates[client]) botstates[client] = G_Alloc(sizeof(bot_state_t));
+    if (!botstates[client]) botstates[client] = (bot_state_t *)G_Alloc(sizeof(bot_state_t));
     bs = botstates[client];
 
     if (bs && bs->inuse)
@@ -1466,8 +1466,8 @@ int BotAIStartFrame(int time)
 
     if (bot_report->integer)
     {
-//		BotTeamplayReport();
-//		Cvar_Set("bot_report", "0");
+        //		BotTeamplayReport();
+        //		Cvar_Set("bot_report", "0");
         BotUpdateInfoConfigStrings();
     }
 
@@ -1594,7 +1594,7 @@ int BotAIStartFrame(int time)
             state.powerups = ent->s.powerups;
             state.legsAnim = ent->s.legsAnim;
             state.torsoAnim = ent->s.torsoAnim;
-		    state.weapon1 = state.weapon2 = ent->s.weapon;
+            state.weapon1 = state.weapon2 = ent->s.weapon;
 
             botlib_export->BotLibUpdateEntity(i, &state);
         }

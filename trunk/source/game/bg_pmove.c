@@ -285,8 +285,8 @@ static void PM_Accelerate( vec3_t wishdir, float wishspeed, float accel )
         accelspeed = addspeed;
 
     pm->ps->velocity[0] += accelspeed * wishdir[0];
-	pm->ps->velocity[1] += accelspeed * wishdir[1];
-	pm->ps->velocity[2] += accelspeed * wishdir[2];
+    pm->ps->velocity[1] += accelspeed * wishdir[1];
+    pm->ps->velocity[2] += accelspeed * wishdir[2];
 }
 
 /*
@@ -308,10 +308,10 @@ static float PM_CmdScale( usercmd_t *cmd )
     if ( abs( cmd->rightmove ) > max )
         max = abs( cmd->rightmove );
 
-	if ( abs( cmd->upmove ) > max )
+    if ( abs( cmd->upmove ) > max )
         max = abs( cmd->upmove );
 
-	if ( !max )
+    if ( !max )
         return 0;
 
     total = sqrt(cmd->forwardmove * cmd->forwardmove + cmd->rightmove * cmd->rightmove + cmd->upmove * cmd->upmove);
@@ -586,9 +586,9 @@ static void PM_FlyMove( void )
     }
     else
     {
-		wishvel[0] = scale * pml.forward[0]*pm->cmd.forwardmove + scale * pml.right[0]*pm->cmd.rightmove;
-		wishvel[1] = scale * pml.forward[1]*pm->cmd.forwardmove + scale * pml.right[1]*pm->cmd.rightmove;
-		wishvel[2] = scale * pml.forward[2]*pm->cmd.forwardmove + scale * pml.right[2]*pm->cmd.rightmove + scale * pm->cmd.upmove;
+        wishvel[0] = scale * pml.forward[0]*pm->cmd.forwardmove + scale * pml.right[0]*pm->cmd.rightmove;
+        wishvel[1] = scale * pml.forward[1]*pm->cmd.forwardmove + scale * pml.right[1]*pm->cmd.rightmove;
+        wishvel[2] = scale * pml.forward[2]*pm->cmd.forwardmove + scale * pml.right[2]*pm->cmd.rightmove + scale * pm->cmd.upmove;
     }
 
     VectorCopy (wishvel, wishdir);
@@ -632,7 +632,7 @@ static void PM_AirMove( void )
     VectorNormalize (pml.right);
 
     wishvel[0] = pml.forward[0]*fmove + pml.right[0]*smove;
-	wishvel[1] = pml.forward[1]*fmove + pml.right[1]*smove;
+    wishvel[1] = pml.forward[1]*fmove + pml.right[1]*smove;
     wishvel[2] = 0;
 
     VectorCopy (wishvel, wishdir);
@@ -755,7 +755,7 @@ static void PM_WalkMove( void )
         wishvel[i] = pml.forward[i]*fmove + pml.right[i]*smove;
     }
     // when going up or down slopes the wish velocity should Not be zero
-//	wishvel[2] = 0;
+    //	wishvel[2] = 0;
 
     VectorCopy (wishvel, wishdir);
     wishspeed = VectorNormalize(wishdir);
@@ -763,7 +763,7 @@ static void PM_WalkMove( void )
 
     // clamp the speed lower if ducking
     if ( pm->ps->pm_flags & PMF_DUCKED && wishspeed > pm->ps->speed * pm_duckScale )
-		wishspeed = pm->ps->speed * pm_duckScale;
+        wishspeed = pm->ps->speed * pm_duckScale;
 
     // clamp the speed lower if wading or walking on the bottom
     if ( pm->waterlevel )
@@ -1246,7 +1246,7 @@ static void PM_GroundTrace( void )
     pm->ps->groundEntityNum = trace.entityNum;
 
     // don't reset the z velocity for slopes
-//	pm->ps->velocity[2] = 0;
+    //	pm->ps->velocity[2] = 0;
 
     PM_AddTouchEnt( trace.entityNum );
 }
@@ -1505,7 +1505,7 @@ PM_BeginWeaponChange
 static void PM_BeginWeaponChange(weapon_t weapon)
 {
     if(pm->ps->weaponState == WEAPON_DROPPING)
-		return;
+        return;
 
     PM_AddEvent(EV_CHANGE_WEAPON);
     pm->ps->weaponState = WEAPON_DROPPING;
@@ -1535,7 +1535,7 @@ PM_TorsoAnimation
 static void PM_TorsoAnimation(void)
 {
     if(pm->ps->weaponState == WEAPON_READY )
-		PM_ContinueTorsoAnim( TORSO_STAND );
+        PM_ContinueTorsoAnim( TORSO_STAND );
 }
 
 /*
@@ -1547,7 +1547,7 @@ Generates weapon events and modifes the weapon counter
 */
 static void PM_ThinkWeapon(qboolean fire, int event, qboolean fire2, int event2)
 {
-	int addTime;
+    int addTime;
 
     // make weapon function
     if(pm->ps->weaponTime > 0 )
@@ -1559,7 +1559,7 @@ static void PM_ThinkWeapon(qboolean fire, int event, qboolean fire2, int event2)
     if(pm->ps->weaponTime <= 0 || pm->ps->weaponState != WEAPON_FIRING)
     {
         if(pm->ps->selectedWeapon != pm->cmd.weapon)
-            PM_BeginWeaponChange(pm->cmd.weapon);
+            PM_BeginWeaponChange((weapon_t)pm->cmd.weapon);
     }
 
     if(pm->ps->weaponTime > 0)
@@ -1568,7 +1568,7 @@ static void PM_ThinkWeapon(qboolean fire, int event, qboolean fire2, int event2)
     // change weapon if time
     if ( pm->ps->weaponState == WEAPON_DROPPING )
     {
-        PM_FinishWeaponChange(pm->cmd.weapon);
+        PM_FinishWeaponChange((weapon_t)pm->cmd.weapon);
         return;
     }
 
@@ -1613,7 +1613,7 @@ static void PM_ThinkWeapon(qboolean fire, int event, qboolean fire2, int event2)
     addTime = bgGetAttackTime(pm->ps->clientNum, pm->ps->selectedWeapon, pm->ps->groundEntityNum == ENTITYNUM_NONE, pm->ps->pm_flags & PMF_DUCKED, !fire);
 
     if ( pm->ps->powerups[PW_HASTE] )
-        addTime /= 1.3;
+        addTime = (int)(addTime / 1.3);
 
     pm->ps->weaponTime += addTime;
 }
@@ -1641,7 +1641,7 @@ static void PM_Weapon( void )
         if(!(pm->ps->pm_flags & PMF_USE_ITEM_HELD))
         {
             if(bg_itemlist[pm->ps->stats[STAT_HOLDABLE_ITEM]].giTag != HI_MEDKIT || pm->ps->stats[STAT_HEALTH] < (pm->ps->stats[STAT_MAX_HEALTH] + 25) )
-			{
+            {
                 pm->ps->pm_flags |= PMF_USE_ITEM_HELD;
                 PM_AddEvent( EV_USE_ITEM0 + bg_itemlist[pm->ps->stats[STAT_HOLDABLE_ITEM]].giTag );
                 pm->ps->stats[STAT_HOLDABLE_ITEM] = 0;
@@ -1652,7 +1652,7 @@ static void PM_Weapon( void )
     else
         pm->ps->pm_flags &= ~PMF_USE_ITEM_HELD;
 
-	PM_ThinkWeapon(pm->cmd.buttons & BUTTON_ATTACK, EV_FIRE_WEAPON, pm->cmd.buttons & BUTTON_ALTERNATE, EV_FIRE_ALTERNATE);
+    PM_ThinkWeapon(pm->cmd.buttons & BUTTON_ATTACK, EV_FIRE_WEAPON, pm->cmd.buttons & BUTTON_ALTERNATE, EV_FIRE_ALTERNATE);
 }
 
 /*
@@ -1923,36 +1923,36 @@ void PmoveSingle (pmove_t *pmove)
 
     PM_DropTimers();
 
-        if ( pm->ps->powerups[PW_FLIGHT] )
-        {
-            // flight powerup doesn't allow jump and has different friction
-            PM_FlyMove();
-        }
-        else if (pm->ps->pm_flags & PMF_GRAPPLE_PULL)
-        {
-            PM_GrappleMove();
-            // We can wiggle a bit
-            PM_AirMove();
-        }
-        else if (pm->ps->pm_flags & PMF_TIME_WATERJUMP)
-        {
-            PM_WaterJumpMove();
-        }
-        else if ( pm->waterlevel > 1 )
-        {
-            // swimming
-            PM_WaterMove();
-        }
-        else if ( pml.walking )
-        {
-            // walking on ground
-            PM_WalkMove();
-        }
-        else
-        {
-            // airborne
-            PM_AirMove();
-        }
+    if ( pm->ps->powerups[PW_FLIGHT] )
+    {
+        // flight powerup doesn't allow jump and has different friction
+        PM_FlyMove();
+    }
+    else if (pm->ps->pm_flags & PMF_GRAPPLE_PULL)
+    {
+        PM_GrappleMove();
+        // We can wiggle a bit
+        PM_AirMove();
+    }
+    else if (pm->ps->pm_flags & PMF_TIME_WATERJUMP)
+    {
+        PM_WaterJumpMove();
+    }
+    else if ( pm->waterlevel > 1 )
+    {
+        // swimming
+        PM_WaterMove();
+    }
+    else if ( pml.walking )
+    {
+        // walking on ground
+        PM_WalkMove();
+    }
+    else
+    {
+        // airborne
+        PM_AirMove();
+    }
 
     PM_Animate();
 

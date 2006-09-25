@@ -81,10 +81,10 @@ void COM_DefaultExtension (char *path, int maxSize, const char *extension )
     char	oldPath[MAX_QPATH];
     char    *src;
 
-//
-// if path doesn't have a .EXT, append extension
-// (extension should include the .)
-//
+    //
+    // if path doesn't have a .EXT, append extension
+    // (extension should include the .)
+    //
     src = path + strlen(path) - 1;
 
     while (*src != '/' && src != path)
@@ -517,7 +517,7 @@ char *COM_ParseExt( char **data_p, qboolean allowLineBreaks )
 
     if (len == MAX_TOKEN_CHARS)
     {
-//		Com_Printf ("Token exceeded %i chars, discarded.\n", MAX_TOKEN_CHARS);
+        //		Com_Printf ("Token exceeded %i chars, discarded.\n", MAX_TOKEN_CHARS);
         len = 0;
     }
     com_token[len] = 0;
@@ -877,7 +877,7 @@ qboolean Q_strsamen(const char *s1, const char *s2, int n)
 
 qboolean Q_strsame(const char *s1, const char *s2)
 {
-	return !Q_stricmpn(s1, s2, 99999);
+    return !Q_stricmpn(s1, s2, 99999);
 }
 
 char *Q_strlwr( char *s1 )
@@ -974,11 +974,11 @@ char *Q_CleanStr( char *string )
 }
 
 
-void QDECL Com_sprintf( char *dest, int size, const char *fmt, ...)
+void QDECL Com_sprintf( char *dest, unsigned int size, const char *fmt, ...)
 {
-    int		len;
-    va_list		argptr;
-    char	bigbuffer[32000];	// big, but small enough to fit in PPC stack
+    unsigned int    len;
+    va_list         argptr;
+    char            bigbuffer[32000];	// big, but small enough to fit in PPC stack
 
     va_start (argptr,fmt);
     len = vsprintf (bigbuffer,fmt,argptr);

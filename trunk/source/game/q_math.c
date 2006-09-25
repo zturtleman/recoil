@@ -291,9 +291,9 @@ unsigned ColorBytes3 (float r, float g, float b)
 {
     unsigned	i;
 
-    ( (byte *)&i )[0] = r * 255;
-    ( (byte *)&i )[1] = g * 255;
-    ( (byte *)&i )[2] = b * 255;
+    ( (byte *)&i )[0] = (byte)(r * 255);
+    ( (byte *)&i )[1] = (byte)(g * 255);
+    ( (byte *)&i )[2] = (byte)(b * 255);
 
     return i;
 }
@@ -302,10 +302,10 @@ unsigned ColorBytes4 (float r, float g, float b, float a)
 {
     unsigned	i;
 
-    ( (byte *)&i )[0] = r * 255;
-    ( (byte *)&i )[1] = g * 255;
-    ( (byte *)&i )[2] = b * 255;
-    ( (byte *)&i )[3] = a * 255;
+    ( (byte *)&i )[0] = (byte)(r * 255);
+    ( (byte *)&i )[1] = (byte)(g * 255);
+    ( (byte *)&i )[2] = (byte)(b * 255);
+    ( (byte *)&i )[3] = (byte)(a * 255);
 
     return i;
 }
@@ -653,7 +653,7 @@ float Q_rsqrt( float number )
     i  = 0x5f3759df - ( i >> 1 );               // what the fuck?
     y  = * ( float * ) &i;
     y  = y * ( threehalfs - ( x2 * y * y ) );   // 1st iteration
-//	y  = y * ( threehalfs - ( x2 * y * y ) );   // 2nd iteration, this can be removed
+    //	y  = y * ( threehalfs - ( x2 * y * y ) );   // 2nd iteration, this can be removed
 
 #ifdef __linux__
     assert( !isnan(y) ); // bk010122 - FPE?
@@ -851,7 +851,7 @@ int BoxOnPlaneSide (vec3_t emins, vec3_t emaxs, struct cplane_s *p)
     float	dist1, dist2;
     int		sides;
 
-// fast axial cases
+    // fast axial cases
     if (p->type < 3)
     {
         if (p->dist <= emins[p->type])
@@ -861,7 +861,7 @@ int BoxOnPlaneSide (vec3_t emins, vec3_t emaxs, struct cplane_s *p)
         return 3;
     }
 
-// general case
+    // general case
     switch (p->signbits)
     {
     case 0:

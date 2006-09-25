@@ -53,7 +53,7 @@ gitem_t	bg_itemlist[] =
             /* icon */		NULL,
             /* pickup */	NULL,
             0,
-            0,
+            IT_BAD,
             0,
             /* precache */ "",
             /* sounds */ ""
@@ -627,8 +627,7 @@ gitem_t	bg_itemlist[] =
         {NULL}
     };
 
-int		bg_numItems = sizeof(bg_itemlist) / sizeof(bg_itemlist[0]) - 1;
-
+int bg_numItems = sizeof(bg_itemlist) / sizeof(bg_itemlist[0]) - 1;
 
 /*
 ==============
@@ -761,7 +760,7 @@ qboolean BG_CanItemBeGrabbed( int gametype, const entityState_t *ent, const play
     case IT_HEALTH:
         // small and mega healths will go over the max, otherwise
         // don't pick up if already at max
-		return (ps->stats[STAT_HEALTH] < 25) ? qfalse : qtrue;
+        return (ps->stats[STAT_HEALTH] < 25) ? qfalse : qtrue;
     case IT_POWERUP:
         return qtrue;	// powerups are always picked up
 
@@ -854,11 +853,11 @@ void BG_EvaluateTrajectory( const trajectory_t *tr, int atTime, vec3_t result )
         VectorMA( tr->trBase, deltaTime, tr->trDelta, result );
         result[2] -= 0.5 * DEFAULT_GRAVITY * deltaTime * deltaTime;		// FIXME: local gravity...
         break;
-	case TR_ACCELERATION:
+    case TR_ACCELERATION:
         deltaTime = ( atTime - tr->trTime ) * 0.001;	// milliseconds to seconds
-		deltaTime *= deltaTime;
+        deltaTime *= deltaTime;
         VectorMA( tr->trBase, deltaTime, tr->trDelta, result );
-		break;
+        break;
     default:
         Com_Error( ERR_DROP, "BG_EvaluateTrajectory: unknown trType: %i", tr->trTime );
         break;
@@ -905,10 +904,10 @@ void BG_EvaluateTrajectoryDelta( const trajectory_t *tr, int atTime, vec3_t resu
         VectorCopy( tr->trDelta, result );
         result[2] -= DEFAULT_GRAVITY * deltaTime;		// FIXME: local gravity...
         break;
-	case TR_ACCELERATION:
+    case TR_ACCELERATION:
         deltaTime = ( atTime - tr->trTime ) * 0.001;	// milliseconds to seconds
         VectorScale( tr->trDelta, deltaTime, result );
-		break;
+        break;
     default:
         Com_Error( ERR_DROP, "BG_EvaluateTrajectoryDelta: unknown trType: %i", tr->trTime );
         break;
@@ -947,7 +946,7 @@ char *eventnames[] = {
                          "EV_NOAMMO",
                          "EV_CHANGE_WEAPON",
                          "EV_FIRE_WEAPON",
-						 "EV_FIRE_ALTERNATE",
+                         "EV_FIRE_ALTERNATE",
 
                          "EV_USE_ITEM0",
                          "EV_USE_ITEM1",
@@ -1297,18 +1296,18 @@ typedef struct
 } chartypeInfo_t;
 
 chartypeInfo_t chars[] =
-{
     {
-        "Defualt",
-        Defualt_BG_GetAttackTime,
-        Defualt_SV_FireWeapon,
+        {
+            "Defualt",
+            Defualt_BG_GetAttackTime,
+            Defualt_SV_FireWeapon,
 #ifndef DEDICATED
-        Defualt_CL_FireWeapon,
-        Defualt_CL_AmmoIcon,
-        Defualt_CL_AmmoModel
+            Defualt_CL_FireWeapon,
+            Defualt_CL_AmmoIcon,
+            Defualt_CL_AmmoModel
 #endif
-    }
-};
+        }
+    };
 
 enum
 {

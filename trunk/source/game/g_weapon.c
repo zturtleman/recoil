@@ -41,9 +41,9 @@ void SnapVectorTowards(vec3_t v, vec3_t to)
 {
     int		i;
     for(i = 0 ; i < 3 ; i++)
-	{
-		v[i] = (to[i] <= v[i]) ? (int)v[i] : (int)v[i] + 1;
-	}
+    {
+        v[i] = (to[i] <= v[i]) ? (int)v[i] : (int)v[i] + 1;
+    }
 }
 
 // Returns the number of players hit, cannot be more then numHits
@@ -53,86 +53,86 @@ static int Fire_HitScan(gentity_t *shooter, float spread, float range, int damag
     trace_t		tr;
     vec3_t		end;
     gentity_t	*traceEnt, tracer;
-	gentity_t	*unlinkedEntities[MAX_UNLINKED_ENTS];
+    gentity_t	*unlinkedEntities[MAX_UNLINKED_ENTS];
     int			passent, hits, unlinked;
-	float r, u;
+    float r, u;
 
-    damage *= s_quadFactor;
+    damage = (int)(damage * s_quadFactor);
 
-	memset(&tracer, 0, sizeof(gentity_t));
+    memset(&tracer, 0, sizeof(gentity_t));
     VectorCopy(w_forward, tracer.r.currentVelocity);
     VectorCopy(muzzle, tracer.r.currentOrigin);
 
     passent = shooter->s.number;
-	unlinked = 0;
-	hits = 0;
+    unlinked = 0;
+    hits = 0;
     while(unlinked < MAX_UNLINKED_ENTS && numHits && range > 1.0)
     {
-	    VectorMA(tracer.r.currentOrigin, range, tracer.r.currentVelocity, end);
+        VectorMA(tracer.r.currentOrigin, range, tracer.r.currentVelocity, end);
 
-		if(spread)
-		{
-			r = random() * M_PI * 2.0f;
-			u = sin(r) * crandom() * spread * 16;
-			r = cos(r) * crandom() * spread * 16;
-			VectorMA(end, r, w_right, end);
-			VectorMA(end, u, w_up, end);
-		}
+        if(spread)
+        {
+            r = random() * M_PI * 2.0f;
+            u = sin(r) * crandom() * spread * 16;
+            r = cos(r) * crandom() * spread * 16;
+            VectorMA(end, r, w_right, end);
+            VectorMA(end, u, w_up, end);
+        }
 
         SV_Trace(&tr, tracer.r.currentOrigin, NULL, NULL, end, passent, MASK_SHOT | CONTENTS_TRIGGER, qfalse);
-		range -= range * tr.fraction;
+        range -= range * tr.fraction;
 
-		traceEnt = &g_entities[tr.entityNum];
+        traceEnt = &g_entities[tr.entityNum];
         if(traceEnt->takedamage)
-		{
-			hits += LogAccuracyHit(traceEnt, shooter) * 1;
-			G_Damage(traceEnt, shooter, shooter, tracer.r.currentVelocity, tr.endpos, damage, dflags, mod);
-		}
+        {
+            hits += LogAccuracyHit(traceEnt, shooter) * 1;
+            G_Damage(traceEnt, shooter, shooter, tracer.r.currentVelocity, tr.endpos, damage, dflags, mod);
+        }
 
-		if((traceEnt->r.contents & CONTENTS_TRIGGER) && traceEnt->touch)
-		{
-			if(traceEnt->s.eType == ET_TELEPORT_TRIGGER)
-			{
-				if(lineEffect)
-					lineEffect(shooter, tracer.r.currentOrigin, &tr);
+        if((traceEnt->r.contents & CONTENTS_TRIGGER) && traceEnt->touch)
+        {
+            if(traceEnt->s.eType == ET_TELEPORT_TRIGGER)
+            {
+                if(lineEffect)
+                    lineEffect(shooter, tracer.r.currentOrigin, &tr);
 
-				VectorCopy(tr.endpos, tracer.r.currentOrigin);
-				traceEnt->touch(traceEnt, &tracer, &tr);
-				passent = ENTITYNUM_NONE; // you can hit yourself now
-			}
+                VectorCopy(tr.endpos, tracer.r.currentOrigin);
+                traceEnt->touch(traceEnt, &tracer, &tr);
+                passent = ENTITYNUM_NONE; // you can hit yourself now
+            }
 
-			SV_UnlinkEntity(traceEnt);
-			unlinkedEntities[unlinked++] = traceEnt;
-			continue;
-		}
+            SV_UnlinkEntity(traceEnt);
+            unlinkedEntities[unlinked++] = traceEnt;
+            continue;
+        }
 
         if(hitEffect)
-			hitEffect(shooter, tracer.r.currentOrigin, &tr);
+            hitEffect(shooter, tracer.r.currentOrigin, &tr);
 
-		if(tr.contents & CONTENTS_SOLID)
+        if(tr.contents & CONTENTS_SOLID)
             break;
 
-		if(numHits--)
-		{
-			SV_UnlinkEntity(traceEnt);
-			unlinkedEntities[unlinked++] = traceEnt;
-			continue;
-		}
+        if(numHits--)
+        {
+            SV_UnlinkEntity(traceEnt);
+            unlinkedEntities[unlinked++] = traceEnt;
+            continue;
+        }
 
-		break;
+        break;
     }
 
-	if(unlinked)
-	{
-		int i;
-		for(i=0; i<unlinked; i++)
-			SV_LinkEntity(unlinkedEntities[i]);
-	}
+    if(unlinked)
+    {
+        int i;
+        for(i=0; i<unlinked; i++)
+            SV_LinkEntity(unlinkedEntities[i]);
+    }
 
-	if(lineEffect)
-		lineEffect(shooter, tracer.r.currentOrigin, &tr);
+    if(lineEffect)
+        lineEffect(shooter, tracer.r.currentOrigin, &tr);
 
-	return hits;
+    return hits;
 }
 
 /*
@@ -192,7 +192,7 @@ qboolean CheckGauntletAttack(gentity_t *ent)
     else
         s_quadFactor = 1;
 
-    G_Damage(traceEnt, ent, ent, w_forward, tr.endpos, 50 * s_quadFactor, 0, MOD_GAUNTLET);
+    G_Damage(traceEnt, ent, ent, w_forward, tr.endpos, (int)(50 * s_quadFactor), 0, MOD_GAUNTLET);
 
     return qtrue;
 }
@@ -224,23 +224,23 @@ gentity_t *BulletHitEffect(gentity_t *shooter, vec3_t start, trace_t *tr)
 {
     gentity_t *tent, *traceEnt;
 
-	traceEnt = &g_entities[tr->entityNum];
+    traceEnt = &g_entities[tr->entityNum];
 
-	SnapVectorTowards(tr->endpos, start);
+    SnapVectorTowards(tr->endpos, start);
 
     tent = G_TempEntity(tr->endpos, (traceEnt->takedamage && traceEnt->client) ? EV_BULLET_HIT_FLESH : EV_BULLET_HIT_WALL);
     tent->s.eventParm = (traceEnt->takedamage && traceEnt->client) ? traceEnt->s.number : DirToByte(tr->plane.normal);
-	tent->s.otherEntityNum = shooter->s.number;
-	return tent;
+    tent->s.otherEntityNum = shooter->s.number;
+    return tent;
 }
 
 void Bullet_Fire(gentity_t *ent, float spread, int damage)
 {
-	int hit;
+    int hit;
 
-	hit = Fire_HitScan(ent, spread, 8192*8, damage, 0, MOD_MACHINEGUN, 1, NULL, BulletHitEffect);
-	if(hit)
-		ent->client->accuracy_hits++;
+    hit = Fire_HitScan(ent, spread, 8192*8, damage, 0, MOD_MACHINEGUN, 1, NULL, BulletHitEffect);
+    if(hit)
+        ent->client->accuracy_hits++;
 }
 
 /*
@@ -256,10 +256,10 @@ void BFG_Fire(gentity_t *ent)
     gentity_t	*m;
 
     m = fire_bfg(ent, muzzle, w_forward);
-    m->damage *= s_quadFactor;
-    m->splashDamage *= s_quadFactor;
+    m->damage = (int)(m->damage * s_quadFactor);
+    m->splashDamage = (int)(m->splashDamage * s_quadFactor);
 
-//	VectorAdd(m->s.pos.trDelta, ent->client->ps.velocity, m->s.pos.trDelta);	// "real" physics
+    //	VectorAdd(m->s.pos.trDelta, ent->client->ps.velocity, m->s.pos.trDelta);	// "real" physics
 }
 
 /*
@@ -289,7 +289,7 @@ void ShotgunPattern(vec3_t origin, vec3_t origin2, int seed, gentity_t *ent)
     PerpendicularVector(_w_right, _w_forward);
     CrossProduct(_w_forward, _w_right, _w_up);
 
-	VectorCopy(origin, muzzle);
+    VectorCopy(origin, muzzle);
 
     oldScore = ent->client->ps.persistant[PERS_SCORE];
 
@@ -302,13 +302,13 @@ void ShotgunPattern(vec3_t origin, vec3_t origin2, int seed, gentity_t *ent)
         VectorMA(end, r, _w_right, end);
         VectorMA(end, u, _w_up, end);
 
-		VectorSubtract(end, origin, w_forward);
-		VectorNormalize(w_forward);
+        VectorSubtract(end, origin, w_forward);
+        VectorNormalize(w_forward);
 
-		hits += Fire_HitScan(ent, 0, 8192 * 16, DEFAULT_SHOTGUN_DAMAGE, 0, MOD_SHOTGUN, 1, NULL, NULL);
+        hits += Fire_HitScan(ent, 0, 8192 * 16, DEFAULT_SHOTGUN_DAMAGE, 0, MOD_SHOTGUN, 1, NULL, NULL);
     }
 
-	ent->client->accuracy_hits += (hits) ? 1 : 0;
+    ent->client->accuracy_hits += (hits) ? 1 : 0;
 }
 
 void weapon_sw_upershotgun_fire(gentity_t *ent)
@@ -342,10 +342,10 @@ void weapon_grenadelauncher_fire(gentity_t *ent)
     VectorNormalize(w_forward);
 
     m = fire_grenade(ent, muzzle, w_forward);
-    m->damage *= s_quadFactor;
-    m->splashDamage *= s_quadFactor;
+    m->damage = (int)(m->damage * s_quadFactor);
+    m->splashDamage = (int)(m->splashDamage * s_quadFactor);
 
-//	VectorAdd(m->s.pos.trDelta, ent->client->ps.velocity, m->s.pos.trDelta);	// "real" physics
+    //	VectorAdd(m->s.pos.trDelta, ent->client->ps.velocity, m->s.pos.trDelta);	// "real" physics
 }
 
 /*
@@ -360,10 +360,10 @@ void Weapon_RocketLauncher_Fire(gentity_t *ent)
     gentity_t	*m;
 
     m = fire_rocket(ent, muzzle, w_forward);
-    m->damage *= s_quadFactor;
-    m->splashDamage *= s_quadFactor;
+    m->damage = (int)(m->damage * s_quadFactor);
+    m->splashDamage = (int)(m->splashDamage * s_quadFactor);
 
-//	VectorAdd(m->s.pos.trDelta, ent->client->ps.velocity, m->s.pos.trDelta);	// "real" physics
+    //	VectorAdd(m->s.pos.trDelta, ent->client->ps.velocity, m->s.pos.trDelta);	// "real" physics
 }
 
 /*
@@ -378,10 +378,10 @@ void Weapon_Plasmagun_Fire(gentity_t *ent)
     gentity_t	*m;
 
     m = fire_plasma(ent, muzzle, w_forward);
-    m->damage *= s_quadFactor;
-    m->splashDamage *= s_quadFactor;
+    m->damage = (int)(m->damage * s_quadFactor);
+    m->splashDamage = (int)(m->splashDamage * s_quadFactor);
 
-//	VectorAdd(m->s.pos.trDelta, ent->client->ps.velocity, m->s.pos.trDelta);	// "real" physics
+    //	VectorAdd(m->s.pos.trDelta, ent->client->ps.velocity, m->s.pos.trDelta);	// "real" physics
 }
 
 /*
@@ -395,24 +395,24 @@ gentity_t *Fire_RailgunEffect(gentity_t *shooter, vec3_t start, trace_t *tr)
 {
     gentity_t *tent;
 
-	tent = G_TempEntity(tr->endpos, EV_RAILTRAIL);
+    tent = G_TempEntity(tr->endpos, EV_RAILTRAIL);
     tent->s.clientNum = shooter->s.clientNum;
     tent->s.eventParm = (tr->surfaceFlags & SURF_NOIMPACT) ? 255 : DirToByte(tr->plane.normal);
 
     VectorCopy(start, tent->s.origin2);
-	return tent;
+    return tent;
 }
 
 void weapon_railgun_fire(gentity_t *ent)
 {
-	int hits;
-	
-	VectorMA(muzzle, 4, w_right, muzzle);
+    int hits;
+
+    VectorMA(muzzle, 4, w_right, muzzle);
     VectorMA(muzzle, -1, w_up, muzzle);
 
-	hits = Fire_HitScan(ent, 0, 8192, 100, 0, MOD_RAILGUN, 8, Fire_RailgunEffect, NULL);
+    hits = Fire_HitScan(ent, 0, 8192, 100, 0, MOD_RAILGUN, 8, Fire_RailgunEffect, NULL);
 
-	if(hits == 0)
+    if(hits == 0)
         ent->client->accurateCount = 0;
     else
     {
@@ -454,11 +454,11 @@ void Weapon_HookFree(gentity_t *ent)
 
 void Weapon_HookThink(gentity_t *ent)
 {
-	if(!ent->parent->client->ps.weaponAmmo[2])
-	{
-		Weapon_HookFree(ent);
-		return;
-	}
+    if(!ent->parent->client->ps.weaponAmmo[2])
+    {
+        Weapon_HookFree(ent);
+        return;
+    }
 
     if(ent->enemy)
     {
@@ -488,7 +488,7 @@ gentity_t *LightningHitEffect(gentity_t *shooter, vec3_t start, trace_t *tr)
 {
     gentity_t *tent = NULL, *traceEnt;
 
-	traceEnt = &g_entities[tr->entityNum];
+    traceEnt = &g_entities[tr->entityNum];
 
     if(traceEnt->takedamage && traceEnt->client)
     {
@@ -503,13 +503,13 @@ gentity_t *LightningHitEffect(gentity_t *shooter, vec3_t start, trace_t *tr)
         tent->s.eventParm = DirToByte(tr->plane.normal);
     }
 
-	return tent;
+    return tent;
 }
 
 void Weapon_LightningFire(gentity_t *ent)
 {
-	if(Fire_HitScan(ent, 0, LIGHTNING_RANGE, 8, 0, MOD_LIGHTNING, 4, NULL, LightningHitEffect))
-		ent->client->accuracy_hits++;
+    if(Fire_HitScan(ent, 0, LIGHTNING_RANGE, 8, 0, MOD_LIGHTNING, 4, NULL, LightningHitEffect))
+        ent->client->accuracy_hits++;
 }
 
 //======================================================================

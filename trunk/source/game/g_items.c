@@ -321,7 +321,7 @@ void Touch_Item (gentity_t *ent, gentity_t *other, trace_t *trace)
     {
     case IT_AMMO:
         respawn = Pickup_Ammo(ent, other);
-//		predict = qfalse;
+        //		predict = qfalse;
         break;
     case IT_ARMOR:
         respawn = Pickup_Armor(ent, other);
@@ -397,14 +397,12 @@ void Touch_Item (gentity_t *ent, gentity_t *other, trace_t *trace)
 
     // non zero wait overrides respawn time
     if ( ent->wait )
-    {
-        respawn = ent->wait;
-    }
+        respawn = (int)ent->wait;
 
     // random can be used to vary the respawn time
     if ( ent->random )
     {
-        respawn += crandom() * ent->random;
+        respawn += (int)(crandom() * ent->random);
         if ( respawn < 1 )
         {
             respawn = 1;
@@ -596,7 +594,7 @@ void FinishSpawningItem( gentity_t *ent )
         respawn = 45 + crandom() * 15;
         ent->s.eFlags |= EF_NODRAW;
         ent->r.contents = 0;
-        ent->nextthink = level.time + respawn * 1000;
+        ent->nextthink = (int)(level.time + respawn * 1000);
         ent->think = RespawnItem;
         return;
     }
@@ -647,8 +645,8 @@ void ClearRegisteredItems( void )
     memset( itemRegistered, 0, sizeof( itemRegistered ) );
 
     // players always start with the base weapon
- //   RegisterItem( BG_FindItemForWeapon( WP_MACHINEGUN ) );
-//    RegisterItem( BG_FindItemForWeapon( WP_GAUNTLET ) );
+    //   RegisterItem( BG_FindItemForWeapon( WP_MACHINEGUN ) );
+    //    RegisterItem( BG_FindItemForWeapon( WP_GAUNTLET ) );
 }
 
 /*
@@ -763,7 +761,7 @@ void G_BounceItem( gentity_t *ent, trace_t *trace )
     int		hitTime;
 
     // reflect the velocity on the trace plane
-    hitTime = level.previousTime + ( level.time - level.previousTime ) * trace->fraction;
+    hitTime = (int)(level.previousTime + ( level.time - level.previousTime ) * trace->fraction);
     BG_EvaluateTrajectoryDelta( &ent->s.pos, hitTime, velocity );
     dot = DotProduct( velocity, trace->plane.normal );
     VectorMA( velocity, -2*dot, trace->plane.normal, ent->s.pos.trDelta );
@@ -830,7 +828,7 @@ void G_RunItem( gentity_t *ent )
         mask = MASK_PLAYERSOLID & ~CONTENTS_BODY;//MASK_SOLID;
     }
     SV_Trace( &tr, ent->r.currentOrigin, ent->r.mins, ent->r.maxs, origin,
-                ent->r.ownerNum, mask, qfalse);
+              ent->r.ownerNum, mask, qfalse);
 
     VectorCopy( tr.endpos, ent->r.currentOrigin );
 

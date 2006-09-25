@@ -213,7 +213,7 @@ int BotNearbyGoal(bot_state_t *bs, int tfl, bot_goal_t *ltg, float range)
     {
         //if the bot is just a few secs away from the base
         if (botlib_export->aas.AAS_AreaTravelTimeToGoalArea(bs->areanum, bs->origin,
-                                              bs->teamgoal.areanum, TFL_DEFAULT) < 300)
+                bs->teamgoal.areanum, TFL_DEFAULT) < 300)
         {
             //make the range really small
             range = 50;
@@ -586,7 +586,7 @@ int BotGetLongTermGoal(bot_state_t *bs, int tfl, int retreat, bot_goal_t *goal)
     if (bs->ltgtype == LTG_DEFENDKEYAREA)
     {
         if (botlib_export->aas.AAS_AreaTravelTimeToGoalArea(bs->areanum, bs->origin,
-                                              bs->teamgoal.areanum, TFL_DEFAULT) > bs->defendaway_range)
+                bs->teamgoal.areanum, TFL_DEFAULT) > bs->defendaway_range)
         {
             bs->defendaway_time = 0;
         }
@@ -2646,7 +2646,7 @@ int AINode_Battle_NBG(bot_state_t *bs)
     bs->tfl |= TFL_GRAPPLEHOOK;
     //if in lava or slime the bot should be able to get out
     if (BotInLavaOrSlime(bs))
-		bs->tfl |= TFL_LAVA|TFL_SLIME;
+        bs->tfl |= TFL_LAVA|TFL_SLIME;
 
     //
     if (BotCanAndWantsToRocketJump(bs))

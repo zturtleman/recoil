@@ -152,7 +152,7 @@ void QDECL Com_Printf( const char *fmt, ... )
 
     if ( rd_buffer )
     {
-        if ((strlen (msg) + strlen(rd_buffer)) > (rd_buffersize - 1))
+        if ((strlen(msg) + strlen(rd_buffer)) > (unsigned int)(rd_buffersize - 1))
         {
             rd_flush(rd_buffer);
             *rd_buffer = 0;
@@ -479,7 +479,7 @@ void Com_StartupVariable( const char *match )
             Cvar_Set( s, Cmd_Argv(2) );
             cv = Cvar_Get( s, "", 0 );
             cv->flags |= CVAR_USER_CREATED;
-//			com_consoleLines[i] = 0;
+            //			com_consoleLines[i] = 0;
         }
     }
 }
@@ -1023,7 +1023,7 @@ void *Z_TagMalloc( int size, int tag )
 {
 #endif
     int		extra, allocSize;
-    memblock_t	*start, *rover, *new, *base;
+    memblock_t	*start, *rover, *nzone, *base;
     memzone_t *zone;
 
     if (!tag)
@@ -1082,14 +1082,14 @@ void *Z_TagMalloc( int size, int tag )
     if (extra > MINFRAGMENT)
     {
         // there will be a free fragment after the allocated block
-        new = (memblock_t *) ((byte *)base + size );
-        new->size = extra;
-        new->tag = 0;			// free block
-        new->prev = base;
-        new->id = ZONEID;
-        new->next = base->next;
-        new->next->prev = new;
-        base->next = new;
+        nzone = (memblock_t *) ((byte *)base + size );
+        nzone->size = extra;
+        nzone->tag = 0;			// free block
+        nzone->prev = base;
+        nzone->id = ZONEID;
+        nzone->next = base->next;
+        nzone->next->prev = nzone;
+        base->next = nzone;
         base->size = size;
     }
 
@@ -1296,7 +1296,7 @@ char *CopyString( const char *in )
             return ((char *)&numberstring[in[0]-'0']) + sizeof(memblock_t);
         }
     }
-    out = S_Malloc (strlen(in)+1);
+    out = (char *)S_Malloc (strlen(in)+1);
     strcpy (out, in);
     return out;
 }
@@ -1553,7 +1553,7 @@ void Com_InitSmallZoneMemory( void )
 {
     s_smallZoneTotal = 512 * 1024;
     // bk001205 - was malloc
-    smallzone = calloc( s_smallZoneTotal, 1 );
+    smallzone = (memzone_t *)calloc( s_smallZoneTotal, 1 );
     if ( !smallzone )
     {
         Com_Error( ERR_FATAL, "Small zone data failed to allocate %1.1f megs", (float)s_smallZoneTotal / (1024*1024) );
@@ -1579,7 +1579,7 @@ void Com_InitZoneMemory( void )
     }
 
     // bk001205 - was malloc
-    mainzone = calloc( s_zoneTotal, 1 );
+    mainzone = (memzone_t *)calloc( s_zoneTotal, 1 );
     if ( !mainzone )
     {
         Com_Error( ERR_FATAL, "Zone data failed to allocate %i megs", s_zoneTotal / (1024*1024) );
@@ -1722,7 +1722,7 @@ void Com_InitHunkMemory( void )
 
 
     // bk001205 - was malloc
-    s_hunkData = calloc( s_hunkTotal + 31, 1 );
+    s_hunkData = (byte *)calloc( s_hunkTotal + 31, 1 );
     if ( !s_hunkData )
     {
         Com_Error( ERR_FATAL, "Hunk data failed to allocate %i megs", s_hunkTotal / (1024*1024) );
@@ -2024,7 +2024,7 @@ void Hunk_FreeTempMemory( void *buf )
 
 
     hdr = ( (hunkHeader_t *)buf ) - 1;
-    if ( hdr->magic != HUNK_MAGIC )
+    if((unsigned int)hdr->magic != HUNK_MAGIC )
     {
         Com_Error( ERR_FATAL, "Hunk_FreeTempMemory: bad magic" );
     }
@@ -2100,18 +2100,18 @@ void Hunk_Trash( void )
 
     if ( hunk_permanent == &hunk_low )
     {
-        buf = (void *)(s_hunkData + hunk_permanent->permanent);
+        buf = (char *)(s_hunkData + hunk_permanent->permanent);
     }
     else
     {
-        buf = (void *)(s_hunkData + s_hunkTotal - hunk_permanent->permanent );
+        buf = (char *)(s_hunkData + s_hunkTotal - hunk_permanent->permanent );
     }
     length = hunk_permanent->permanent;
 
     if (length > 0x7FFFF)
     {
         //randomly trash data within buf
-        rnd = random() * (length - 0x7FFFF);
+        rnd = (int)(random() * (length - 0x7FFFF));
         value = 31;
         for (i = 0; i < 0x7FFFF; i++)
         {
@@ -2418,7 +2418,7 @@ int Com_EventLoop( void )
             // the event buffers are only large enough to hold the
             // exact payload, but channel messages need to be large
             // enough to hold fragment reassembly
-            if ( (unsigned)buf.cursize > buf.maxsize )
+            if(buf.cursize > buf.maxsize)
             {
                 Com_Printf("Com_EventLoop: oversize packet\n");
                 continue;
@@ -2564,7 +2564,7 @@ void Com_Init( char *commandLine )
     // cvar and command buffer management
     Com_ParseCommandLine( commandLine );
 
-//	Swap_Init ();
+    //	Swap_Init ();
     Cbuf_Init ();
 
     Com_InitZoneMemory();
@@ -2792,11 +2792,11 @@ int Com_ModifyMsec( int msec )
     }
     else if ( com_timescale->value )
     {
-        msec *= com_timescale->value;
+        msec = (int)(msec * com_timescale->value);
     }
     else if (com_cameraMode->integer)
     {
-        msec *= com_timescale->value;
+        msec = (int)(msec * com_timescale->value);
     }
 
     // don't let it scale below 1 msec

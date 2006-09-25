@@ -327,13 +327,13 @@ copied out.
 */
 qboolean Netchan_Process( netchan_t *chan, msg_t *msg )
 {
-    int			sequence;
-    int			qport;
-    int			fragmentStart, fragmentLength;
-    qboolean	fragmented;
+    int             sequence;
+    int             qport;
+    unsigned int    fragmentStart, fragmentLength;
+    qboolean        fragmented;
 
     // XOR unscramble all data in the packet after the header
-//	Netchan_UnScramblePacket( msg );
+    //	Netchan_UnScramblePacket( msg );
 
     // get sequence numbers
     MSG_BeginReadingOOB( msg );
@@ -436,7 +436,7 @@ qboolean Netchan_Process( netchan_t *chan, msg_t *msg )
         }
 
         // if we missed a fragment, dump the message
-        if ( fragmentStart != chan->fragmentLength )
+        if ( fragmentStart != (unsigned int)chan->fragmentLength )
         {
             if ( showdrop->integer || showpackets->integer )
             {
@@ -450,8 +450,7 @@ qboolean Netchan_Process( netchan_t *chan, msg_t *msg )
         }
 
         // copy the fragment to the fragment buffer
-        if ( fragmentLength < 0 || msg->readcount + fragmentLength > msg->cursize ||
-                chan->fragmentLength + fragmentLength > sizeof( chan->fragmentBuffer ) )
+        if ( fragmentLength < 0 || msg->readcount + fragmentLength > (unsigned int)msg->cursize || chan->fragmentLength + fragmentLength > sizeof( chan->fragmentBuffer ) )
         {
             if ( showdrop->integer || showpackets->integer )
             {

@@ -156,35 +156,35 @@ void QDECL BotImport_Print(int type, char *fmt, ...)
     switch(type)
     {
     case PRT_MESSAGE:
-    {
-        Com_Printf("%s", str);
-        break;
-    }
+        {
+            Com_Printf("%s", str);
+            break;
+        }
     case PRT_WARNING:
-    {
-        Com_Printf(S_COLOR_YELLOW "Warning: %s", str);
-        break;
-    }
+        {
+            Com_Printf(S_COLOR_YELLOW "Warning: %s", str);
+            break;
+        }
     case PRT_ERROR:
-    {
-        Com_Printf(S_COLOR_RED "Error: %s", str);
-        break;
-    }
+        {
+            Com_Printf(S_COLOR_RED "Error: %s", str);
+            break;
+        }
     case PRT_FATAL:
-    {
-        Com_Printf(S_COLOR_RED "Fatal: %s", str);
-        break;
-    }
+        {
+            Com_Printf(S_COLOR_RED "Fatal: %s", str);
+            break;
+        }
     case PRT_EXIT:
-    {
-        Com_Error(ERR_DROP, S_COLOR_RED "Exit: %s", str);
-        break;
-    }
+        {
+            Com_Error(ERR_DROP, S_COLOR_RED "Exit: %s", str);
+            break;
+        }
     default:
-    {
-        Com_Printf("unknown print type\n");
-        break;
-    }
+        {
+            Com_Printf("unknown print type\n");
+            break;
+        }
     }
 }
 
@@ -470,10 +470,10 @@ extern qboolean gamelib_started;
 void SV_BotFrame( int time )
 {
     if (!bot_enable)
-		return;
+        return;
     //NOTE: maybe the game is already shutdown
     if (!gamelib_started)
-		return;
+        return;
 
     BotAIStartFrame(time);
 }
@@ -574,7 +574,7 @@ void SV_BotInitBotLib(void)
 
     if (debugpolygons) Z_Free(debugpolygons);
     bot_maxdebugpolys = Cvar_VariableIntegerValue("bot_maxdebugpolys");
-    debugpolygons = Z_Malloc(sizeof(bot_debugpoly_t) * bot_maxdebugpolys);
+    debugpolygons = (bot_debugpoly_t *)Z_Malloc(sizeof(bot_debugpoly_t) * bot_maxdebugpolys);
 
     botlib_import.Print = BotImport_Print;
     botlib_import.Trace = BotImport_Trace;

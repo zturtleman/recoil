@@ -267,7 +267,7 @@ cvar_t *Cvar_Get( const char *var_name, const char *var_value, int flags )
             Z_Free( s );
         }
 
-// use a CVAR_SET for rom sets, get won't override
+        // use a CVAR_SET for rom sets, get won't override
 #if 0
         // CVAR_ROM always overrides
         if ( flags & CVAR_ROM )
@@ -564,7 +564,7 @@ void Cvar_Toggle_f( void )
         return;
     }
 
-    v = Cvar_VariableValue( Cmd_Argv( 1 ) );
+    v = (int)(Cvar_VariableValue( Cmd_Argv( 1 ) ));
     v = !v;
 
     Cvar_Set2 (Cmd_Argv(1), va("%i", v), qfalse);

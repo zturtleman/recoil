@@ -58,7 +58,7 @@ winding_t	*AllocWinding (int points)
         c_peak_windings = c_active_windings;
 
     s = sizeof(vec_t)*3*points + sizeof(int);
-    w = Z_Malloc (s);
+    w = (winding_t *)Z_Malloc (s);
     Com_Memset (w, 0, s);
     return w;
 }
@@ -206,7 +206,7 @@ winding_t *BaseWindingForPlane (vec3_t normal, vec_t dist)
     vec3_t	org, vright, vup;
     winding_t	*w;
 
-// find the major axis
+    // find the major axis
 
     max = -MAX_MAP_BOUNDS;
     x = -1;
@@ -245,7 +245,7 @@ winding_t *BaseWindingForPlane (vec3_t normal, vec_t dist)
     VectorScale (vup, MAX_MAP_BOUNDS, vup);
     VectorScale (vright, MAX_MAP_BOUNDS, vright);
 
-// project a really big	axis aligned box onto the plane
+    // project a really big	axis aligned box onto the plane
     w = AllocWinding (4);
 
     VectorSubtract (org, vright, w->p[0]);
@@ -321,7 +321,7 @@ void	ClipWindingEpsilon (winding_t *in, vec3_t normal, vec_t dist,
 
     counts[0] = counts[1] = counts[2] = 0;
 
-// determine sides for each point
+    // determine sides for each point
     for (i=0 ; i<in->numpoints ; i++)
     {
         dot = DotProduct (in->p[i], normal);
@@ -434,7 +434,7 @@ void ChopWindingInPlace (winding_t **inout, vec3_t normal, vec_t dist, vec_t eps
     in = *inout;
     counts[0] = counts[1] = counts[2] = 0;
 
-// determine sides for each point
+    // determine sides for each point
     for (i=0 ; i<in->numpoints ; i++)
     {
         dot = DotProduct (in->p[i], normal);

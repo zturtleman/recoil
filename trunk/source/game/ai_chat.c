@@ -250,7 +250,7 @@ char *BotRandomOpponentName(bot_state_t *bs)
         opponents[numopponents] = i;
         numopponents++;
     }
-    count = random() * numopponents;
+    count = (int)(random() * numopponents);
     for (i = 0; i < numopponents; i++)
     {
         count--;
@@ -332,7 +332,7 @@ char *BotRandomWeaponName(void)
 {
     int rnd;
 
-    rnd = random() * 8.9;
+    rnd = (int)(random() * 8.9);
     switch(rnd)
     {
     case 0:
@@ -824,12 +824,12 @@ int BotChat_HitTalking(bot_state_t *bs)
     float rnd;
 
     if (bot_nochat->integer || bs->lastchat_time > FloatTime() - TIME_BETWEENCHATTING || BotNumActivePlayers() <= 1 || !lasthurt_client || lasthurt_client == bs->client || lasthurt_client < 0 || lasthurt_client >= MAX_CLIENTS)
-		return qfalse;
+        return qfalse;
 
     rnd = botlib_export->ai.Characteristic_BFloat(bs->character, CHARACTERISTIC_CHAT_HITTALKING, 0, 1);
 
     if (TeamPlayIsOn() || gametype == GT_TOURNAMENT || (!bot_fastchat->integer && random() > rnd * 0.5) || !BotValidChatPosition(bs))
-		return qfalse;
+        return qfalse;
 
     ClientName(g_entities[bs->client].client->lasthurt_entity->s.number, name, sizeof(name));
     weap = BotWeaponNameForMeansOfDeath(g_entities[bs->client].client->lasthurt_entity->s.number);
@@ -853,17 +853,17 @@ int BotChat_HitNoDeath(bot_state_t *bs)
     aas_entityinfo_t entinfo;
 
     if (!lasthurt_client || lasthurt_client == bs->client || lasthurt_client < 0 || lasthurt_client >= MAX_CLIENTS || bot_nochat->integer || bs->lastchat_time > FloatTime() - TIME_BETWEENCHATTING || BotNumActivePlayers() <= 1)
-		return qfalse;
+        return qfalse;
 
     rnd = botlib_export->ai.Characteristic_BFloat(bs->character, CHARACTERISTIC_CHAT_HITNODEATH, 0, 1);
 
     if (TeamPlayIsOn() || gametype == GT_TOURNAMENT || (!bot_fastchat->integer && random() > rnd * 0.5) || !BotValidChatPosition(bs) || BotVisibleEnemies(bs))
-		return qfalse;
+        return qfalse;
 
     BotEntityInfo(bs->enemy, &entinfo);
 
     if (EntityIsShooting(&entinfo))
-		return qfalse;
+        return qfalse;
 
     ClientName(lasthurt_client, name, sizeof(name));
     weap = BotWeaponNameForMeansOfDeath(g_entities[bs->client].client->lasthurt_mod);

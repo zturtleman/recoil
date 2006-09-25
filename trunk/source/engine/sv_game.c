@@ -54,7 +54,7 @@ Disconnects the client with a message
 void SV_GameDropClient( int clientNum, const char *reason )
 {
     if ( clientNum >= 0 && clientNum < sv_maxclients->integer )
-		SV_DropClient( svs.clients + clientNum, reason );
+        SV_DropClient( svs.clients + clientNum, reason );
 }
 
 /*
@@ -273,7 +273,7 @@ void SV_ShutdownGameProgs( void )
         return;
     }
     G_ShutdownGame(qfalse);
-	gamelib_started = qfalse;
+    gamelib_started = qfalse;
 }
 
 /*
@@ -300,7 +300,7 @@ static void SV_InitGameVM( qboolean restart )
     // use the current msec count for a random seed
     // init for this gamestate
     G_InitGame(svs.time, Com_Milliseconds(), restart);
-	gamelib_started = qtrue;
+    gamelib_started = qtrue;
 }
 
 
@@ -336,9 +336,9 @@ void SV_InitGameProgs( void )
     cvar_t	*var = Cvar_Get( "bot_enable", "1", CVAR_LATCH );
     extern int	bot_enable;
 
-	bot_enable = (var) ? var->integer : 0;
+    bot_enable = (var) ? var->integer : 0;
 
-     SV_InitGameVM( qfalse );
+    SV_InitGameVM( qfalse );
 }
 
 /*

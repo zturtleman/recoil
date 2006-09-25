@@ -42,8 +42,8 @@ void UpdateTournamentInfo( void )
     int			i;
     gentity_t	*player;
     int			playerClientNum;
-    int			n, accuracy, perfect,	msglen;
-    int			buflen;
+    int			n, accuracy, perfect;
+    unsigned int        buflen, msglen;
     char		buf[32];
     char		msg[MAX_STRING_CHARS];
 

@@ -72,8 +72,8 @@ void P_DamageFeedback( gentity_t *player )
     else
     {
         vectoangles( client->damage_from, angles );
-        client->ps.damagePitch = angles[PITCH]/360.0 * 256;
-        client->ps.damageYaw = angles[YAW]/360.0 * 256;
+        client->ps.damagePitch = (int)(angles[PITCH]/360.0 * 256);
+        client->ps.damageYaw = (int)(angles[YAW]/360.0 * 256);
     }
 
     // play an apropriate pain sound
@@ -85,7 +85,7 @@ void P_DamageFeedback( gentity_t *player )
     }
 
 
-    client->ps.damageCount = count;
+    client->ps.damageCount = (int)(count);
 
     //
     // clear totals
@@ -117,7 +117,7 @@ void P_WorldEffects( gentity_t *ent )
 
     waterlevel = ent->waterlevel;
 
-    envirosuit = ent->client->ps.powerups[PW_BATTLESUIT] > level.time;
+    envirosuit = (ent->client->ps.powerups[PW_BATTLESUIT] > level.time) ? qtrue : qfalse;
 
     //
     // check for drowning
@@ -211,14 +211,14 @@ G_SetClientSound
 */
 void G_SetClientSound( gentity_t *ent )
 {
-        if (ent->waterlevel && (ent->watertype&(CONTENTS_LAVA|CONTENTS_SLIME)) )
-        {
-            ent->client->ps.loopSound = level.snd_fry;
-        }
-        else
-        {
-            ent->client->ps.loopSound = 0;
-        }
+    if (ent->waterlevel && (ent->watertype&(CONTENTS_LAVA|CONTENTS_SLIME)) )
+    {
+        ent->client->ps.loopSound = level.snd_fry;
+    }
+    else
+    {
+        ent->client->ps.loopSound = 0;
+    }
 }
 
 
@@ -369,7 +369,7 @@ SpectatorThink
 */
 void SV_PM_Trace(trace_t *results, const vec3_t start, vec3_t mins, vec3_t maxs, const vec3_t end, int passEntityNum, int contentmask)
 {
-	SV_Trace(results, start, mins, maxs, end, passEntityNum, contentmask, qfalse);
+    SV_Trace(results, start, mins, maxs, end, passEntityNum, contentmask, qfalse);
 }
 
 void SpectatorThink( gentity_t *ent, usercmd_t *ucmd )
@@ -479,7 +479,7 @@ void ClientTimerActions( gentity_t *ent, int msec )
                 ent->health += 15;
                 if ( ent->health > client->ps.stats[STAT_MAX_HEALTH] * 1.1 )
                 {
-                    ent->health = client->ps.stats[STAT_MAX_HEALTH] * 1.1;
+                    ent->health = (int)(client->ps.stats[STAT_MAX_HEALTH] * 1.1);
                 }
                 G_AddEvent( ent, EV_POWERUP_REGEN, 0 );
             }
@@ -528,7 +528,7 @@ void ClientIntermissionThink( gclient_t *client )
     if ( client->buttons & ( BUTTON_ATTACK | BUTTON_USE_HOLDABLE ) & ( client->oldbuttons ^ client->buttons ) )
     {
         // this used to be an ^1 but once a player says ready, it should stick
-        client->readyToExit = 1;
+        client->readyToExit = qtrue;
     }
 }
 
@@ -547,7 +547,7 @@ void ClientEvents( gentity_t *ent, int oldEventSequence )
     int		event;
     gclient_t *client;
     vec3_t	origin, angles;
-//	qboolean	fired;
+    //	qboolean	fired;
     gitem_t *item;
     gentity_t *drop;
 
@@ -712,7 +712,7 @@ void ClientThink_real( gentity_t *ent )
     if ( ucmd->serverTime > level.time + 200 )
         ucmd->serverTime = level.time + 200;
 
-	if ( ucmd->serverTime < level.time - 1000 )
+    if ( ucmd->serverTime < level.time - 1000 )
         ucmd->serverTime = level.time - 1000;
 
     msec = ucmd->serverTime - client->ps.commandTime;
@@ -764,20 +764,20 @@ void ClientThink_real( gentity_t *ent )
     else
         client->ps.pm_type = PM_NORMAL;
 
-    client->ps.gravity = g_gravity->value;
+    client->ps.gravity = (int)g_gravity->value;
 
     // set speed
-    client->ps.speed = g_speed->value;
+    client->ps.speed = (int)g_speed->value;
 
     if ( client->ps.powerups[PW_HASTE] )
-        client->ps.speed *= 1.3;
+        client->ps.speed = (int)(client->ps.speed * 1.3);
 
     // Let go of the hook if we aren't firing
-	if(client->hook)
-	{
-		if(!(ucmd->buttons & BUTTON_ATTACK))
-			Weapon_HookFree(client->hook);
-	}
+    if(client->hook)
+    {
+        if(!(ucmd->buttons & BUTTON_ATTACK))
+            Weapon_HookFree(client->hook);
+    }
 
     // set up for pmove
     oldEventSequence = client->ps.eventSequence;
@@ -807,7 +807,7 @@ void ClientThink_real( gentity_t *ent )
     pm.trace = SV_PM_Trace;
     pm.pointcontents = SV_PointContents;
     pm.debugLevel = g_debugMove->integer;
-    pm.noFootsteps = ( g_dmflags->integer & DF_NO_FOOTSTEPS ) > 0;
+    pm.noFootsteps = ((g_dmflags->integer & DF_NO_FOOTSTEPS) > 0) ? qtrue : qfalse;
 
     pm.pmove_fixed = pmove_fixed->integer | client->pers.pmoveFixed;
     pm.pmove_msec = pmove_msec->integer;
@@ -1041,8 +1041,8 @@ void ClientEndFrame( gentity_t *ent )
     SendPendingPredictableEvents( &ent->client->ps );
 
     // set the bit for the reachability area the client is currently in
-//	i = botlib_export->aas.AAS_PointReachabilityAreaIndex( ent->client->ps.origin );
-//	ent->client->areabits[i >> 3] |= 1 << (i & 7);
+    //	i = botlib_export->aas.AAS_PointReachabilityAreaIndex( ent->client->ps.origin );
+    //	ent->client->areabits[i >> 3] |= 1 << (i & 7);
 }
 
 

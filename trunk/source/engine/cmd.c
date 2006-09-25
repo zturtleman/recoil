@@ -217,9 +217,9 @@ void Cbuf_Execute (void)
         Com_Memcpy (line, text, i);
         line[i] = 0;
 
-// delete the text from the command buffer and move remaining commands down
-// this is necessary because commands (exec) can insert data at the
-// beginning of the text buffer
+        // delete the text from the command buffer and move remaining commands down
+        // this is necessary because commands (exec) can insert data at the
+        // beginning of the text buffer
 
         if (i == cmd_text.cursize)
             cmd_text.cursize = 0;
@@ -230,7 +230,7 @@ void Cbuf_Execute (void)
             memmove (text, text+i, cmd_text.cursize);
         }
 
-// execute the command line
+        // execute the command line
 
         Cmd_ExecuteString (line);
     }
@@ -335,10 +335,10 @@ typedef struct cmd_function_s
 cmd_function_t;
 
 
-static	int			cmd_argc;
-static	char		*cmd_argv[MAX_STRING_TOKENS];		// points into cmd_tokenized
-static	char		cmd_tokenized[BIG_INFO_STRING+MAX_STRING_TOKENS];	// will have 0 bytes inserted
-static	char		cmd_cmd[BIG_INFO_STRING]; // the original command we received (no token processing)
+static	unsigned int     cmd_argc;
+static	char             *cmd_argv[MAX_STRING_TOKENS];		// points into cmd_tokenized
+static	char             cmd_tokenized[BIG_INFO_STRING+MAX_STRING_TOKENS];	// will have 0 bytes inserted
+static	char             cmd_cmd[BIG_INFO_STRING]; // the original command we received (no token processing)
 
 static	cmd_function_t	*cmd_functions;		// possible commands to execute
 
@@ -357,7 +357,7 @@ int		Cmd_Argc( void )
 Cmd_Argv
 ============
 */
-char	*Cmd_Argv( int arg )
+char	*Cmd_Argv( unsigned int arg )
 {
     if ( (unsigned)arg >= cmd_argc )
     {
@@ -389,8 +389,8 @@ Returns a single string containing argv(1) to argv(argc()-1)
 */
 char	*Cmd_Args( void )
 {
-    static	char		cmd_args[MAX_STRING_CHARS];
-    int		i;
+    static char     cmd_args[MAX_STRING_CHARS];
+    unsigned int    i;
 
     cmd_args[0] = 0;
     for ( i = 1 ; i < cmd_argc ; i++ )
@@ -412,10 +412,10 @@ Cmd_Args
 Returns a single string containing argv(arg) to argv(argc()-1)
 ============
 */
-char *Cmd_ArgsFrom( int arg )
+char *Cmd_ArgsFrom( unsigned int arg )
 {
-    static	char		cmd_args[BIG_INFO_STRING];
-    int		i;
+    static char     cmd_args[BIG_INFO_STRING];
+    unsigned int    i;
 
     cmd_args[0] = 0;
     if (arg < 0)
@@ -619,7 +619,7 @@ void	Cmd_AddCommand( const char *cmd_name, xcommand_t function )
     }
 
     // use a small malloc to avoid zone fragmentation
-    cmd = S_Malloc (sizeof(cmd_function_t));
+    cmd = (cmd_function_t *)S_Malloc (sizeof(cmd_function_t));
     cmd->name = CopyString( cmd_name );
     cmd->function = function;
     cmd->next = cmd_functions;

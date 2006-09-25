@@ -228,7 +228,7 @@ int CM_BoxBrushes( const vec3_t mins, const vec3_t maxs, cbrush_t **list, int li
     VectorCopy( maxs, ll.bounds[1] );
     ll.count = 0;
     ll.maxcount = listsize;
-    ll.list = (void *)list;
+    ll.list = (int *)list;
     ll.storeLeafs = CM_StoreBrushes;
     ll.lastLeaf = 0;
     ll.overflowed = qfalse;
@@ -285,8 +285,8 @@ int CM_PointContents( const vec3_t p, clipHandle_t model )
         for ( i = 0 ; i < b->numsides ; i++ )
         {
             d = DotProduct( p, b->sides[i].plane->normal );
-// FIXME test for Cash
-//			if ( d >= b->sides[i].plane->dist ) {
+            // FIXME test for Cash
+            //			if ( d >= b->sides[i].plane->dist ) {
             if ( d > b->sides[i].plane->dist )
             {
                 break;
