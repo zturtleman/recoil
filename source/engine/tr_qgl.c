@@ -3092,7 +3092,7 @@ qboolean QGL_Init( const char *dllname )
 {
 	if(!DynlibOpen(&glw_state.openglLibrary, dllname))
 	{
-		CL_RefPrintf(PRINT_ALL, "QGL_Init: Can't load %s from /etc/ld.so.conf or current dir: %s\n", dllname, dlerror());
+		CL_RefPrintf(PRINT_ALL, "QGL_Init: Can't load %s\n", dllname);
 		return qfalse;
 	}
 

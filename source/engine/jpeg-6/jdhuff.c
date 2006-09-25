@@ -446,6 +446,9 @@ decode_mcu (j_decompress_ptr cinfo, JBLOCKROW *MCU_data)
   d_derived_tbl * actbl;
   jpeg_component_info * compptr;
 
+    br_state.get_buffer = 0;
+    br_state.bits_left = 0;
+
   /* Process restart marker if needed; may have to suspend */
   if (cinfo->restart_interval) {
     if (entropy->restarts_to_go == 0)

@@ -46,7 +46,7 @@ typedef struct
 
 	// special tools
 	void (* waterErode)(float count, float length, float erode, float size, float minx, float miny, float maxx, float maxy, float color[4]);
-	void (* BuildTextureFromScript)(unsigned char *buffer, unsigned int script_size, int width, int height);
+	void (* BuildTextureFromScript)(char *buffer, unsigned int script_size, int width, int height);
 }
 tg_interface_t;
 

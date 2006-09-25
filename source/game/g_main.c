@@ -224,7 +224,7 @@ void G_FindTeams( void )
     Com_Printf ("%i teams with %i entities\n", c, c2);
 }
 
-void G_RemapTeamShaders()
+void G_RemapTeamShaders(void)
 {
 }
 

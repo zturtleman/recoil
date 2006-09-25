@@ -486,7 +486,7 @@ void Shader_Convert(shader_t *pShader)
 	glShader_t shader;
 
 	pShader->glShader = NULL;
-	if(pShader->sort < SS_OPAQUE || pShader->glShaderFailed || (pShader->stages[0] && pShader->stages[0]->stateBits & GLS_DSTBLEND_BITS != GLS_DSTBLEND_ZERO && countStages(pShader)))
+	if(pShader->sort < SS_OPAQUE || pShader->glShaderFailed || (pShader->stages[0] && (pShader->stages[0]->stateBits & GLS_DSTBLEND_BITS) != GLS_DSTBLEND_ZERO && countStages(pShader)))
 	{
 		pShader->glShaderFailed = qtrue;
 		return;

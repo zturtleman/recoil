@@ -1078,6 +1078,14 @@ int AAS_Reachability_Step_Barrier_WaterJump_WalkOffLedge(int area1num, int area2
 	aas_lreachability_t *lreach;
 	aas_trace_t trace;
 
+        VectorClear(water_bestend);
+        VectorClear(water_bestnormal);
+        VectorClear(water_beststart);
+
+        VectorClear(ground_bestend);
+        VectorClear(ground_bestnormal);
+        VectorClear(ground_beststart);
+
 	//must be able to walk or swim in the first area
 	if (!AAS_AreaGrounded(area1num) && !AAS_AreaSwim(area1num)) return qfalse;
 	//
@@ -2392,6 +2400,8 @@ int AAS_Reachability_Ladder(int area1num, int area2num)
 	aas_edge_t *sharededge, *edge1;
 	aas_lreachability_t *lreach;
 	aas_trace_t trace;
+
+        VectorClear(lowestpoint);
 
 	if (!AAS_AreaLadder(area1num) || !AAS_AreaLadder(area2num)) return qfalse;
 	//

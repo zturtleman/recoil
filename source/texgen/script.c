@@ -14,12 +14,12 @@ static char *curtoken;
 #define Integer(n) atoi(script_argv[n])
 #define String(n) script_argv[n]
 
-static void script_tokenclear()
+static void script_tokenclear(void)
 {
 	curtoken = temptoken;
 }
 
-static unsigned char *script_gettoken(char **start, char *end)
+static char *script_gettoken(char **start, char *end)
 {
 	char *in = *start, *out, *temp;
 	if (in >= end)
@@ -48,32 +48,32 @@ static unsigned char *script_gettoken(char **start, char *end)
 	return temp; // return the token
 }
 
-static void sc_clear()
+static void sc_clear(void)
 {
 	tgClear(Float(1), Float(2), Float(3), Float(4), Float(5));
 }
 
-static void sc_seed()
+static void sc_seed(void)
 {
 	tgSeed(Integer(1));
 }
 
-static void sc_colornoise()
+static void sc_colornoise(void)
 {
 	tgColorNoise(Integer(1), Float(2), Float(3));
 }
 
-static void sc_bumpnoise()
+static void sc_bumpnoise(void)
 {
 	tgBumpNoise(Integer(1), Float(2), Float(3));
 }
 
-static void sc_brickwall()
+static void sc_brickwall(void)
 {
 	tgBrickMask(Float(1), Float(2), Float(3), Float(4));
 }
 
-static void sc_watererode()
+static void sc_watererode(void)
 {
 	float color[4];
 
@@ -85,12 +85,12 @@ static void sc_watererode()
 	tgWaterErode(Float(1), Float(2), Float(3), Float(4), Float(5), Float(6), Float(7), Float(8), color);
 }
 
-static void sc_combineMask()
+static void sc_combineMask(void)
 {
 	tgCombineMask(String(1), String(2), String(3));
 }
 
-static void sc_light()
+static void sc_light(void)
 {
 	float light[3], lcolor[3];
 
@@ -103,22 +103,22 @@ static void sc_light()
 	tgLight(light, lcolor);
 }
 
-static void sc_normalmap()
+static void sc_normalmap(void)
 {
 	tgNormalmap();
 }
 
-static void sc_movezoom()
+static void sc_movezoom(void)
 {
 	tgMovezoom(Float(1), Float(2), Float(3), Float(4));
 }
 
-static void sc_gaussian()
+static void sc_gaussian(void)
 {
 	tgGaussian(Float(1));
 }
 
-static void sc_noisemask()
+static void sc_noisemask(void)
 {
 	tgNoiseMask(Integer(1), Float(2), Float(3));
 }
@@ -127,7 +127,7 @@ typedef struct
 {
 	char *name;
 	char *usage;
-	void (*code)();
+	void (*code)(void);
 	unsigned short least, most;
 } sccommand_t;
 
@@ -148,11 +148,10 @@ static sccommand_t script_command[] =
 	{NULL, NULL, NULL, 0, 0} // end of the list
 };
 
-void script_execute(unsigned char *script, unsigned int scriptsize, int width, int height)
+void script_execute(char *script, unsigned int scriptsize, int width, int height)
 {
 	int i, len;
 	char *in, *end, *token;
-	unsigned char *data;
 
 	in = script;
 	end = script + scriptsize;

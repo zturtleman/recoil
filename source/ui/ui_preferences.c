@@ -407,8 +407,6 @@ Preferences_Cache
 */
 void Preferences_Cache( void )
 {
-    int		n;
-
     RE_RegisterShaderNoMip( ART_FRAMEL );
     RE_RegisterShaderNoMip( ART_FRAMER );
     RE_RegisterShaderNoMip( ART_BACK0 );

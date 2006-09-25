@@ -1578,6 +1578,11 @@ void CM_TraceThroughPatchCollide( traceWork_t *tw, const struct patchCollide_s *
     static cvar_t *cv;
 #endif //BSPC
 
+    bestplane[0] = 0;
+    bestplane[1] = 0;
+    bestplane[2] = 0;
+    bestplane[3] = 0;
+
     if (tw->isPoint)
     {
         CM_TracePointThroughPatchCollide( tw, pc );

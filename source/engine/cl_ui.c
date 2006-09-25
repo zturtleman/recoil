@@ -810,6 +810,7 @@ void CL_ShutdownUI( void )
     UI_Shutdown();
 }
 
+void UI_Init(void);
 void CL_InitUI(void)
 {
 	cls.uiStarted = qtrue;

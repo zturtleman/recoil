@@ -29,6 +29,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #define qglExtern(p, name) extern p q ## name
 #define qglDeclare(p, name) p q ## name
 #define qglGetFunction(p, name) do { q ## name = (p)qwglGetProcAddress( #name ); if( q ## name == NULL ) CL_RefPrintf( PRINT_ALL, "...!q" #name "\n"); } while(0)
+void *qwglGetProcAddress(char *symbol);
 
 #if defined( __LINT__ )
 #include <GL/gl.h>

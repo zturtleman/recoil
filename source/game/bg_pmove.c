@@ -48,6 +48,7 @@ float	pm_spectatorfriction = 5.0f;
 
 int		c_pmove = 0;
 
+int bgGetAttackTime(int number, int weapon, qboolean a, qboolean d, qboolean alt);
 
 /*
 ===============

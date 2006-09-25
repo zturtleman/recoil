@@ -100,7 +100,7 @@ ifeq ($(PLATFORM),linux)
   endif
   endif
 
-  BASE_CFLAGS = -Wall -fno-strict-aliasing -Wimplicit -Wstrict-prototypes -pipe
+  BASE_CFLAGS = -Wall -fno-strict-aliasing -Wimplicit -Wstrict-prototypes -pipe -Werror
 
   OPTIMIZE = -O3 -ffast-math -funroll-loops -fomit-frame-pointer
 
@@ -231,12 +231,12 @@ else # ifeq darwin
 # SETUP AND BUILD -- MINGW32
 #############################################################################
 ifeq ($(PLATFORM),mingw32)
-  CC=gcc
-  WINDRES=windres
+  CC=i586-mingw32msvc-gcc
+  WINDRES=i586-mingw32msvc-windres
 
   ARCH=x86
 
-  BASE_CFLAGS = -Wall -fno-strict-aliasing -Wimplicit -Wstrict-prototypes
+  BASE_CFLAGS = -Wall -fno-strict-aliasing -Wimplicit -Wstrict-prototypes -D_WIN32=1
 
   GL_CFLAGS =
   MINGW_CFLAGS = -DDONT_TYPEDEF_INT32
@@ -448,15 +448,27 @@ ifeq ($(USE_CCACHE),1)
   CC := ccache $(CC)
 endif
 
+
 DO_CC=$(CC) $(NOTSHLIBCFLAGS) $(CFLAGS) -o $@ -c $<
-DO_SMP_CC=$(CC) $(NOTSHLIBCFLAGS) $(CFLAGS) -DSMP -o $@ -c $<
-DO_BOT_CC=$(CC) $(NOTSHLIBCFLAGS) $(CFLAGS) $(BOTCFLAGS) -DBOTLIB -o $@ -c $<   # $(SHLIBCFLAGS) # bk001212
-DO_DEBUG_CC=$(CC) $(NOTSHLIBCFLAGS) $(DEBUG_CFLAGS) -o $@ -c $<
+DO_GL_CC=$(DO_CC) $(GL_CFLAGS) $(MINGW_CFLAGS)
+DO_TGD_CC=$(CC) -DLIBTEXGEN=\"$(LIBSDIR)libtexgen.$(ARCH)$(SHLIBEXT)\" $(NOTSHLIBCFLAGS) $(CFLAGS) -o $@ -c $<
+DO_SMP_CC=$(CC) $(NOTSHLIBCFLAGS) $(CFLAGS) -DSMP -o $@ -c $< $(SAVEOUTPUT)
+DO_BOT_CC=$(CC) $(NOTSHLIBCFLAGS) $(CFLAGS) $(BOTCFLAGS) -DBOTLIB -o $@ -c $<
 DO_SHLIB_CC=$(CC) $(CFLAGS) $(SHLIBCFLAGS) -o $@ -c $<
-DO_SHLIB_DEBUG_CC=$(CC) $(DEBUG_CFLAGS) $(SHLIBCFLAGS) -o $@ -c $<
-DO_AS=$(CC) $(CFLAGS) -DELF -x assembler-with-cpp -o $@ -c $<
 DO_DED_CC=$(CC) $(NOTSHLIBCFLAGS) -DDEDICATED $(CFLAGS) -o $@ -c $<
 DO_WINDRES=$(WINDRES) -i $< -o $@
+
+## ifneq ($(SAVEOUTPUT),0)
+##   SAVEOUTPUT= >> output.txt 2>&1
+##   DO_CC += $(SAVEOUTPUT)
+##   DO_GL_CC += $(SAVEOUTPUT)
+##   DO_TGD_CC += $(SAVEOUTPUT)
+##   DO_SMP_CC += $(SAVEOUTPUT)
+##   DO_BOT_CC += $(SAVEOUTPUT)
+##   DO_SHLIB_CC += $(SAVEOUTPUT)
+##   DO_DED_CC += $(SAVEOUTPUT)
+##   DO_WINDRES += $(SAVEOUTPUT)
+## endif
 
 RBC=$(SO)engine/client-$(B)/
 RBD=$(SO)engine/ded-$(B)/
@@ -467,23 +479,26 @@ TE=$(SO)tgEdit/$(B)/
 # MAIN TARGETS
 #############################################################################
 
-default:build_release
+default: build_release
 
 debug: build_debug
 release: build_release
 
 build_debug: B=$(BD)
 build_debug: makedirs
-	$(MAKE)  targets B=$(BD) CFLAGS="$(CFLAGS) $(DEBUG_CFLAGS) $(DEPEND_CFLAGS)"
+	$(MAKE) targets B=$(BD) CFLAGS="$(CFLAGS) $(DEBUG_CFLAGS) $(DEPEND_CFLAGS)"
 
 build_release: B=$(BR)
 build_release: makedirs
-	$(MAKE)  targets B=$(BR) CFLAGS="$(CFLAGS) $(RELEASE_CFLAGS) $(DEPEND_CFLAGS)"
+	$(MAKE) targets B=$(BR) CFLAGS="$(CFLAGS) $(RELEASE_CFLAGS) $(DEPEND_CFLAGS)"
 
 #Build both debug and release builds
 all:build_debug build_release
 
-targets: $(TARGETS)
+targets: clear_output $(TARGETS)
+
+clear_output:
+	@if [ -d output.txt ]; then rm output.txt; fi
 
 makedirs:
 	@if [ ! -d $(SO)engine/client-$(B) ];then $(MKDIR) $(SO)engine/client-$(B);fi
@@ -785,7 +800,7 @@ $(RBC)jcomapi.o: $(SO)engine/jpeg-6/jcomapi.c; $(DO_CC)
 $(RBC)jdatasrc.o: $(SO)engine/jpeg-6/jdatasrc.c; $(DO_CC)
 $(RBC)jdmerge.o: $(SO)engine/jpeg-6/jdmerge.c; $(DO_CC)
 $(RBC)jidctflt.o: $(SO)engine/jpeg-6/jidctflt.c; $(DO_CC)
-$(RBC)jmemnobs.o: $(SO)engine/jpeg-6/jmemnobs.c; $(DO_CC) $(GL_CFLAGS) $(MINGW_CFLAGS)
+$(RBC)jmemnobs.o: $(SO)engine/jpeg-6/jmemnobs.c; $(DO_GL_CC)
 $(RBC)jccoefct.o: $(SO)engine/jpeg-6/jccoefct.c; $(DO_CC)
 $(RBC)jcparam.o: $(SO)engine/jpeg-6/jcparam.c; $(DO_CC)
 $(RBC)jdcoefct.o: $(SO)engine/jpeg-6/jdcoefct.c; $(DO_CC)
@@ -811,7 +826,7 @@ $(RBC)jutils.o: $(SO)engine/jpeg-6/jutils.c; $(DO_CC)
 $(RBC)jcinit.o: $(SO)engine/jpeg-6/jcinit.c; $(DO_CC)
 $(RBC)jctrans.o: $(SO)engine/jpeg-6/jctrans.c; $(DO_CC)
 $(RBC)jdinput.o: $(SO)engine/jpeg-6/jdinput.c; $(DO_CC)
-$(RBC)jerror.o: $(SO)engine/jpeg-6/jerror.c; $(DO_CC) $(GL_CFLAGS) $(MINGW_CFLAGS)
+$(RBC)jerror.o: $(SO)engine/jpeg-6/jerror.c; $(DO_GL_CC) 
 $(RBC)jmemansi.o: $(SO)engine/jpeg-6/jmemansi.c; $(DO_CC)
 $(RBC)jcmainct.o: $(SO)engine/jpeg-6/jcmainct.c; $(DO_CC)
 $(RBC)jdapimin.o: $(SO)engine/jpeg-6/jdapimin.c; $(DO_CC)
@@ -848,28 +863,28 @@ $(RBC)tr_qgl.o: $(SO)engine/tr_qgl.c; $(DO_CC) $(GL_CFLAGS)
 $(RBC)cl_cgame.o: $(SO)engine/cl_cgame.c; $(DO_CC)
 $(RBC)cm_test.o: $(SO)engine/cm_test.c; $(DO_CC)
 $(RBC)snd_wavelet.o: $(SO)engine/snd_wavelet.c; $(DO_CC)
-$(RBC)tr_cmds.o: $(SO)engine/tr_cmds.c; $(DO_CC) $(GL_CFLAGS)
-$(RBC)tr_rtt.o: $(SO)engine/tr_rtt.c; $(DO_CC) $(GL_CFLAGS)
+$(RBC)tr_cmds.o: $(SO)engine/tr_cmds.c; $(DO_GL_CC)
+$(RBC)tr_rtt.o: $(SO)engine/tr_rtt.c; $(DO_GL_CC)
 $(RBC)cl_cin.o: $(SO)engine/cl_cin.c; $(DO_CC)
 $(RBC)cm_trace.o: $(SO)engine/cm_trace.c; $(DO_CC)
 $(RBC)sv_bot.o: $(SO)engine/sv_bot.c; $(DO_CC)
-$(RBC)tr_curve.o: $(SO)engine/tr_curve.c; $(DO_CC) $(GL_CFLAGS)
-$(RBC)tr_scene.o: $(SO)engine/tr_scene.c; $(DO_CC) $(GL_CFLAGS)
+$(RBC)tr_curve.o: $(SO)engine/tr_curve.c; $(DO_GL_CC)
+$(RBC)tr_scene.o: $(SO)engine/tr_scene.c; $(DO_GL_CC)
 $(RBC)cl_console.o: $(SO)engine/cl_console.c; $(DO_CC)
 $(RBC)common.o: $(SO)engine/common.c; $(DO_CC)
 $(RBC)sv_ccmds.o: $(SO)engine/sv_ccmds.c; $(DO_CC)
-$(RBC)tr_extentions.o: $(SO)engine/tr_extentions.c; $(DO_CC) $(GL_CFLAGS)
-$(RBC)tr_shade.o: $(SO)engine/tr_shade.c; $(DO_CC) $(GL_CFLAGS)
+$(RBC)tr_extentions.o: $(SO)engine/tr_extentions.c; $(DO_GL_CC)
+$(RBC)tr_shade.o: $(SO)engine/tr_shade.c; $(DO_GL_CC)
 $(RBC)cl_input.o: $(SO)engine/cl_input.c; $(DO_CC)
 $(RBC)cvar.o: $(SO)engine/cvar.c; $(DO_CC)
 $(RBC)sv_client.o: $(SO)engine/sv_client.c; $(DO_CC)
-$(RBC)tr_flares.o: $(SO)engine/tr_flares.c; $(DO_CC) $(GL_CFLAGS)
-$(RBC)tr_shade_calc.o: $(SO)engine/tr_shade_calc.c; $(DO_CC) $(GL_CFLAGS)
+$(RBC)tr_flares.o: $(SO)engine/tr_flares.c; $(DO_GL_CC)
+$(RBC)tr_shade_calc.o: $(SO)engine/tr_shade_calc.c; $(DO_GL_CC)
 $(RBC)cl_keys.o: $(SO)engine/cl_keys.c; $(DO_CC)
 $(RBC)files.o: $(SO)engine/files.c; $(DO_CC)
 $(RBC)sv_game.o: $(SO)engine/sv_game.c; $(DO_CC)
-$(RBC)tr_font.o: $(SO)engine/tr_font.c; $(DO_CC) $(GL_CFLAGS)
-$(RBC)tr_shader.o: $(SO)engine/tr_shader.c; $(DO_CC) $(GL_CFLAGS)
+$(RBC)tr_font.o: $(SO)engine/tr_font.c; $(DO_GL_CC)
+$(RBC)tr_shader.o: $(SO)engine/tr_shader.c; $(DO_GL_CC)
 $(RBC)cl_main.o: $(SO)engine/cl_main.c; $(DO_CC)
 $(RBC)huffman.o: $(SO)engine/huffman.c; $(DO_CC)
 $(RBC)sv_init.o: $(SO)engine/sv_init.c; $(DO_CC)
@@ -878,40 +893,40 @@ $(RBC)tr_shadows.o: $(SO)engine/tr_shadows.c; $(DO_CC)
 $(RBC)cl_net_chan.o: $(SO)engine/cl_net_chan.c; $(DO_CC)
 $(RBC)md4.o: $(SO)engine/md4.c; $(DO_CC)
 $(RBC)sv_main.o: $(SO)engine/sv_main.c; $(DO_CC)
-$(RBC)tr_image.o: $(SO)engine/tr_image.c; $(DO_CC) $(GL_CFLAGS)
-$(RBC)tr_sky.o: $(SO)engine/tr_sky.c; $(DO_CC) $(GL_CFLAGS)
+$(RBC)tr_image.o: $(SO)engine/tr_image.c; $(DO_GL_CC)
+$(RBC)tr_sky.o: $(SO)engine/tr_sky.c; $(DO_GL_CC)
 $(RBC)cl_parse.o: $(SO)engine/cl_parse.c; $(DO_CC)
 $(RBC)msg.o: $(SO)engine/msg.c; $(DO_CC)
 $(RBC)sv_net_chan.o: $(SO)engine/sv_net_chan.c; $(DO_CC)
-$(RBC)tr_init.o: $(SO)engine/tr_init.c; $(DO_CC) $(GL_CFLAGS)
-$(RBC)tr_surface.o: $(SO)engine/tr_surface.c; $(DO_CC) $(GL_CFLAGS)
+$(RBC)tr_init.o: $(SO)engine/tr_init.c; $(DO_GL_CC)
+$(RBC)tr_surface.o: $(SO)engine/tr_surface.c; $(DO_GL_CC)
 $(RBC)cl_scrn.o: $(SO)engine/cl_scrn.c; $(DO_CC)
 $(RBC)net_chan.o: $(SO)engine/net_chan.c; $(DO_CC)
 $(RBC)sv_rankings.o: $(SO)engine/sv_rankings.c; $(DO_CC)
-$(RBC)tr_light.o: $(SO)engine/tr_light.c; $(DO_CC) $(GL_CFLAGS)
-$(RBC)tr_texgen.o: $(SO)engine/tr_texgen.c; $(DO_CC) $(GL_CFLAGS) -DLIBTEXGEN "$(LIBSDIR)libtexgen.$(ARCH)$(SHLIBEXT)"
+$(RBC)tr_light.o: $(SO)engine/tr_light.c; $(DO_GL_CC)
+$(RBC)tr_texgen.o: $(SO)engine/tr_texgen.c; $(DO_TGD_CC)
 $(RBC)cl_ui.o: $(SO)engine/cl_ui.c; $(DO_CC)
 $(RBC)python.o: $(SO)engine/python.c; $(DO_CC)
 $(RBC)sv_snapshot.o: $(SO)engine/sv_snapshot.c; $(DO_CC)
-$(RBC)tr_main.o: $(SO)engine/tr_main.c; $(DO_CC) $(GL_CFLAGS)
-$(RBC)tr_world.o: $(SO)engine/tr_world.c; $(DO_CC) $(GL_CFLAGS)
+$(RBC)tr_main.o: $(SO)engine/tr_main.c; $(DO_GL_CC)
+$(RBC)tr_world.o: $(SO)engine/tr_world.c; $(DO_GL_CC)
 $(RBC)cmd.o: $(SO)engine/cmd.c; $(DO_CC)
 $(RBC)snd_adpcm.o: $(SO)engine/snd_adpcm.c; $(DO_CC)
 $(RBC)sv_world.o: $(SO)engine/sv_world.c; $(DO_CC)
-$(RBC)tr_marks.o: $(SO)engine/tr_marks.c; $(DO_CC) $(GL_CFLAGS)
+$(RBC)tr_marks.o: $(SO)engine/tr_marks.c; $(DO_GL_CC)
 $(RBC)unzip.o: $(SO)engine/unzip.c; $(DO_CC)
 $(RBC)cm_load.o: $(SO)engine/cm_load.c; $(DO_CC)
 $(RBC)snd_dma.o: $(SO)engine/snd_dma.c; $(DO_CC)
-$(RBC)tr_animation.o: $(SO)engine/tr_animation.c; $(DO_CC) $(GL_CFLAGS)
-$(RBC)tr_mesh.o: $(SO)engine/tr_mesh.c; $(DO_CC) $(GL_CFLAGS)
+$(RBC)tr_animation.o: $(SO)engine/tr_animation.c; $(DO_GL_CC)
+$(RBC)tr_mesh.o: $(SO)engine/tr_mesh.c; $(DO_GL_CC)
 $(RBC)cm_patch.o: $(SO)engine/cm_patch.c; $(DO_CC)
 $(RBC)snd_mem.o: $(SO)engine/snd_mem.c; $(DO_CC)
-$(RBC)tr_backend.o: $(SO)engine/tr_backend.c; $(DO_CC) $(GL_CFLAGS)
-$(RBC)tr_model.o: $(SO)engine/tr_model.c; $(DO_CC) $(GL_CFLAGS)
+$(RBC)tr_backend.o: $(SO)engine/tr_backend.c; $(DO_GL_CC)
+$(RBC)tr_model.o: $(SO)engine/tr_model.c; $(DO_GL_CC)
 $(RBC)cm_polylib.o: $(SO)engine/cm_polylib.c; $(DO_CC)
 $(RBC)snd_mix.o: $(SO)engine/snd_mix.c; $(DO_CC)
-$(RBC)tr_bsp.o: $(SO)engine/tr_bsp.c; $(DO_CC) $(GL_CFLAGS)
-$(RBC)tr_noise.o: $(SO)engine/tr_noise.c; $(DO_CC) $(GL_CFLAGS)
+$(RBC)tr_bsp.o: $(SO)engine/tr_bsp.c; $(DO_GL_CC)
+$(RBC)tr_noise.o: $(SO)engine/tr_noise.c; $(DO_GL_CC)
 
 $(RBC)ai_chat.o: $(SO)game/ai_chat.c; $(DO_CC)
 $(RBC)ai_vcmd.o: $(SO)game/ai_vcmd.c; $(DO_CC)
