@@ -160,7 +160,6 @@ extern vec3_t w_forward;
 
 void Defualt_SV_FireWeapon(gentity_t *ent, qboolean alt)
 {
-    vec3_t velAdd;
     attack_t *attack = getAttack(ent->s.weapon, ent->client->ps.groundEntityNum == ENTITYNUM_NONE, ent->client->ps.pm_flags & PMF_DUCKED, alt);
 
     VectorCopy(attack->min, ent->attack_min);

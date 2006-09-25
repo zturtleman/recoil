@@ -315,7 +315,6 @@ Rendering a scene may require multiple views to be rendered
 to handle mirrors,
 @@@@@@@@@@@@@@@@@@@@@
 */
-static float exposure;
 void RE_RenderScene( const refdef_t *fd )
 {
     viewParms_t		parms;

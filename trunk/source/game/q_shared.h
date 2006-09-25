@@ -1500,8 +1500,8 @@ typedef enum _flag_status {
 #else
 #define DYNLIBTYPE void *
 #endif
-qboolean DynlibOpen(DYNLIBTYPE *lib, char *name);
-void *DynlibGetAddress(DYNLIBTYPE lib, char *name);
+qboolean DynlibOpen(DYNLIBTYPE *lib, const char *name);
+void *DynlibGetAddress(DYNLIBTYPE lib, const char *name);
 void DynlibClose(DYNLIBTYPE lib);
 
 #endif	// __Q_SHARED_H

@@ -1963,6 +1963,8 @@ bot_moveresult_t BotFinishTravel_Jump(bot_movestate_t *ms, aas_reachability_t *r
 	float speed, dist;
 	bot_moveresult_t result;
 
+        VectorClear(result.movedir);
+
 	BotClearMoveResult(&result);
 	//if not jumped yet
 	if (!ms->jumpreach) return result;
@@ -2482,6 +2484,7 @@ bot_moveresult_t BotFinishTravel_FuncBobbing(bot_movestate_t *ms, aas_reachabili
 	bot_moveresult_t result;
 	float dist, speed;
 
+    VectorClear(result.movedir);
 	BotClearMoveResult(&result);
 	//
 	BotFuncBobStartEnd(reach, bob_start, bob_end, bob_origin);
@@ -2872,6 +2875,8 @@ bot_moveresult_t BotFinishTravel_WeaponJump(bot_movestate_t *ms, aas_reachabilit
 	vec3_t hordir;
 	float speed;
 	bot_moveresult_t result;
+
+    VectorClear(result.movedir);
 
 	BotClearMoveResult(&result);
 	//if not jumped yet

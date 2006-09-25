@@ -2086,7 +2086,7 @@ static void CG_DrawTeamVote(void)
 }
 
 
-static qboolean CG_DrawScoreboard()
+static qboolean CG_DrawScoreboard(void)
 {
     return CG_DrawOldScoreboard();
 }
@@ -2405,7 +2405,7 @@ static void CG_Draw2D( void )
 }
 
 
-static void CG_DrawTourneyScoreboard()
+static void CG_DrawTourneyScoreboard(void)
 {
     CG_DrawOldTourneyScoreboard();
 }

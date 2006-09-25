@@ -794,7 +794,6 @@ void UI_DrawPlayer( float x, float y, float w, float h, playerInfo_t *pi, int ti
     refEntity_t		torso;
     refEntity_t		head;
     refEntity_t		gun;
-    refEntity_t		barrel;
     refEntity_t		flash;
     vec3_t			origin;
     int				renderfx;

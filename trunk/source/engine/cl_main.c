@@ -1582,7 +1582,7 @@ void CL_CheckForResend( void )
         data[10+i] = 0;
 
         // NOTE TTimo don't forget to set the right data length!
-        NET_OutOfBandData( NS_CLIENT, clc.serverAddress, &data[0], i+10 );
+        NET_OutOfBandData( NS_CLIENT, clc.serverAddress, (unsigned char *)&data[0], i+10);
         // the most current userinfo has been sent, so watch for any
         // newer changes to userinfo variables
         cvar_modifiedFlags &= ~CVAR_USERINFO;
@@ -2206,10 +2206,6 @@ CL_ShutdownRef
 */
 void CL_ShutdownRef( void )
 {
-    if ( !RE_Shutdown )
-    {
-        return;
-    }
     RE_Shutdown( qtrue );
 }
 
@@ -2239,6 +2235,7 @@ After the server has cleared the hunk, these will need to be restarted
 This is the only place that any of these functions are called from
 ============================
 */
+void CL_InitUI(void);
 void CL_StartHunkUsers( void )
 {
     if (!com_cl_running)

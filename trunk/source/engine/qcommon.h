@@ -466,7 +466,7 @@ issues.
 
 #define BASEGAME "."
 
-qboolean FS_Initialized();
+qboolean FS_Initialized(void);
 
 void	FS_InitFilesystem (void);
 void	FS_Shutdown( qboolean closemfp );
@@ -484,7 +484,7 @@ void	FS_FreeFileList( char **list );
 
 qboolean FS_FileExists( const char *file );
 
-int		FS_LoadStack();
+int		FS_LoadStack(void);
 
 int		FS_GetFileList(  const char *path, const char *extension, char *listbuf, int bufsize );
 int		FS_GetModList(  char *listbuf, int bufsize );
@@ -952,8 +952,8 @@ void	Sys_FreeFileList( char **list );
 void	Sys_BeginProfiling( void );
 void	Sys_EndProfiling( void );
 
-qboolean Sys_LowPhysicalMemory();
-unsigned int Sys_ProcessorCount();
+qboolean Sys_LowPhysicalMemory(void);
+unsigned int Sys_ProcessorCount(void);
 
 int Sys_MonkeyShouldBeSpanked( void );
 

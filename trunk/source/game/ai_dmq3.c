@@ -2303,12 +2303,12 @@ BotAimAtEnemy
 void BotAimAtEnemy(bot_state_t *bs)
 {
     int i, enemyvisible;
-    float dist, f, aim_skill, aim_accuracy, speed, reactiontime;
+    float dist, aim_skill, aim_accuracy, speed, reactiontime;
     vec3_t dir, bestorigin, end, start, groundtarget, cmdmove, enemyvelocity;
     vec3_t mins = {-4,-4,-4}, maxs = {4, 4, 4};
     weaponinfo_t wi;
     aas_entityinfo_t entinfo;
-    bot_goal_t goal;
+    // bot_goal_t goal;
     bsp_trace_t trace;
     vec3_t target;
 

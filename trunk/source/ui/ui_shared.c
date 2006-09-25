@@ -2516,7 +2516,7 @@ static void Menu_CloseCinematics(menuDef_t *menu) {
 	}
 }
 
-static void Display_CloseCinematics() {
+static void Display_CloseCinematics(void) {
 	int i;
 	for (i = 0; i < menuCount; i++) {
 		Menu_CloseCinematics(&Menus[i]);
@@ -2540,7 +2540,7 @@ void  Menus_Activate(menuDef_t *menu) {
 
 }
 
-int Display_VisibleMenuCount() {
+int Display_VisibleMenuCount(void) {
 	int i, count;
 	count = 0;
 	for (i = 0; i < menuCount; i++) {
@@ -3200,19 +3200,6 @@ static bind_t g_bindings[] =
 
 
 static const int g_bindCount = sizeof(g_bindings) / sizeof(bind_t);
-
-static configcvar_t g_configcvars[] =
-{
-	{"cl_run",			0,					0},
-	{"m_pitch",			0,					0},
-	{"cg_autoswitch",	0,					0},
-	{"sensitivity",		0,					0},
-	{"in_joystick",		0,					0},
-	{"joy_threshold",	0,					0},
-	{"m_filter",		0,					0},
-	{"cl_freelook",		0,					0},
-	{NULL,				0,					0}
-};
 
 /*
 =================
@@ -5640,9 +5627,6 @@ displayContextDef_t *Display_GetContext() {
 	return DC;
 }
  
-static float captureX;
-static float captureY;
-
 void *Display_CaptureItem(int x, int y) {
 	int i;
 

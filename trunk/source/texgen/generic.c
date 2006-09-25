@@ -33,6 +33,7 @@ void tgGetImage(int type, int dataType, void **data)
 		break;
 	default:
 		tgError("tgGetImage - Bad type");
+                return;
 	}
 
 #define conversion(t, min, max)												\

@@ -425,6 +425,10 @@ srfGridMesh_t *R_SubdividePatchToGrid( int width, int height,
     MAC_STATIC drawVertex_t	ctrl[MAX_GRID_SIZE][MAX_GRID_SIZE];
     float		errorTable[2][MAX_GRID_SIZE];
 
+    VectorClear(prev.normal);
+    VectorClear(mid.normal);
+    VectorClear(next.normal);
+
     for ( i = 0 ; i < width ; i++ )
     {
         for ( j = 0 ; j < height ; j++ )

@@ -30,8 +30,8 @@ static const char *lastScriptUsed;
 
 static cvar_t *r_texgen_detail;
 
-qboolean DynlibOpen(DYNLIBTYPE *lib, char *name);
-void *DynlibGetAddress(DYNLIBTYPE lib, char *name);
+qboolean DynlibOpen(DYNLIBTYPE *lib, const char *name);
+void *DynlibGetAddress(DYNLIBTYPE lib, const char *name);
 
 void MyLogError(const char *format, ...)
 {
@@ -54,15 +54,19 @@ void InitTexgenModule(void)
     tgi.Print = MyLogMessage;
     tgi.Malloc = CL_RefMalloc;
 
+    Com_Printf("trying to load %i:", LIBTEXGEN);
     if(DynlibOpen(&lib, LIBTEXGEN))
     {
+        Com_Printf("success\n");
         TexgenLibExport = (PFNTEXGENLIBEXPORTPROC)DynlibGetAddress(lib, "TexgenLibExport");
         TexgenLibExport(&tgi);
 
         lastScriptUsed = NULL;
 
         _inited = qtrue;
+        return;
     }
+    Com_Printf("failure\n");
 }
 
 void LoadTexgenImages(const char *name, const char *slots[], void **pics[], int numSlots, int *width, int *height)
@@ -123,10 +127,9 @@ image_t *R_FindTexgenImage(const char *name, const char *slot, qboolean mipmap, 
 {
     image_t	*image;
     int		width, height;
-    byte	*pic;
     char altname[MAX_QPATH];
     const char *slots[1];
-    void **pics[1];
+    void **pics[1], *pic;
 
     if (!name)
         return NULL;

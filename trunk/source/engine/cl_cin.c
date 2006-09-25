@@ -185,7 +185,7 @@ extern int CL_ScaledMilliseconds(void);
 //
 // Returns:		Nothing
 //-----------------------------------------------------------------------------
-static void RllSetupTable()
+static void RllSetupTable(void)
 {
     int z;
 
@@ -1299,7 +1299,7 @@ static void RoQPrepMcomp( long xoff, long yoff )
 *
 ******************************************************************************/
 
-static void initRoQ()
+static void initRoQ(void)
 {
     if (currentHandle < 0) return;
 
@@ -1333,7 +1333,7 @@ static byte* RoQFetchInterlaced( byte *source ) {
 	return cinTable[currentHandle].buf2;
 }
 */
-static void RoQReset()
+static void RoQReset(void)
 {
 
     if (currentHandle < 0) return;

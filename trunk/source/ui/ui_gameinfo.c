@@ -42,42 +42,7 @@ static char		*ui_arenaInfos[MAX_ARENAS];
 static int		ui_numSinglePlayerArenas;
 static int		ui_numSpecialSinglePlayerArenas;
 
-static char		memoryPool[POOLSIZE];
-static int		allocPoint, outOfMemory;
-
-
-/*
-===============
-UI_Alloc
-===============
-*
-void *UI_Alloc( int size )
-{
-    char	*p;
-
-    if ( allocPoint + size > POOLSIZE )
-    {
-        outOfMemory = qtrue;
-        return NULL;
-    }
-
-    p = &memoryPool[allocPoint];
-
-    allocPoint += ( size + 31 ) & ~31;
-
-    return p;
-}
-
-/*
-===============
-UI_InitMemory
-===============
-*
-void UI_InitMemory( void )
-{
-    allocPoint = 0;
-    outOfMemory = qfalse;
-}
+static int		outOfMemory;
 
 /*
 ===============

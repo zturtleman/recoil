@@ -79,14 +79,14 @@ Toss the weapon and powerups for the killed player
 */
 void TossClientItems( gentity_t *self )
 {
-    gitem_t		*item;
+/*    gitem_t		*item;
     int			weapon;
     float		angle;
     int			i;
     gentity_t	*drop;
 
     // drop the weapon if not a gauntlet or machinegun
-/*    weapon = self->s.weapon;
+    weapon = self->s.weapon;
 
     // make a special check to see if they are changing to a new
     // weapon that isn't the mg or gauntlet.  Without this, a client

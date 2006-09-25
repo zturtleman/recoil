@@ -215,6 +215,9 @@ static	void R_LoadLightmaps( lump_t *l )
                 float b = buf_p[j*3+2];
                 float intensity;
                 float out[3];
+                out[0] = 0;
+                out[1] = 0;
+                out[2] = 0;
 
                 intensity = 0.33f * r + 0.685f * g + 0.063f * b;
 

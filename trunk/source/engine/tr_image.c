@@ -2028,10 +2028,10 @@ image_t	*R_FindImageFile( const char *name, qboolean mipmap, qboolean allowPicmi
         altname[len-3] = toupper(altname[len-3]);             // and try upper case extension for unix systems
         altname[len-2] = toupper(altname[len-2]);             //
         altname[len-1] = toupper(altname[len-1]);             //
-        CL_RefPrintf( PRINT_ALL, "trying %s...\n", altname );    //
-        R_LoadImage( altname, &pic, &width, &height );        //
+        CL_RefPrintf( PRINT_ALL, "trying %s...\n", altname );
+        R_LoadImage( altname, &pic, &width, &height );
         if (pic == NULL)
-        {                                    // if that fails
+        {
             return NULL;                                        // bail
         }
     }

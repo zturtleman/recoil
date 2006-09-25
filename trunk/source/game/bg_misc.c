@@ -1316,9 +1316,10 @@ enum
     CH_NUMBER
 };
 
-chartypeInfo_t *GetChar(int cindex)
+extern gclient_t g_clients[MAX_CLIENTS];
+chartypeInfo_t *GetChar(unsigned int cindex)
 {
-    gclient_t *c = g_entities + cindex;
+    gclient_t *c = g_clients + cindex;
     int index = c->ps.stats[STAT_CHARINDEX];
     return (index < CH_NUMBER && index >= CH_DEFUALT) ? &chars[index] : &chars[0];
 }

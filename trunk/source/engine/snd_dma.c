@@ -36,7 +36,7 @@ void S_Play_f(void);
 void S_SoundList_f(void);
 void S_Music_f(void);
 
-void S_Update_();
+void S_Update_(void);
 void S_StopAllSounds(void);
 void S_UpdateBackgroundTrack( void );
 
@@ -205,7 +205,7 @@ void S_ChannelFree(channel_t *v)
     freelist = (channel_t*)v;
 }
 
-channel_t*	S_ChannelMalloc()
+channel_t*	S_ChannelMalloc(void)
 {
     channel_t *v;
     if (freelist == NULL)
@@ -218,7 +218,7 @@ channel_t*	S_ChannelMalloc()
     return v;
 }
 
-void S_ChannelSetup()
+void S_ChannelSetup(void)
 {
     channel_t *p, *q;
 
