@@ -30,7 +30,7 @@ qboolean	G_SpawnString( const char *key, const char *defaultString, char **out )
     if ( !level.spawning )
     {
         *out = (char *)defaultString;
-//		Com_Error( "G_SpawnString() called while not spawning" );
+        //		Com_Error( "G_SpawnString() called while not spawning" );
     }
 
     for ( i = 0 ; i < level.numSpawnVars ; i++ )
@@ -104,29 +104,29 @@ typedef struct
 gfield_t;
 
 gfield_t fields[] = {
-                       {"classname", FOFS(classname), F_LSTRING},
-                       {"origin", FOFS(s.origin), F_VECTOR},
-                       {"model", FOFS(model), F_LSTRING},
-                       {"model2", FOFS(model2), F_LSTRING},
-                       {"spawnflags", FOFS(spawnflags), F_INT},
-                       {"speed", FOFS(speed), F_FLOAT},
-                       {"target", FOFS(target), F_LSTRING},
-                       {"targetname", FOFS(targetname), F_LSTRING},
-                       {"message", FOFS(message), F_LSTRING},
-                       {"team", FOFS(team), F_LSTRING},
-                       {"wait", FOFS(wait), F_FLOAT},
-                       {"random", FOFS(random), F_FLOAT},
-                       {"count", FOFS(count), F_INT},
-                       {"health", FOFS(health), F_INT},
-                       {"light", 0, F_IGNORE},
-                       {"dmg", FOFS(damage), F_INT},
-                       {"angles", FOFS(s.angles), F_VECTOR},
-                       {"angle", FOFS(s.angles), F_ANGLEHACK},
-                       {"targetShaderName", FOFS(targetShaderName), F_LSTRING},
-                       {"targetShaderNewName", FOFS(targetShaderNewName), F_LSTRING},
+                        {"classname", FOFS(classname), F_LSTRING},
+                        {"origin", FOFS(s.origin), F_VECTOR},
+                        {"model", FOFS(model), F_LSTRING},
+                        {"model2", FOFS(model2), F_LSTRING},
+                        {"spawnflags", FOFS(spawnflags), F_INT},
+                        {"speed", FOFS(speed), F_FLOAT},
+                        {"target", FOFS(target), F_LSTRING},
+                        {"targetname", FOFS(targetname), F_LSTRING},
+                        {"message", FOFS(message), F_LSTRING},
+                        {"team", FOFS(team), F_LSTRING},
+                        {"wait", FOFS(wait), F_FLOAT},
+                        {"random", FOFS(random), F_FLOAT},
+                        {"count", FOFS(count), F_INT},
+                        {"health", FOFS(health), F_INT},
+                        {"light", 0, F_IGNORE},
+                        {"dmg", FOFS(damage), F_INT},
+                        {"angles", FOFS(s.angles), F_VECTOR},
+                        {"angle", FOFS(s.angles), F_ANGLEHACK},
+                        {"targetShaderName", FOFS(targetShaderName), F_LSTRING},
+                        {"targetShaderNewName", FOFS(targetShaderNewName), F_LSTRING},
 
-                       {NULL}
-                   };
+                        {NULL}
+                    };
 
 
 typedef struct
@@ -328,7 +328,7 @@ char *G_NewString( const char *string )
 
     l = strlen(string) + 1;
 
-    newb = G_Alloc( l );
+    newb = (char *)G_Alloc( l );
 
     new_p = newb;
 

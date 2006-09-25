@@ -242,10 +242,10 @@ void G_RegisterCvars( void )
 
     for ( i = 0, cv = gameCvarTable ; i < gameCvarTableSize ; i++, cv++ )
     {
-		if(cv->cvar)
-			*cv->cvar = Cvar_Get(cv->name, cv->defaultString, cv->flags);
-		else
-			Cvar_Get(cv->name, cv->defaultString, cv->flags);
+        if(cv->cvar)
+            *cv->cvar = Cvar_Get(cv->name, cv->defaultString, cv->flags);
+        else
+            Cvar_Get(cv->name, cv->defaultString, cv->flags);
 
         if (cv->teamShader)
             remapped = qtrue;
@@ -274,13 +274,13 @@ void G_UpdateCvars( void )
     int			i;
     cvarTable_t	*cv;
     qboolean remapped = qfalse;
-	cvar_t *cvar;
+    cvar_t *cvar;
 
     for ( i = 0, cv = gameCvarTable ; i < gameCvarTableSize ; i++, cv++ )
     {
         if ( cv->cvar )
         {
-			cvar = cv->cvar[0];
+            cvar = cv->cvar[0];
             if ( cv->modificationCount != cvar->modificationCount )
             {
                 cv->modificationCount = cvar->modificationCount;
@@ -288,7 +288,7 @@ void G_UpdateCvars( void )
                 if ( cv->trackChange )
                 {
                     SV_GameSendServerCommand( -1, va("print \"Server: %s changed to %s\n\"",
-                                                   cv->name, cvar->string ) );
+                                                     cv->name, cvar->string ) );
                 }
 
                 if (cv->teamShader)
@@ -1343,7 +1343,7 @@ void CheckExitRules( void )
             {
                 LogExit( "Fraglimit hit." );
                 SV_GameSendServerCommand( -1, va("print \"%s" S_COLOR_WHITE " hit the fraglimit.\n\"",
-                                               cl->pers.netname ) );
+                                                 cl->pers.netname ) );
                 return;
             }
         }

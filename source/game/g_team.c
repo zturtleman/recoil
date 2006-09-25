@@ -51,7 +51,7 @@ void Team_InitGame( void )
     switch( g_gametype->integer )
     {
     case GT_CTF:
-        teamgame.redStatus = teamgame.blueStatus = -1; // Invalid to force update
+        teamgame.redStatus = teamgame.blueStatus = (flagStatus_t)-1; // Invalid to force update
         Team_SetFlagStatus( TEAM_RED, FLAG_ATBASE );
         Team_SetFlagStatus( TEAM_BLUE, FLAG_ATBASE );
         break;
@@ -110,7 +110,7 @@ void QDECL PrintMsg( gentity_t *ent, const char *fmt, ... )
     char		*p;
 
     va_start (argptr,fmt);
-    if (vsprintf (msg, fmt, argptr) > sizeof(msg))
+    if ((unsigned int)vsprintf(msg, fmt, argptr) > sizeof(msg))
     {
         Com_Error (ERR_DROP,  "PrintMsg overrun" );
     }
@@ -431,26 +431,26 @@ void Team_FragBonuses(gentity_t *targ, gentity_t *inflictor, gentity_t *attacker
 
     // we have to find the flag and carrier entities
 
-        // find the flag
-        switch (attacker->client->sess.sessionTeam)
-        {
-        case TEAM_RED:
-            c = "team_CTF_redflag";
+    // find the flag
+    switch (attacker->client->sess.sessionTeam)
+    {
+    case TEAM_RED:
+        c = "team_CTF_redflag";
+        break;
+    case TEAM_BLUE:
+        c = "team_CTF_blueflag";
+        break;
+    default:
+        return;
+    }
+    // find attacker's team's flag carrier
+    for (i = 0; i < g_maxclients->integer; i++)
+    {
+        carrier = g_entities + i;
+        if (carrier->inuse && carrier->client->ps.powerups[flag_pw])
             break;
-        case TEAM_BLUE:
-            c = "team_CTF_blueflag";
-            break;
-        default:
-            return;
-        }
-        // find attacker's team's flag carrier
-        for (i = 0; i < g_maxclients->integer; i++)
-        {
-            carrier = g_entities + i;
-            if (carrier->inuse && carrier->client->ps.powerups[flag_pw])
-                break;
-            carrier = NULL;
-        }
+        carrier = NULL;
+    }
     flag = NULL;
     while ((flag = G_Find (flag, FOFS(classname), c)) != NULL)
     {
@@ -752,33 +752,33 @@ int Team_TouchOurFlag( gentity_t *ent, gentity_t *other, int team )
     int			enemy_flag;
 
 
-	if (cl->sess.sessionTeam == TEAM_RED)
-        {
-            enemy_flag = PW_BLUEFLAG;
-        }
-        else
-        {
-            enemy_flag = PW_REDFLAG;
-        }
+    if (cl->sess.sessionTeam == TEAM_RED)
+    {
+        enemy_flag = PW_BLUEFLAG;
+    }
+    else
+    {
+        enemy_flag = PW_REDFLAG;
+    }
 
-        if ( ent->flags & FL_DROPPED_ITEM )
-        {
-            // hey, its not home.  return it by teleporting it back
-            PrintMsg( NULL, "%s" S_COLOR_WHITE " returned the %s flag!\n",
-                      cl->pers.netname, TeamName(team));
-            AddScore(other, ent->r.currentOrigin, CTF_RECOVERY_BONUS);
-            other->client->pers.teamState.flagrecovery++;
-            other->client->pers.teamState.lastreturnedflag = level.time;
-            //ResetFlag will remove this entity!  We must return zero
-            Team_ReturnFlagSound(Team_ResetFlag(team), team);
-            return 0;
-        }
+    if ( ent->flags & FL_DROPPED_ITEM )
+    {
+        // hey, its not home.  return it by teleporting it back
+        PrintMsg( NULL, "%s" S_COLOR_WHITE " returned the %s flag!\n",
+                  cl->pers.netname, TeamName(team));
+        AddScore(other, ent->r.currentOrigin, CTF_RECOVERY_BONUS);
+        other->client->pers.teamState.flagrecovery++;
+        other->client->pers.teamState.lastreturnedflag = level.time;
+        //ResetFlag will remove this entity!  We must return zero
+        Team_ReturnFlagSound(Team_ResetFlag(team), team);
+        return 0;
+    }
 
     // the flag is at home base.  if the player has the enemy
     // flag, he's just won!
     if (!cl->ps.powerups[enemy_flag])
         return 0; // We don't have the flag
-        PrintMsg( NULL, "%s" S_COLOR_WHITE " captured the %s flag!\n", cl->pers.netname, TeamName(OtherTeam(team)));
+    PrintMsg( NULL, "%s" S_COLOR_WHITE " captured the %s flag!\n", cl->pers.netname, TeamName(OtherTeam(team)));
 
     cl->ps.powerups[enemy_flag] = 0;
 
@@ -856,15 +856,15 @@ int Team_TouchEnemyFlag( gentity_t *ent, gentity_t *other, int team )
 {
     gclient_t *cl = other->client;
 
-        PrintMsg (NULL, "%s" S_COLOR_WHITE " got the %s flag!\n",
-                  other->client->pers.netname, TeamName(team));
+    PrintMsg (NULL, "%s" S_COLOR_WHITE " got the %s flag!\n",
+              other->client->pers.netname, TeamName(team));
 
-        if (team == TEAM_RED)
-            cl->ps.powerups[PW_REDFLAG] = INT_MAX; // flags never expire
-        else
-            cl->ps.powerups[PW_BLUEFLAG] = INT_MAX; // flags never expire
+    if (team == TEAM_RED)
+        cl->ps.powerups[PW_REDFLAG] = INT_MAX; // flags never expire
+    else
+        cl->ps.powerups[PW_BLUEFLAG] = INT_MAX; // flags never expire
 
-        Team_SetFlagStatus( team, FLAG_TAKEN );
+    Team_SetFlagStatus( team, FLAG_TAKEN );
 
     AddScore(other, ent->r.currentOrigin, CTF_FLAG_BONUS);
     cl->pers.teamState.flagsince = level.time;
@@ -1079,7 +1079,7 @@ void TeamplayInfoMessage( gentity_t *ent )
 {
     char		entry[1024];
     char		string[8192];
-    int			stringlength;
+    unsigned int        stringlength;
     int			i, j;
     gentity_t	*player;
     int			cnt;

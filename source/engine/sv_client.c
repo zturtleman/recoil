@@ -379,9 +379,9 @@ void SV_DirectConnect( netadr_t from )
 
             // this doesn't work because it nukes the players userinfo
 
-//			// disconnect the client from the game first so any flags the
-//			// player might have are dropped
-//			ClientDisconnect(newcl - svs.clients );
+            //			// disconnect the client from the game first so any flags the
+            //			// player might have are dropped
+            //			ClientDisconnect(newcl - svs.clients );
             goto gotnewcl;
         }
     }
@@ -918,7 +918,7 @@ void SV_WriteDownloadToClient( client_t *cl , msg_t *msg )
         curindex = (cl->downloadCurrentBlock % MAX_DOWNLOAD_WINDOW);
 
         if (!cl->downloadBlocks[curindex])
-            cl->downloadBlocks[curindex] = Z_Malloc( MAX_DOWNLOAD_BLKSIZE );
+            cl->downloadBlocks[curindex] = (byte *)Z_Malloc( MAX_DOWNLOAD_BLKSIZE );
 
         cl->downloadBlockSize[curindex] = FS_Read( cl->downloadBlocks[curindex], MAX_DOWNLOAD_BLKSIZE, cl->download );
 
@@ -1698,7 +1698,7 @@ void SV_ExecuteClientMessage( client_t *cl, msg_t *msg )
     {
         Com_Printf( "WARNING: bad command byte for client %i\n", cl - svs.clients );
     }
-//	if ( msg->readcount != msg->cursize ) {
-//		Com_Printf( "WARNING: Junk at end of packet for client %i\n", cl - svs.clients );
-//	}
+    //	if ( msg->readcount != msg->cursize ) {
+    //		Com_Printf( "WARNING: Junk at end of packet for client %i\n", cl - svs.clients );
+    //	}
 }

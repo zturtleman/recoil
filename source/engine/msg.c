@@ -116,7 +116,7 @@ int	overflows;
 void MSG_WriteBits( msg_t *msg, int value, int bits )
 {
     int	i;
-//	FILE*	fp;
+    //	FILE*	fp;
 
     oldsize += bits;
 
@@ -187,7 +187,7 @@ void MSG_WriteBits( msg_t *msg, int value, int bits )
     }
     else
     {
-//		fp = fopen("c:\\netchan.bin", "a");
+        //		fp = fopen("c:\\netchan.bin", "a");
         value &= (0xffffffff>>(32-bits));
         if (bits&7)
         {
@@ -204,13 +204,13 @@ void MSG_WriteBits( msg_t *msg, int value, int bits )
         {
             for(i=0;i<bits;i+=8)
             {
-//				fwrite(bp, 1, 1, fp);
+                //				fwrite(bp, 1, 1, fp);
                 Huff_offsetTransmit (&msgHuff.compressor, (value&0xff), msg->data, &msg->bit);
                 value = (value>>8);
             }
         }
         msg->cursize = (msg->bit>>3)+1;
-//		fclose(fp);
+        //		fclose(fp);
     }
 }
 
@@ -220,7 +220,7 @@ int MSG_ReadBits( msg_t *msg, int bits )
     int			get;
     qboolean	sgn;
     int			i, nbits;
-//	FILE*	fp;
+    //	FILE*	fp;
 
     value = 0;
 
@@ -275,14 +275,14 @@ int MSG_ReadBits( msg_t *msg, int bits )
         }
         if (bits)
         {
-//			fp = fopen("c:\\netchan.bin", "a");
+            //			fp = fopen("c:\\netchan.bin", "a");
             for(i=0;i<bits;i+=8)
             {
                 Huff_offsetReceive (msgHuff.decompressor.tree, &get, msg->data, &msg->bit);
-//				fwrite(&get, 1, 1, fp);
+                //				fwrite(&get, 1, 1, fp);
                 value |= (get<<(i+nbits));
             }
-//			fclose(fp);
+            //			fclose(fp);
         }
         msg->readcount = (msg->bit>>3)+1;
     }
@@ -514,8 +514,9 @@ float MSG_ReadFloat( msg_t *msg )
 
 char *MSG_ReadString( msg_t *msg )
 {
-    static char	string[MAX_STRING_CHARS];
-    int		l,c;
+    static char     string[MAX_STRING_CHARS];
+    unsigned int    l;
+    int             c;
 
     l = 0;
     do
@@ -548,8 +549,9 @@ char *MSG_ReadString( msg_t *msg )
 
 char *MSG_ReadBigString( msg_t *msg )
 {
-    static char	string[BIG_INFO_STRING];
-    int		l,c;
+    static char     string[BIG_INFO_STRING];
+    unsigned int    l;
+    int             c;
 
     l = 0;
     do
@@ -577,8 +579,9 @@ char *MSG_ReadBigString( msg_t *msg )
 
 char *MSG_ReadStringLine( msg_t *msg )
 {
-    static char	string[MAX_STRING_CHARS];
-    int		l,c;
+    static char     string[MAX_STRING_CHARS];
+    unsigned int    l;
+    int             c;
 
     l = 0;
     do
@@ -1264,7 +1267,7 @@ void MSG_ReadDeltaEntity( msg_t *msg, entityState_t *from, entityState_t *to,
                     }
                 }
             }
-//			pcount[i]++;
+            //			pcount[i]++;
         }
     }
     for ( i = lc, field = &entityStateFields[lc] ; i < numFields ; i++, field++ )
@@ -1411,7 +1414,7 @@ void MSG_WriteDeltaPlayerstate( msg_t *msg, struct playerState_s *from, struct p
         }
 
         MSG_WriteBits( msg, 1, 1 );	// changed
-//		pcount[i]++;
+        //		pcount[i]++;
 
         if ( field->bits == 0 )
         {
@@ -1520,7 +1523,7 @@ void MSG_WriteDeltaPlayerstate( msg_t *msg, struct playerState_s *from, struct p
         MSG_WriteShort( msg, ammobits );
         for (i=0 ; i<3 ; i++)
             if (ammobits & (1<<i) )
-                MSG_WriteShort (msg, to->weaponAmmo[i]);
+                MSG_WriteShort(msg, (int)(to->weaponAmmo[i]));
     }
     else
     {

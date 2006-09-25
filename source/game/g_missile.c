@@ -37,7 +37,7 @@ void G_BounceMissile( gentity_t *ent, trace_t *trace )
     int		hitTime;
 
     // reflect the velocity on the trace plane
-    hitTime = level.previousTime + ( level.time - level.previousTime ) * trace->fraction;
+    hitTime = (int)(level.previousTime + ( level.time - level.previousTime ) * trace->fraction);
     BG_EvaluateTrajectoryDelta( &ent->s.pos, hitTime, velocity );
     dot = DotProduct( velocity, trace->plane.normal );
     VectorMA( velocity, -2*dot, trace->plane.normal, ent->s.pos.trDelta );
@@ -108,21 +108,21 @@ void G_MissileImpact( gentity_t *ent, trace_t *trace)
     qboolean		hitClient = qfalse;
     other = &g_entities[trace->entityNum];
 
-	if ((other->r.contents & CONTENTS_TRIGGER) && other->touch)
-	{
-		int hitTime = level.previousTime + ( level.time - level.previousTime ) * trace->fraction;
+    if ((other->r.contents & CONTENTS_TRIGGER) && other->touch)
+    {
+        int hitTime = (int)(level.previousTime + ( level.time - level.previousTime ) * trace->fraction);
 
-		BG_EvaluateTrajectoryDelta(&ent->s.pos, hitTime, ent->r.currentVelocity);
-		BG_EvaluateTrajectory(&ent->s.pos, hitTime, ent->r.currentOrigin);
+        BG_EvaluateTrajectoryDelta(&ent->s.pos, hitTime, ent->r.currentVelocity);
+        BG_EvaluateTrajectory(&ent->s.pos, hitTime, ent->r.currentOrigin);
 
-		other->touch(other, ent, trace);
+        other->touch(other, ent, trace);
 
-		VectorCopy(ent->r.currentOrigin, ent->s.pos.trBase);
-		VectorCopy(ent->r.currentVelocity, ent->s.pos.trDelta);
-		ent->s.pos.trTime = hitTime;
+        VectorCopy(ent->r.currentOrigin, ent->s.pos.trBase);
+        VectorCopy(ent->r.currentVelocity, ent->s.pos.trDelta);
+        ent->s.pos.trTime = hitTime;
 
-		return;
-	}
+        return;
+    }
 
     // check for bounce
     if ( !other->takedamage &&
@@ -262,46 +262,46 @@ void G_RunMissile( gentity_t *ent )
     // get current position
     BG_EvaluateTrajectory( &ent->s.pos, level.time, origin );
 
-	// trace a line from the previous position to the current position
-	SV_Trace(&tr, ent->r.currentOrigin, ent->r.mins, ent->r.maxs, origin, passent, mask, qfalse);
+    // trace a line from the previous position to the current position
+    SV_Trace(&tr, ent->r.currentOrigin, ent->r.mins, ent->r.maxs, origin, passent, mask, qfalse);
 
-	if(tr.fraction != 1)
-	{
-		gentity_t		*other = &g_entities[tr.entityNum];
-		if(other->s.eType != ET_TELEPORT_TRIGGER)
-		{
-			mask = ent->clipmask;
-			SV_Trace(&tr, ent->r.currentOrigin, ent->r.mins, ent->r.maxs, origin, passent, mask, qfalse);
-		}
-	}
+    if(tr.fraction != 1)
+    {
+        gentity_t		*other = &g_entities[tr.entityNum];
+        if(other->s.eType != ET_TELEPORT_TRIGGER)
+        {
+            mask = ent->clipmask;
+            SV_Trace(&tr, ent->r.currentOrigin, ent->r.mins, ent->r.maxs, origin, passent, mask, qfalse);
+        }
+    }
 
-	if (tr.startsolid || tr.allsolid)
-	{
-		SV_Trace( &tr, ent->r.currentOrigin, ent->r.mins, ent->r.maxs, ent->r.currentOrigin, passent, mask, qfalse);
-		tr.fraction = 0;
-	}
-	else
-		VectorCopy( tr.endpos, ent->r.currentOrigin );
+    if (tr.startsolid || tr.allsolid)
+    {
+        SV_Trace( &tr, ent->r.currentOrigin, ent->r.mins, ent->r.maxs, ent->r.currentOrigin, passent, mask, qfalse);
+        tr.fraction = 0;
+    }
+    else
+        VectorCopy( tr.endpos, ent->r.currentOrigin );
 
-	SV_LinkEntity(ent);
+    SV_LinkEntity(ent);
 
-	if(tr.fraction != 1)
-	{
-		// never explode or bounce on sky
-		if(tr.surfaceFlags & SURF_NOIMPACT)
-		{
-			// If grapple, reset owner
-			if (ent->parent && ent->parent->client && ent->parent->client->hook == ent)
-				ent->parent->client->hook = NULL;
-			G_FreeEntity( ent );
-			return;
-		}
+    if(tr.fraction != 1)
+    {
+        // never explode or bounce on sky
+        if(tr.surfaceFlags & SURF_NOIMPACT)
+        {
+            // If grapple, reset owner
+            if (ent->parent && ent->parent->client && ent->parent->client->hook == ent)
+                ent->parent->client->hook = NULL;
+            G_FreeEntity( ent );
+            return;
+        }
 
-		G_MissileImpact(ent, &tr);
+        G_MissileImpact(ent, &tr);
 
-		if(ent->s.eType != ET_MISSILE)
-			return;
-	}
+        if(ent->s.eType != ET_MISSILE)
+            return;
+    }
 
     // check think function after bouncing
     G_RunThink( ent );

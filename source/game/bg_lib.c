@@ -45,10 +45,7 @@ static char sccsid[] = "@(#)qsort.c	8.1 (Berkeley) 6/4/93";
 static const char rcsid[] =
 #endif /* LIBC_SCCS and not lint */
 
-typedef int		 cmp_t(const void *, const void *);
-
-static char* med3(char *, char *, char *, cmp_t *);
-static void	 swapfunc(char *, char *, int, int);
+    typedef int		 cmp_t(const void *, const void *);
 
 #ifndef min
 #define min(a, b)	(a) < (b) ? a : b
@@ -71,10 +68,7 @@ static void	 swapfunc(char *, char *, int, int);
 #define SWAPINIT(a, es) swaptype = ((char *)a - (char *)0) % sizeof(long) || \
 	es % sizeof(long) ? 2 : es == sizeof(long)? 0 : 1;
 
-static void
-swapfunc(a, b, n, swaptype)
-char *a, *b;
-int n, swaptype;
+static void swapfunc(char *a, char *b, int n, int swaptype)
 {
     if(swaptype <= 1)
         swapcode(long, a, b, n)
@@ -92,21 +86,14 @@ int n, swaptype;
 
 #define vecswap(a, b, n) 	if ((n) > 0) swapfunc(a, b, n, swaptype)
 
-static char *
-med3(a, b, c, cmp)
-char *a, *b, *c;
-cmp_t *cmp;
+static char *med3(char *a, char *b, char *c, cmp_t *cmp)
 {
     return cmp(a, b) < 0 ?
            (cmp(b, c) < 0 ? b : (cmp(a, c) < 0 ? c : a ))
                    :(cmp(b, c) > 0 ? b : (cmp(a, c) < 0 ? a : c ));
 }
 
-void
-qsort(a, n, es, cmp)
-void *a;
-size_t n, es;
-cmp_t *cmp;
+void qsort(void *a, size_t n, size_t es, cmp_t *cmp)
 {
     char *pa, *pb, *pc, *pd, *pl, *pm, *pn;
     int d, r, swaptype, swap_cnt;
@@ -125,7 +112,7 @@ cmp_t *cmp;
     pm = (char *)a + (n / 2) * es;
     if (n > 7)
     {
-        pl = a;
+        pl = (char *)a;
         pn = (char *)a + (n - 1) * es;
         if (n > 40)
         {
@@ -136,7 +123,7 @@ cmp_t *cmp;
         }
         pm = med3(pl, pm, pn, cmp);
     }
-    swap(a, pm);
+    swap((char *)a, pm);
     pa = pb = (char *)a + es;
 
     pc = pd = (char *)a + (n - 1) * es;
@@ -180,12 +167,12 @@ cmp_t *cmp;
 
     pn = (char *)a + n * es;
     r = min(pa - (char *)a, pb - pa);
-    vecswap(a, pb - r, r);
-    r = min(pd - pc, pn - pd - es);
+    vecswap((char *)a, pb - r, r);
+    r = min((unsigned int)(pd - pc), (unsigned int)(pn - pd - es));
     vecswap(pb, pn - r, r);
-    if ((r = pb - pa) > es)
+    if ((unsigned int)(r = pb - pa) > es)
         qsort(a, r / es, es, cmp);
-    if ((r = pd - pc) > es)
+    if ((unsigned int)(r = pd - pc) > es)
     {
         /* Iterate rather than recurse to save stack space */
         a = pn - r;
@@ -199,7 +186,7 @@ cmp_t *cmp;
 
 void *memmove( void *dest, const void *src, size_t count )
 {
-    int		i;
+    unsigned int i;
 
     if ( dest > src )
     {
@@ -220,17 +207,18 @@ void *memmove( void *dest, const void *src, size_t count )
 
 static int randSeed = 0;
 
-void	srand( unsigned seed )
+void srand( unsigned seed )
 {
     randSeed = seed;
 }
 
-int		rand( void )
+int rand( void )
 {
     randSeed = (69069 * randSeed + 1);
     return randSeed & 0x7fff;
 }
 
+#if 0
 double atof( const char *string )
 {
     float sign;
@@ -311,6 +299,7 @@ double atof( const char *string )
 
     return value * sign;
 }
+#endif
 
 double _atof( const char **stringPtr )
 {

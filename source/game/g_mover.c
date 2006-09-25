@@ -416,7 +416,7 @@ qboolean G_MoverPush( gentity_t *pusher, vec3_t move, vec3_t amove, gentity_t **
             VectorCopy (p->angles, p->ent->s.apos.trBase);
             if ( p->ent->client )
             {
-                p->ent->client->ps.delta_angles[YAW] = p->deltayaw;
+                p->ent->client->ps.delta_angles[YAW] = (int)(p->deltayaw);
                 VectorCopy (p->origin, p->ent->client->ps.origin);
             }
             SV_LinkEntity (p->ent);
@@ -580,7 +580,7 @@ All entities in a mover team will move from pos1 to pos2
 in the same amount of time
 ================
 */
-void MatchTeam( gentity_t *teamLeader, int moverState, int time )
+void MatchTeam( gentity_t *teamLeader, moverState_t moverState, int time )
 {
     gentity_t		*slave;
 
@@ -636,7 +636,7 @@ void Reached_BinaryMover( gentity_t *ent )
 
         // return to pos1 after a delay
         ent->think = ReturnToPos1;
-        ent->nextthink = level.time + ent->wait;
+        ent->nextthink = (int)(level.time + ent->wait);
 
         // fire targets
         if ( !ent->activator )
@@ -714,7 +714,7 @@ void Use_BinaryMover( gentity_t *ent, gentity_t *other, gentity_t *activator )
     // if all the way up, just delay before coming down
     if ( ent->moverState == MOVER_POS2 )
     {
-        ent->nextthink = level.time + ent->wait;
+        ent->nextthink = (int)(level.time + ent->wait);
         return;
     }
 
@@ -796,22 +796,22 @@ void InitMover( gentity_t *ent )
     {
         int		r, g, b, i;
 
-        r = color[0] * 255;
+        r = (int)(color[0] * 255);
         if ( r > 255 )
         {
             r = 255;
         }
-        g = color[1] * 255;
+        g = (int)(color[1] * 255);
         if ( g > 255 )
         {
             g = 255;
         }
-        b = color[2] * 255;
+        b = (int)(color[2] * 255);
         if ( b > 255 )
         {
             b = 255;
         }
-        i = light / 4;
+        i = (int)(light / 4);
         if ( i > 255 )
         {
             i = 255;
@@ -840,7 +840,7 @@ void InitMover( gentity_t *ent )
         ent->speed = 100;
     }
     VectorScale( move, ent->speed, ent->s.pos.trDelta );
-    ent->s.pos.trDuration = distance * 1000 / ent->speed;
+    ent->s.pos.trDuration = (int)(distance * 1000 / ent->speed);
     if ( ent->s.pos.trDuration <= 0 )
     {
         ent->s.pos.trDuration = 1;
@@ -1425,7 +1425,7 @@ void Reached_Train( gentity_t *ent )
     VectorSubtract( ent->pos2, ent->pos1, move );
     length = VectorLength( move );
 
-    ent->s.pos.trDuration = length * 1000 / speed;
+    ent->s.pos.trDuration = (int)(length * 1000 / speed);
 
     // looping sound
     ent->s.loopSound = next->soundLoop;
@@ -1436,7 +1436,7 @@ void Reached_Train( gentity_t *ent )
     // if there is a "wait" value on the target, don't start moving yet
     if ( next->wait )
     {
-        ent->nextthink = level.time + next->wait * 1000;
+        ent->nextthink = (int)(level.time + next->wait * 1000);
         ent->think = Think_BeginMoving;
         ent->s.pos.trType = TR_STATIONARY;
     }
@@ -1458,7 +1458,7 @@ void Think_SetupTrainTargets( gentity_t *ent )
     if ( !ent->nextTrain )
     {
         Com_Printf( "func_train at %s with an unfound target\n",
-                  vtos(ent->r.absmin) );
+                    vtos(ent->r.absmin) );
         return;
     }
 
@@ -1473,7 +1473,7 @@ void Think_SetupTrainTargets( gentity_t *ent )
         if ( !path->target )
         {
             Com_Printf( "Train corner at %s without a target\n",
-                      vtos(path->s.origin) );
+                        vtos(path->s.origin) );
             return;
         }
 
@@ -1487,7 +1487,7 @@ void Think_SetupTrainTargets( gentity_t *ent )
             if ( !next )
             {
                 Com_Printf( "Train corner at %s without a target path_corner\n",
-                          vtos(path->s.origin) );
+                            vtos(path->s.origin) );
                 return;
             }
         }
@@ -1689,8 +1689,8 @@ void SP_func_bobbing (gentity_t *ent)
     VectorCopy( ent->s.origin, ent->s.pos.trBase );
     VectorCopy( ent->s.origin, ent->r.currentOrigin );
 
-    ent->s.pos.trDuration = ent->speed * 1000;
-    ent->s.pos.trTime = ent->s.pos.trDuration * phase;
+    ent->s.pos.trDuration = (int)(ent->speed * 1000);
+    ent->s.pos.trTime = (int)(ent->s.pos.trDuration * phase);
     ent->s.pos.trType = TR_SINE;
 
     // set the axis of bobbing
@@ -1750,7 +1750,7 @@ void SP_func_pendulum(gentity_t *ent)
 
     freq = 1 / ( M_PI * 2 ) * sqrt( g_gravity->value / ( 3 * length ) );
 
-    ent->s.pos.trDuration = ( 1000 / freq );
+    ent->s.pos.trDuration = (int)( 1000 / freq );
 
     InitMover( ent );
 
@@ -1759,8 +1759,8 @@ void SP_func_pendulum(gentity_t *ent)
 
     VectorCopy( ent->s.angles, ent->s.apos.trBase );
 
-    ent->s.apos.trDuration = 1000 / freq;
-    ent->s.apos.trTime = ent->s.apos.trDuration * phase;
+    ent->s.apos.trDuration = (int)(1000 / freq);
+    ent->s.apos.trTime = (int)(ent->s.apos.trDuration * phase);
     ent->s.apos.trType = TR_SINE;
     ent->s.apos.trDelta[2] = speed;
 }

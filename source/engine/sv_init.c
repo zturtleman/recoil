@@ -256,7 +256,7 @@ void SV_Startup( void )
     }
     SV_BoundMaxClients( 1 );
 
-    svs.clients = Z_Malloc (sizeof(client_t) * sv_maxclients->integer );
+    svs.clients = (client_t *)Z_Malloc (sizeof(client_t) * sv_maxclients->integer );
     if ( com_dedicated->integer )
     {
         svs.numSnapshotEntities = sv_maxclients->integer * PACKET_BACKUP * 64;
@@ -305,7 +305,7 @@ void SV_ChangeMaxClients( void )
         return;
     }
 
-    oldClients = Hunk_AllocateTempMemory( count * sizeof(client_t) );
+    oldClients = (client_t *)Hunk_AllocateTempMemory( count * sizeof(client_t) );
     // copy the clients to hunk memory
     for ( i = 0 ; i < count ; i++ )
     {
@@ -323,7 +323,7 @@ void SV_ChangeMaxClients( void )
     Z_Free( svs.clients );
 
     // allocate new clients
-    svs.clients = Z_Malloc ( sv_maxclients->integer * sizeof(client_t) );
+    svs.clients = (client_t *)Z_Malloc ( sv_maxclients->integer * sizeof(client_t) );
     Com_Memset( svs.clients, 0, sv_maxclients->integer * sizeof(client_t) );
 
     // copy the clients over
@@ -423,7 +423,7 @@ void SV_SpawnServer( char *server, qboolean killBots )
     FS_ClearPakReferences(0);
 
     // allocate the snapshot entities on the hunk
-    svs.snapshotEntities = Hunk_Alloc( sizeof(entityState_t)*svs.numSnapshotEntities, h_high );
+    svs.snapshotEntities = (entityState_t *)Hunk_Alloc( sizeof(entityState_t)*svs.numSnapshotEntities, h_high );
     svs.nextSnapshotEntities = 0;
 
     // toggle the server bit so clients can detect that a
@@ -433,7 +433,7 @@ void SV_SpawnServer( char *server, qboolean killBots )
     // set nextmap to the same map, but it may be overriden
     // by the game startup or another console command
     Cvar_Set( "nextmap", "map_restart 0");
-//	Cvar_Set( "nextmap", va("map %s", server) );
+    //	Cvar_Set( "nextmap", va("map %s", server) );
 
     // wipe the entire per-level structure
     SV_ClearServer();

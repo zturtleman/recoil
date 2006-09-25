@@ -1395,7 +1395,7 @@ extern unzFile unzOpen (const char* path)
 
     s=(unz_s*)ALLOC(sizeof(unz_s));
     *s=us;
-//	unzGoToFirstFile((unzFile)s);
+    //	unzGoToFirstFile((unzFile)s);
     return (unzFile)s;
 }
 
@@ -2034,9 +2034,9 @@ extern int unzReadCurrentFile  (unzFile file, void *buf, unsigned len)
                 *(pfile_in_zip_read_info->stream.next_out+i) =
                     *(pfile_in_zip_read_info->stream.next_in+i);
 
-//			pfile_in_zip_read_info->crc32 = crc32(pfile_in_zip_read_info->crc32,
-//								pfile_in_zip_read_info->stream.next_out,
-//								uDoCopy);
+            //			pfile_in_zip_read_info->crc32 = crc32(pfile_in_zip_read_info->crc32,
+            //								pfile_in_zip_read_info->stream.next_out,
+            //								uDoCopy);
             pfile_in_zip_read_info->rest_read_uncompressed-=uDoCopy;
             pfile_in_zip_read_info->stream.avail_in -= uDoCopy;
             pfile_in_zip_read_info->stream.avail_out -= uDoCopy;
@@ -2066,9 +2066,9 @@ extern int unzReadCurrentFile  (unzFile file, void *buf, unsigned len)
             uTotalOutAfter = pfile_in_zip_read_info->stream.total_out;
             uOutThis = uTotalOutAfter-uTotalOutBefore;
 
-//			pfile_in_zip_read_info->crc32 =
-//                crc32(pfile_in_zip_read_info->crc32,bufBefore,
-//                        (uInt)(uOutThis));
+            //			pfile_in_zip_read_info->crc32 =
+            //                crc32(pfile_in_zip_read_info->crc32,bufBefore,
+            //                        (uInt)(uOutThis));
 
             pfile_in_zip_read_info->rest_read_uncompressed -=
                 uOutThis;
@@ -2488,7 +2488,12 @@ struct inflate_blocks_state
 #define LOAD {LOADIN LOADOUT}
 
 /* masks for lower bits (size given to avoid silly warnings with Visual C++) */
-static  uInt inflate_mask[17];
+/* And'ing with mask[n] masks the lower n bits */
+static uInt inflate_mask[17] = {
+                                   0x0000,
+                                   0x0001, 0x0003, 0x0007, 0x000f, 0x001f, 0x003f, 0x007f, 0x00ff,
+                                   0x01ff, 0x03ff, 0x07ff, 0x0fff, 0x1fff, 0x3fff, 0x7fff, 0xffff
+                               };
 
 /* copy as much as possible from the sliding window to the output area */
 static  int inflate_flush OF((
@@ -2866,15 +2871,6 @@ int inflate_blocks_sync_point(inflate_blocks_statef *s)
     return s->mode == LENS;
 }
 #endif
-
-
-/* And'ing with mask[n] masks the lower n bits */
-static uInt inflate_mask[17] = {
-                                   0x0000,
-                                   0x0001, 0x0003, 0x0007, 0x000f, 0x001f, 0x003f, 0x007f, 0x00ff,
-                                   0x01ff, 0x03ff, 0x07ff, 0x0fff, 0x1fff, 0x3fff, 0x7fff, 0xffff
-                               };
-
 
 /* copy as much as possible from the sliding window to the output area */
 int inflate_flush(inflate_blocks_statef *s, z_streamp z, int r)

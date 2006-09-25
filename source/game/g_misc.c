@@ -362,7 +362,7 @@ void SP_misc_portal_camera(gentity_t *ent)
 
     G_SpawnFloat( "roll", "0", &roll );
 
-    ent->s.clientNum = roll/360.0 * 256;
+    ent->s.clientNum = (int)(roll/360.0 * 256);
 }
 
 /*
@@ -375,47 +375,47 @@ void SP_misc_portal_camera(gentity_t *ent)
 
 void Use_Shooter( gentity_t *ent, gentity_t *other, gentity_t *activator )
 {
-/*    vec3_t		dir;
-    float		deg;
-    vec3_t		up, right;
+    /*    vec3_t		dir;
+        float		deg;
+        vec3_t		up, right;
 
-    // see if we have a target
-    if ( ent->enemy )
-    {
-        VectorSubtract( ent->enemy->r.currentOrigin, ent->s.origin, dir );
+        // see if we have a target
+        if ( ent->enemy )
+        {
+            VectorSubtract( ent->enemy->r.currentOrigin, ent->s.origin, dir );
+            VectorNormalize( dir );
+        }
+        else
+        {
+            VectorCopy( ent->movedir, dir );
+        }
+
+        // randomize a bit
+        PerpendicularVector( up, dir );
+        CrossProduct( up, dir, right );
+
+        deg = crandom() * ent->random;
+        VectorMA( dir, deg, up, dir );
+
+        deg = crandom() * ent->random;
+        VectorMA( dir, deg, right, dir );
+
         VectorNormalize( dir );
-    }
-    else
-    {
-        VectorCopy( ent->movedir, dir );
-    }
 
-    // randomize a bit
-    PerpendicularVector( up, dir );
-    CrossProduct( up, dir, right );
+        switch ( ent->s.weapon )
+        {
+        case WP_GRENADE_LAUNCHER:
+            fire_grenade( ent, ent->s.origin, dir );
+            break;
+        case WP_ROCKET_LAUNCHER:
+            fire_rocket( ent, ent->s.origin, dir );
+            break;
+        case WP_PLASMAGUN:
+            fire_plasma( ent, ent->s.origin, dir );
+            break;
+        }
 
-    deg = crandom() * ent->random;
-    VectorMA( dir, deg, up, dir );
-
-    deg = crandom() * ent->random;
-    VectorMA( dir, deg, right, dir );
-
-    VectorNormalize( dir );
-
-    switch ( ent->s.weapon )
-    {
-    case WP_GRENADE_LAUNCHER:
-        fire_grenade( ent, ent->s.origin, dir );
-        break;
-    case WP_ROCKET_LAUNCHER:
-        fire_rocket( ent, ent->s.origin, dir );
-        break;
-    case WP_PLASMAGUN:
-        fire_plasma( ent, ent->s.origin, dir );
-        break;
-    }
-
-    G_AddEvent( ent, EV_FIRE_WEAPON, 0 );*/
+        G_AddEvent( ent, EV_FIRE_WEAPON, 0 );*/
 }
 
 
@@ -431,7 +431,7 @@ void InitShooter( gentity_t *ent, int weapon )
     ent->use = Use_Shooter;
     ent->s.weapon = weapon;
 
-//    RegisterItem( BG_FindItemForWeapon( weapon ) );
+    //    RegisterItem( BG_FindItemForWeapon( weapon ) );
 
     G_SetMovedir( ent->s.angles, ent->movedir );
 
@@ -455,7 +455,7 @@ Fires at either the target or the current direction.
 */
 void SP_shooter_rocket( gentity_t *ent )
 {
-//    InitShooter( ent, WP_ROCKET_LAUNCHER );
+    //    InitShooter( ent, WP_ROCKET_LAUNCHER );
 }
 
 /*QUAKED shooter_plasma (1 0 0) (-16 -16 -16) (16 16 16)
@@ -464,7 +464,7 @@ Fires at either the target or the current direction.
 */
 void SP_shooter_plasma( gentity_t *ent )
 {
- //   InitShooter( ent, WP_PLASMAGUN);
+    //   InitShooter( ent, WP_PLASMAGUN);
 }
 
 /*QUAKED shooter_grenade (1 0 0) (-16 -16 -16) (16 16 16)
@@ -473,5 +473,5 @@ Fires at either the target or the current direction.
 */
 void SP_shooter_grenade( gentity_t *ent )
 {
-//    InitShooter( ent, WP_GRENADE_LAUNCHER);
+    //    InitShooter( ent, WP_GRENADE_LAUNCHER);
 }

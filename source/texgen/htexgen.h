@@ -15,7 +15,7 @@ extern tg_interface_t *tgi;
 typedef float texpixel[5];
 
 extern int tex_width, tex_height, tex_width1, tex_height1, tex_size;
-texpixel *scratch;
+extern texpixel *scratch;
 
 typedef enum
 {

@@ -79,64 +79,64 @@ Toss the weapon and powerups for the killed player
 */
 void TossClientItems( gentity_t *self )
 {
-/*    gitem_t		*item;
-    int			weapon;
-    float		angle;
-    int			i;
-    gentity_t	*drop;
+    /*    gitem_t		*item;
+        int			weapon;
+        float		angle;
+        int			i;
+        gentity_t	*drop;
 
-    // drop the weapon if not a gauntlet or machinegun
-    weapon = self->s.weapon;
+        // drop the weapon if not a gauntlet or machinegun
+        weapon = self->s.weapon;
 
-    // make a special check to see if they are changing to a new
-    // weapon that isn't the mg or gauntlet.  Without this, a client
-    // can pick up a weapon, be killed, and not drop the weapon because
-    // their weapon change hasn't completed yet and they are still holding the MG.
-    if ( weapon == WP_MACHINEGUN || weapon == WP_GRAPPLING_HOOK )
-    {
-        if ( self->client->ps.weapons[0].state == WEAPON_DROPPING )
+        // make a special check to see if they are changing to a new
+        // weapon that isn't the mg or gauntlet.  Without this, a client
+        // can pick up a weapon, be killed, and not drop the weapon because
+        // their weapon change hasn't completed yet and they are still holding the MG.
+        if ( weapon == WP_MACHINEGUN || weapon == WP_GRAPPLING_HOOK )
         {
-            weapon = self->client->pers.cmd.weapon;
-        }
-        if ( !( self->client->ps.stats[STAT_WEAPONS] & ( 1 << weapon ) ) )
-        {
-            weapon = WP_NONE;
-        }
-    }
-
-    if(weapon > WP_MACHINEGUN && weapon != WP_GRAPPLING_HOOK && self->client->ps.ammo[weapon])
-    {
-        // find the item type for this weapon
-        item = BG_FindItemForWeapon( weapon );
-
-        // spawn the item
-        Drop_Item( self, item, 0 );
-    }
-
-    // drop all the powerups if not in teamplay
-    if ( g_gametype->integer != GT_TEAM )
-    {
-        angle = 45;
-        for ( i = 1 ; i < PW_NUM_POWERUPS ; i++ )
-        {
-            if ( self->client->ps.powerups[ i ] > level.time )
+            if ( self->client->ps.weapons[0].state == WEAPON_DROPPING )
             {
-                item = BG_FindItemForPowerup( i );
-                if ( !item )
-                {
-                    continue;
-                }
-                drop = Drop_Item( self, item, angle );
-                // decide how many seconds it has left
-                drop->count = ( self->client->ps.powerups[ i ] - level.time ) / 1000;
-                if ( drop->count < 1 )
-                {
-                    drop->count = 1;
-                }
-                angle += 45;
+                weapon = self->client->pers.cmd.weapon;
+            }
+            if ( !( self->client->ps.stats[STAT_WEAPONS] & ( 1 << weapon ) ) )
+            {
+                weapon = WP_NONE;
             }
         }
-    }*/
+
+        if(weapon > WP_MACHINEGUN && weapon != WP_GRAPPLING_HOOK && self->client->ps.ammo[weapon])
+        {
+            // find the item type for this weapon
+            item = BG_FindItemForWeapon( weapon );
+
+            // spawn the item
+            Drop_Item( self, item, 0 );
+        }
+
+        // drop all the powerups if not in teamplay
+        if ( g_gametype->integer != GT_TEAM )
+        {
+            angle = 45;
+            for ( i = 1 ; i < PW_NUM_POWERUPS ; i++ )
+            {
+                if ( self->client->ps.powerups[ i ] > level.time )
+                {
+                    item = BG_FindItemForPowerup( i );
+                    if ( !item )
+                    {
+                        continue;
+                    }
+                    drop = Drop_Item( self, item, angle );
+                    // decide how many seconds it has left
+                    drop->count = ( self->client->ps.powerups[ i ] - level.time ) / 1000;
+                    if ( drop->count < 1 )
+                    {
+                        drop->count = 1;
+                    }
+                    angle += 45;
+                }
+            }
+        }*/
 }
 
 /*
@@ -159,11 +159,11 @@ void LookAtKiller( gentity_t *self, gentity_t *inflictor, gentity_t *attacker )
     }
     else
     {
-        self->client->ps.stats[STAT_DEAD_YAW] = self->s.angles[YAW];
+        self->client->ps.stats[STAT_DEAD_YAW] = (int)self->s.angles[YAW];
         return;
     }
 
-    self->client->ps.stats[STAT_DEAD_YAW] = vectoyaw ( dir );
+    self->client->ps.stats[STAT_DEAD_YAW] = (int)vectoyaw ( dir );
 
     angles[YAW] = vectoyaw ( dir );
     angles[PITCH] = 0;
@@ -360,7 +360,7 @@ void CheckAlmostScored( gentity_t *self, gentity_t *attacker )
 player_die
 ==================
 */
-void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int damage, int meansOfDeath )
+void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int damage, unsigned int meansOfDeath )
 {
     gentity_t	*ent;
     int			anim;
@@ -637,7 +637,7 @@ int CheckArmor (gentity_t *ent, int damage, int dflags)
 
     // armor
     count = client->ps.stats[STAT_ARMOR];
-    save = ceil( damage * ARMOR_PROTECTION );
+    save = (int)ceil( damage * ARMOR_PROTECTION );
     if (save >= count)
         save = count;
 
@@ -722,7 +722,7 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,
     int			asave;
     int			knockback;
     int			max;
-	qboolean	isWorld = qfalse, trueDamage = !(attacker->client && targ->client);
+    qboolean	isWorld = qfalse, trueDamage = !(attacker->client && targ->client);
 
     if (!targ->takedamage)
         return;
@@ -740,7 +740,7 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,
     if ( !attacker )
     {
         attacker = &g_entities[ENTITYNUM_WORLD];
-		isWorld = qtrue;
+        isWorld = qtrue;
     }
 
     // shootable doors / buttons don't actually have any health
@@ -800,29 +800,29 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,
         }
     }
 
-	knockback = damage * (trueDamage) ? 1.0 : targ->health;
-	if ( targ->flags & FL_NO_KNOCKBACK || dflags & DAMAGE_NO_KNOCKBACK)
-		knockback = 0;
+    knockback = (int)(damage * (trueDamage) ? 1.0 : targ->health);
+    if ( targ->flags & FL_NO_KNOCKBACK || dflags & DAMAGE_NO_KNOCKBACK)
+        knockback = 0;
 
-	// figure momentum add, even if the damage won't be taken
-	if ( knockback && targ->client )
-	{
-		vec3_t	kvel;
-		float	mass;
+    // figure momentum add, even if the damage won't be taken
+    if ( knockback && targ->client )
+    {
+        vec3_t	kvel;
+        float	mass;
 
-		mass = 200;
+        mass = 200;
 
-		VectorScale (dir, g_knockback->value * (float)knockback / mass, kvel);
-		VectorAdd (targ->client->ps.velocity, kvel, targ->client->ps.velocity);
+        VectorScale (dir, g_knockback->value * (float)knockback / mass, kvel);
+        VectorAdd (targ->client->ps.velocity, kvel, targ->client->ps.velocity);
 
-		// set the timer so that the other client can't cancel
-		// out the movement immediately
-		if ( !targ->client->ps.pm_time )
-		{
-			targ->client->ps.pm_time = clamp(knockback * 2, 50, 200);
-			targ->client->ps.pm_flags |= PMF_TIME_KNOCKBACK;
-		}
-	}
+        // set the timer so that the other client can't cancel
+        // out the movement immediately
+        if ( !targ->client->ps.pm_time )
+        {
+            targ->client->ps.pm_time = clamp(knockback * 2, 50, 200);
+            targ->client->ps.pm_flags |= PMF_TIME_KNOCKBACK;
+        }
+    }
 
     // battlesuit protects from all radius damage (but takes knockback)
     // and protects 50% against all damage
@@ -833,7 +833,7 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,
         {
             return;
         }
-        damage *= 0.5;
+        damage >>= 1;
     }
 
     // add to the attacker's hit counter (if the target isn't a general entity like a prox mine)
@@ -855,7 +855,7 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,
     // always give half damage if hurting self
     // calculated after knockback, so rocket jumping works
     if ( targ == attacker)
-        damage *= 0.5;
+        damage >>= 1;
 
     if ( damage < 1 )
         damage = 1;
@@ -870,7 +870,7 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,
     if ( g_debugDamage->integer )
     {
         Com_Printf( "%i: client:%i health:%i damage:%i armor:%i\n", level.time, targ->s.number,
-                  targ->health, take, asave );
+                    targ->health, take, asave );
     }
 
     // add to the damage inflicted on a player this frame
@@ -926,10 +926,10 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,
             if (targ->health < -999)
                 targ->health = -999;
 
-			if(targ->client && targ->client->lasthurt_entity)
-				targ->die(targ, inflictor, targ->client->lasthurt_entity, take, targ->client->lasthurt_mod);
-			else
-				targ->die(targ, inflictor, attacker, take, mod);
+            if(targ->client && targ->client->lasthurt_entity)
+                targ->die(targ, inflictor, targ->client->lasthurt_entity, take, targ->client->lasthurt_mod);
+            else
+                targ->die(targ, inflictor, attacker, take, mod);
 
             return;
         }

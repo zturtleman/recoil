@@ -234,21 +234,21 @@ void SV_LinkEntity( gentity_t *gEnt )
     else if ( gEnt->r.contents & ( CONTENTS_SOLID | CONTENTS_BODY ) )
     {
         // assume that x/y are equal and symetric
-        i = gEnt->r.maxs[0];
+        i = (int)gEnt->r.maxs[0];
         if (i<1)
             i = 1;
         if (i>255)
             i = 255;
 
         // z is not symetric
-        j = (-gEnt->r.mins[2]);
+        j = (int)(-gEnt->r.mins[2]);
         if (j<1)
             j = 1;
         if (j>255)
             j = 255;
 
         // and z maxs can be negative...
-        k = (gEnt->r.maxs[2]+32);
+        k = (int)(gEnt->r.maxs[2]+32);
         if (k<1)
             k = 1;
         if (k>255)
@@ -643,7 +643,8 @@ void SV_ClipMoveToEntities( moveclip_t *clip )
 
             trace.entityNum = touch->s.number;
             clip->trace = trace;
-            clip->trace.startsolid |= oldStart;
+            if(oldStart)
+                clip->trace.startsolid = qtrue;
         }
     }
 }
@@ -684,7 +685,7 @@ void SV_Trace( trace_t *results, const vec3_t start, vec3_t mins, vec3_t maxs, c
 
     clip.contentmask = contentmask;
     clip.start = start;
-//	VectorCopy( clip.trace.endpos, clip.end );
+    //	VectorCopy( clip.trace.endpos, clip.end );
     VectorCopy( end, clip.end );
     clip.mins = mins;
     clip.maxs = maxs;

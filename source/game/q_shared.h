@@ -363,7 +363,13 @@ static float LittleFloat (const float *l)
 
 typedef unsigned char 		byte;
 
+#if defined(__GNUG__)
+#define qboolean bool
+#define qtrue true
+#define qfalse false
+#else
 typedef enum {qfalse, qtrue}	qboolean;
+#endif
 
 typedef int		qhandle_t;
 typedef int		sfxHandle_t;

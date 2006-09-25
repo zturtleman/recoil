@@ -74,68 +74,68 @@ void BotPrintTeamGoal(bot_state_t *bs)
     switch(bs->ltgtype)
     {
     case LTG_TEAMHELP:
-    {
-        BotAI_Print(PRT_MESSAGE, "%s: I'm gonna help a team mate for %1.0f secs\n", netname, t);
-        break;
-    }
+        {
+            BotAI_Print(PRT_MESSAGE, "%s: I'm gonna help a team mate for %1.0f secs\n", netname, t);
+            break;
+        }
     case LTG_TEAMACCOMPANY:
-    {
-        BotAI_Print(PRT_MESSAGE, "%s: I'm gonna accompany a team mate for %1.0f secs\n", netname, t);
-        break;
-    }
+        {
+            BotAI_Print(PRT_MESSAGE, "%s: I'm gonna accompany a team mate for %1.0f secs\n", netname, t);
+            break;
+        }
     case LTG_GETFLAG:
-    {
-        BotAI_Print(PRT_MESSAGE, "%s: I'm gonna get the flag for %1.0f secs\n", netname, t);
-        break;
-    }
+        {
+            BotAI_Print(PRT_MESSAGE, "%s: I'm gonna get the flag for %1.0f secs\n", netname, t);
+            break;
+        }
     case LTG_RUSHBASE:
-    {
-        BotAI_Print(PRT_MESSAGE, "%s: I'm gonna rush to the base for %1.0f secs\n", netname, t);
-        break;
-    }
+        {
+            BotAI_Print(PRT_MESSAGE, "%s: I'm gonna rush to the base for %1.0f secs\n", netname, t);
+            break;
+        }
     case LTG_RETURNFLAG:
-    {
-        BotAI_Print(PRT_MESSAGE, "%s: I'm gonna try to return the flag for %1.0f secs\n", netname, t);
-        break;
-    }
+        {
+            BotAI_Print(PRT_MESSAGE, "%s: I'm gonna try to return the flag for %1.0f secs\n", netname, t);
+            break;
+        }
     case LTG_DEFENDKEYAREA:
-    {
-        BotAI_Print(PRT_MESSAGE, "%s: I'm gonna defend a key area for %1.0f secs\n", netname, t);
-        break;
-    }
+        {
+            BotAI_Print(PRT_MESSAGE, "%s: I'm gonna defend a key area for %1.0f secs\n", netname, t);
+            break;
+        }
     case LTG_GETITEM:
-    {
-        BotAI_Print(PRT_MESSAGE, "%s: I'm gonna get an item for %1.0f secs\n", netname, t);
-        break;
-    }
+        {
+            BotAI_Print(PRT_MESSAGE, "%s: I'm gonna get an item for %1.0f secs\n", netname, t);
+            break;
+        }
     case LTG_KILL:
-    {
-        BotAI_Print(PRT_MESSAGE, "%s: I'm gonna kill someone for %1.0f secs\n", netname, t);
-        break;
-    }
+        {
+            BotAI_Print(PRT_MESSAGE, "%s: I'm gonna kill someone for %1.0f secs\n", netname, t);
+            break;
+        }
     case LTG_CAMP:
     case LTG_CAMPORDER:
-    {
-        BotAI_Print(PRT_MESSAGE, "%s: I'm gonna camp for %1.0f secs\n", netname, t);
-        break;
-    }
+        {
+            BotAI_Print(PRT_MESSAGE, "%s: I'm gonna camp for %1.0f secs\n", netname, t);
+            break;
+        }
     case LTG_PATROL:
-    {
-        BotAI_Print(PRT_MESSAGE, "%s: I'm gonna patrol for %1.0f secs\n", netname, t);
-        break;
-    }
+        {
+            BotAI_Print(PRT_MESSAGE, "%s: I'm gonna patrol for %1.0f secs\n", netname, t);
+            break;
+        }
     default:
-    {
-        if (bs->ctfroam_time > FloatTime())
         {
-            t = bs->ctfroam_time - FloatTime();
-            BotAI_Print(PRT_MESSAGE, "%s: I'm gonna roam for %1.0f secs\n", netname, t);
+            if (bs->ctfroam_time > FloatTime())
+            {
+                t = bs->ctfroam_time - FloatTime();
+                BotAI_Print(PRT_MESSAGE, "%s: I'm gonna roam for %1.0f secs\n", netname, t);
+            }
+            else
+            {
+                BotAI_Print(PRT_MESSAGE, "%s: I've got a regular goal\n", netname);
+            }
         }
-        else
-        {
-            BotAI_Print(PRT_MESSAGE, "%s: I've got a regular goal\n", netname);
-        }
-    }
     }
 }
 #endif //DEBUG
@@ -1051,22 +1051,22 @@ void BotMatch_TaskPreference(bot_state_t *bs, bot_match_t *match)
     switch(match->subtype)
     {
     case ST_DEFENDER:
-    {
-        preference &= ~TEAMTP_ATTACKER;
-        preference |= TEAMTP_DEFENDER;
-        break;
-    }
+        {
+            preference &= ~TEAMTP_ATTACKER;
+            preference |= TEAMTP_DEFENDER;
+            break;
+        }
     case ST_ATTACKER:
-    {
-        preference &= ~TEAMTP_DEFENDER;
-        preference |= TEAMTP_ATTACKER;
-        break;
-    }
+        {
+            preference &= ~TEAMTP_DEFENDER;
+            preference |= TEAMTP_ATTACKER;
+            break;
+        }
     case ST_ROAMER:
-    {
-        preference &= ~(TEAMTP_ATTACKER|TEAMTP_DEFENDER);
-        break;
-    }
+        {
+            preference &= ~(TEAMTP_ATTACKER|TEAMTP_DEFENDER);
+            break;
+        }
     }
     BotSetTeamMateTaskPreference(bs, teammate, preference);
     //
@@ -1424,66 +1424,66 @@ void BotMatch_WhatAreYouDoing(bot_state_t *bs, bot_match_t *match)
     switch(bs->ltgtype)
     {
     case LTG_TEAMHELP:
-    {
-        EasyClientName(bs->teammate, netname, sizeof(netname));
-        BotAI_BotInitialChat(bs, "helping", netname, NULL);
-        break;
-    }
+        {
+            EasyClientName(bs->teammate, netname, sizeof(netname));
+            BotAI_BotInitialChat(bs, "helping", netname, NULL);
+            break;
+        }
     case LTG_TEAMACCOMPANY:
-    {
-        EasyClientName(bs->teammate, netname, sizeof(netname));
-        BotAI_BotInitialChat(bs, "accompanying", netname, NULL);
-        break;
-    }
+        {
+            EasyClientName(bs->teammate, netname, sizeof(netname));
+            BotAI_BotInitialChat(bs, "accompanying", netname, NULL);
+            break;
+        }
     case LTG_DEFENDKEYAREA:
-    {
-        botlib_export->ai.BotGoalName(bs->teamgoal.number, goalname, sizeof(goalname));
-        BotAI_BotInitialChat(bs, "defending", goalname, NULL);
-        break;
-    }
+        {
+            botlib_export->ai.BotGoalName(bs->teamgoal.number, goalname, sizeof(goalname));
+            BotAI_BotInitialChat(bs, "defending", goalname, NULL);
+            break;
+        }
     case LTG_GETITEM:
-    {
-        botlib_export->ai.BotGoalName(bs->teamgoal.number, goalname, sizeof(goalname));
-        BotAI_BotInitialChat(bs, "gettingitem", goalname, NULL);
-        break;
-    }
+        {
+            botlib_export->ai.BotGoalName(bs->teamgoal.number, goalname, sizeof(goalname));
+            BotAI_BotInitialChat(bs, "gettingitem", goalname, NULL);
+            break;
+        }
     case LTG_KILL:
-    {
-        ClientName(bs->teamgoal.entitynum, netname, sizeof(netname));
-        BotAI_BotInitialChat(bs, "killing", netname, NULL);
-        break;
-    }
+        {
+            ClientName(bs->teamgoal.entitynum, netname, sizeof(netname));
+            BotAI_BotInitialChat(bs, "killing", netname, NULL);
+            break;
+        }
     case LTG_CAMP:
     case LTG_CAMPORDER:
-    {
-        BotAI_BotInitialChat(bs, "camping", NULL);
-        break;
-    }
+        {
+            BotAI_BotInitialChat(bs, "camping", NULL);
+            break;
+        }
     case LTG_PATROL:
-    {
-        BotAI_BotInitialChat(bs, "patrolling", NULL);
-        break;
-    }
+        {
+            BotAI_BotInitialChat(bs, "patrolling", NULL);
+            break;
+        }
     case LTG_GETFLAG:
-    {
-        BotAI_BotInitialChat(bs, "capturingflag", NULL);
-        break;
-    }
+        {
+            BotAI_BotInitialChat(bs, "capturingflag", NULL);
+            break;
+        }
     case LTG_RUSHBASE:
-    {
-        BotAI_BotInitialChat(bs, "rushingbase", NULL);
-        break;
-    }
+        {
+            BotAI_BotInitialChat(bs, "rushingbase", NULL);
+            break;
+        }
     case LTG_RETURNFLAG:
-    {
-        BotAI_BotInitialChat(bs, "returningflag", NULL);
-        break;
-    }
+        {
+            BotAI_BotInitialChat(bs, "returningflag", NULL);
+            break;
+        }
     default:
-    {
-        BotAI_BotInitialChat(bs, "roaming", NULL);
-        break;
-    }
+        {
+            BotAI_BotInitialChat(bs, "roaming", NULL);
+            break;
+        }
     }
     //chat what the bot is doing
     botlib_export->ai.BotMatchVariable(match, NETNAME, netname, sizeof(netname));
@@ -1834,8 +1834,8 @@ int BotMatchMessage(bot_state_t *bs, char *message)
     match.type = 0;
     //if it is an unknown message
     if (!botlib_export->ai.BotFindMatch(message, &match, MTCONTEXT_MISC
-                           |MTCONTEXT_INITIALTEAMCHAT
-                           |MTCONTEXT_CTF))
+                                        |MTCONTEXT_INITIALTEAMCHAT
+                                        |MTCONTEXT_CTF))
     {
         return qfalse;
     }
@@ -1844,168 +1844,168 @@ int BotMatchMessage(bot_state_t *bs, char *message)
     {
     case MSG_HELP:					//someone calling for help
     case MSG_ACCOMPANY:				//someone calling for company
-    {
-        BotMatch_HelpAccompany(bs, &match);
-        break;
-    }
+        {
+            BotMatch_HelpAccompany(bs, &match);
+            break;
+        }
     case MSG_DEFENDKEYAREA:			//teamplay defend a key area
-    {
-        BotMatch_DefendKeyArea(bs, &match);
-        break;
-    }
+        {
+            BotMatch_DefendKeyArea(bs, &match);
+            break;
+        }
     case MSG_CAMP:					//camp somewhere
-    {
-        BotMatch_Camp(bs, &match);
-        break;
-    }
+        {
+            BotMatch_Camp(bs, &match);
+            break;
+        }
     case MSG_PATROL:				//patrol between several key areas
-    {
-        BotMatch_Patrol(bs, &match);
-        break;
-    }
-    //CTF & 1FCTF
+        {
+            BotMatch_Patrol(bs, &match);
+            break;
+        }
+        //CTF & 1FCTF
     case MSG_GETFLAG:				//ctf get the enemy flag
-    {
-        BotMatch_GetFlag(bs, &match);
-        break;
-    }
-    //CTF & 1FCTF & Harvester
+        {
+            BotMatch_GetFlag(bs, &match);
+            break;
+        }
+        //CTF & 1FCTF & Harvester
     case MSG_RUSHBASE:				//ctf rush to the base
-    {
-        BotMatch_RushBase(bs, &match);
-        break;
-    }
-    //CTF & 1FCTF
+        {
+            BotMatch_RushBase(bs, &match);
+            break;
+        }
+        //CTF & 1FCTF
     case MSG_RETURNFLAG:
-    {
-        BotMatch_ReturnFlag(bs, &match);
-        break;
-    }
-    //CTF & 1FCTF & Obelisk & Harvester
+        {
+            BotMatch_ReturnFlag(bs, &match);
+            break;
+        }
+        //CTF & 1FCTF & Obelisk & Harvester
     case MSG_TASKPREFERENCE:
-    {
-        BotMatch_TaskPreference(bs, &match);
-        break;
-    }
-    //CTF & 1FCTF
+        {
+            BotMatch_TaskPreference(bs, &match);
+            break;
+        }
+        //CTF & 1FCTF
     case MSG_CTF:
-    {
-        BotMatch_CTF(bs, &match);
-        break;
-    }
+        {
+            BotMatch_CTF(bs, &match);
+            break;
+        }
     case MSG_GETITEM:
-    {
-        BotMatch_GetItem(bs, &match);
-        break;
-    }
+        {
+            BotMatch_GetItem(bs, &match);
+            break;
+        }
     case MSG_JOINSUBTEAM:			//join a sub team
-    {
-        BotMatch_JoinSubteam(bs, &match);
-        break;
-    }
+        {
+            BotMatch_JoinSubteam(bs, &match);
+            break;
+        }
     case MSG_LEAVESUBTEAM:			//leave a sub team
-    {
-        BotMatch_LeaveSubteam(bs, &match);
-        break;
-    }
+        {
+            BotMatch_LeaveSubteam(bs, &match);
+            break;
+        }
     case MSG_WHICHTEAM:
-    {
-        BotMatch_WhichTeam(bs, &match);
-        break;
-    }
+        {
+            BotMatch_WhichTeam(bs, &match);
+            break;
+        }
     case MSG_CHECKPOINT:			//remember a check point
-    {
-        BotMatch_CheckPoint(bs, &match);
-        break;
-    }
+        {
+            BotMatch_CheckPoint(bs, &match);
+            break;
+        }
     case MSG_CREATENEWFORMATION:	//start the creation of a new formation
-    {
-        botlib_export->ea.EA_SayTeam(bs->client, "the part of my brain to create formations has been damaged");
-        break;
-    }
+        {
+            botlib_export->ea.EA_SayTeam(bs->client, "the part of my brain to create formations has been damaged");
+            break;
+        }
     case MSG_FORMATIONPOSITION:		//tell someone his/her position in the formation
-    {
-        botlib_export->ea.EA_SayTeam(bs->client, "the part of my brain to create formations has been damaged");
-        break;
-    }
+        {
+            botlib_export->ea.EA_SayTeam(bs->client, "the part of my brain to create formations has been damaged");
+            break;
+        }
     case MSG_FORMATIONSPACE:		//set the formation space
-    {
-        BotMatch_FormationSpace(bs, &match);
-        break;
-    }
+        {
+            BotMatch_FormationSpace(bs, &match);
+            break;
+        }
     case MSG_DOFORMATION:			//form a certain formation
-    {
-        break;
-    }
+        {
+            break;
+        }
     case MSG_DISMISS:				//dismiss someone
-    {
-        BotMatch_Dismiss(bs, &match);
-        break;
-    }
+        {
+            BotMatch_Dismiss(bs, &match);
+            break;
+        }
     case MSG_STARTTEAMLEADERSHIP:	//someone will become the team leader
-    {
-        BotMatch_StartTeamLeaderShip(bs, &match);
-        break;
-    }
+        {
+            BotMatch_StartTeamLeaderShip(bs, &match);
+            break;
+        }
     case MSG_STOPTEAMLEADERSHIP:	//someone will stop being the team leader
-    {
-        BotMatch_StopTeamLeaderShip(bs, &match);
-        break;
-    }
+        {
+            BotMatch_StopTeamLeaderShip(bs, &match);
+            break;
+        }
     case MSG_WHOISTEAMLAEDER:
-    {
-        BotMatch_WhoIsTeamLeader(bs, &match);
-        break;
-    }
+        {
+            BotMatch_WhoIsTeamLeader(bs, &match);
+            break;
+        }
     case MSG_WHATAREYOUDOING:		//ask a bot what he/she is doing
-    {
-        BotMatch_WhatAreYouDoing(bs, &match);
-        break;
-    }
+        {
+            BotMatch_WhatAreYouDoing(bs, &match);
+            break;
+        }
     case MSG_WHATISMYCOMMAND:
-    {
-        BotMatch_WhatIsMyCommand(bs, &match);
-        break;
-    }
+        {
+            BotMatch_WhatIsMyCommand(bs, &match);
+            break;
+        }
     case MSG_WHEREAREYOU:
-    {
-        BotMatch_WhereAreYou(bs, &match);
-        break;
-    }
+        {
+            BotMatch_WhereAreYou(bs, &match);
+            break;
+        }
     case MSG_LEADTHEWAY:
-    {
-        BotMatch_LeadTheWay(bs, &match);
-        break;
-    }
+        {
+            BotMatch_LeadTheWay(bs, &match);
+            break;
+        }
     case MSG_KILL:
-    {
-        BotMatch_Kill(bs, &match);
-        break;
-    }
+        {
+            BotMatch_Kill(bs, &match);
+            break;
+        }
     case MSG_ENTERGAME:				//someone entered the game
-    {
-        BotMatch_EnterGame(bs, &match);
-        break;
-    }
+        {
+            BotMatch_EnterGame(bs, &match);
+            break;
+        }
     case MSG_NEWLEADER:
-    {
-        BotMatch_NewLeader(bs, &match);
-        break;
-    }
+        {
+            BotMatch_NewLeader(bs, &match);
+            break;
+        }
     case MSG_WAIT:
-    {
-        break;
-    }
+        {
+            break;
+        }
     case MSG_SUICIDE:
-    {
-        BotMatch_Suicide(bs, &match);
-        break;
-    }
+        {
+            BotMatch_Suicide(bs, &match);
+            break;
+        }
     default:
-    {
-        BotAI_Print(PRT_MESSAGE, "unknown match type\n");
-        break;
-    }
+        {
+            BotAI_Print(PRT_MESSAGE, "unknown match type\n");
+            break;
+        }
     }
     return qtrue;
 }

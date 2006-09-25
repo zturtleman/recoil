@@ -61,19 +61,19 @@ unsigned long sys_timeBase = 0;
 int curtime;
 int Sys_Milliseconds (void)
 {
-	struct timeval tp;
+    struct timeval tp;
 
-	gettimeofday(&tp, NULL);
-	
-	if (!sys_timeBase)
-	{
-		sys_timeBase = tp.tv_sec;
-		return tp.tv_usec/1000;
-	}
+    gettimeofday(&tp, NULL);
 
-	curtime = (tp.tv_sec - sys_timeBase)*1000 + tp.tv_usec/1000;
-	
-	return curtime;
+    if (!sys_timeBase)
+    {
+        sys_timeBase = tp.tv_sec;
+        return tp.tv_usec/1000;
+    }
+
+    curtime = (tp.tv_sec - sys_timeBase)*1000 + tp.tv_usec/1000;
+
+    return curtime;
 }
 
 #if defined(__linux__) && !defined(DEDICATED)
@@ -96,63 +96,63 @@ disable with in_subframe 0
 extern cvar_t *in_subframe;
 int Sys_XTimeToSysTime (unsigned long xtime)
 {
-	int ret, time, test;
-	
-	if (!in_subframe->value)
-	{
-		// if you don't want to do any event times corrections
-		return Sys_Milliseconds();
-	}
+    int ret, time, test;
 
-	// test the wrap issue
+    if (!in_subframe->value)
+    {
+        // if you don't want to do any event times corrections
+        return Sys_Milliseconds();
+    }
+
+    // test the wrap issue
 #if 0	
-	// reference values for test: sys_timeBase 0x3dc7b5e9 xtime 0x541ea451 (read these from a test run)
-	// xtime will wrap in 0xabe15bae ms >~ 0x2c0056 s (33 days from Nov 5 2002 -> 8 Dec)
-	//   NOTE: date -d '1970-01-01 UTC 1039384002 seconds' +%c
-	// use sys_timeBase 0x3dc7b5e9+0x2c0056 = 0x3df3b63f
-	// after around 5s, xtime would have wrapped around
-	// we get 7132, the formula handles the wrap safely
-	unsigned long xtime_aux,base_aux;
-	int test;
-//	Com_Printf("sys_timeBase: %p\n", sys_timeBase);
-//	Com_Printf("xtime: %p\n", xtime);
-	xtime_aux = 500; // 500 ms after wrap
-	base_aux = 0x3df3b63f; // the base a few seconds before wrap
-	test = xtime_aux - (unsigned long)(base_aux*1000);
-	Com_Printf("xtime wrap test: %d\n", test);
+    // reference values for test: sys_timeBase 0x3dc7b5e9 xtime 0x541ea451 (read these from a test run)
+    // xtime will wrap in 0xabe15bae ms >~ 0x2c0056 s (33 days from Nov 5 2002 -> 8 Dec)
+    //   NOTE: date -d '1970-01-01 UTC 1039384002 seconds' +%c
+    // use sys_timeBase 0x3dc7b5e9+0x2c0056 = 0x3df3b63f
+    // after around 5s, xtime would have wrapped around
+    // we get 7132, the formula handles the wrap safely
+    unsigned long xtime_aux,base_aux;
+    int test;
+    //	Com_Printf("sys_timeBase: %p\n", sys_timeBase);
+    //	Com_Printf("xtime: %p\n", xtime);
+    xtime_aux = 500; // 500 ms after wrap
+    base_aux = 0x3df3b63f; // the base a few seconds before wrap
+    test = xtime_aux - (unsigned long)(base_aux*1000);
+    Com_Printf("xtime wrap test: %d\n", test);
 #endif
 
-  // some X servers (like suse 8.1's) report weird event times
-  // if the game is loading, resolving DNS, etc. we are also getting old events
-  // so we only deal with subframe corrections that look 'normal'
-  ret = xtime - (unsigned long)(sys_timeBase*1000);
-  time = Sys_Milliseconds();
-  test = time - ret;
-  //printf("delta: %d\n", test);
-  if (test < 0 || test > 30) // in normal conditions I've never seen this go above
-  {
-    return time;
-  }
+    // some X servers (like suse 8.1's) report weird event times
+    // if the game is loading, resolving DNS, etc. we are also getting old events
+    // so we only deal with subframe corrections that look 'normal'
+    ret = xtime - (unsigned long)(sys_timeBase*1000);
+    time = Sys_Milliseconds();
+    test = time - ret;
+    //printf("delta: %d\n", test);
+    if (test < 0 || test > 30) // in normal conditions I've never seen this go above
+    {
+        return time;
+    }
 
-	return ret;
+    return ret;
 }
 #endif
 
 //#if 0 // bk001215 - see snapvector.nasm for replacement
 #if (defined __APPLE__) // rcg010206 - using this for PPC builds...
 long fastftol( float f ) { // bk001213 - from win32/win_shared.c
-  //static int tmp;
-  //	__asm fld f
-  //__asm fistp tmp
-  //__asm mov eax, tmp
-  return (long)f;
+    //static int tmp;
+    //	__asm fld f
+    //__asm fistp tmp
+    //__asm mov eax, tmp
+    return (long)f;
 }
 
 void Sys_SnapVector( float *v ) { // bk001213 - see win32/win_shared.c
-  // bk001213 - old linux
-  v[0] = rint(v[0]);
-  v[1] = rint(v[1]);
-  v[2] = rint(v[2]);
+    // bk001213 - old linux
+    v[0] = rint(v[0]);
+    v[1] = rint(v[1]);
+    v[2] = rint(v[2]);
 }
 #endif
 
@@ -163,15 +163,15 @@ void	Sys_Mkdir( const char *path )
 }
 
 char *strlwr (char *s) {
-  if ( s==NULL ) { // bk001204 - paranoia
-    assert(0);
-    return s;
-  }
-  while (*s) {
-    *s = tolower(*s);
-    s++;
-  }
-  return s; // bk001204 - duh
+    if ( s==NULL ) { // bk001204 - paranoia
+        assert(0);
+        return s;
+    }
+    while (*s) {
+        *s = tolower(*s);
+        s++;
+    }
+    return s; // bk001204 - duh
 }
 
 //============================================
@@ -180,235 +180,235 @@ char *strlwr (char *s) {
 
 // bk001129 - new in 1.26
 void Sys_ListFilteredFiles( const char *basedir, char *subdirs, char *filter, char **list, int *numfiles ) {
-	char		search[MAX_OSPATH], newsubdirs[MAX_OSPATH];
-	char		filename[MAX_OSPATH];
-	DIR			*fdir;
-	struct dirent *d;
-	struct stat st;
+    char		search[MAX_OSPATH], newsubdirs[MAX_OSPATH];
+    char		filename[MAX_OSPATH];
+    DIR			*fdir;
+    struct dirent *d;
+    struct stat st;
 
-	if ( *numfiles >= MAX_FOUND_FILES - 1 ) {
-		return;
-	}
+    if ( *numfiles >= MAX_FOUND_FILES - 1 ) {
+        return;
+    }
 
-	if (strlen(subdirs)) {
-		Com_sprintf( search, sizeof(search), "%s/%s", basedir, subdirs );
-	}
-	else {
-		Com_sprintf( search, sizeof(search), "%s", basedir );
-	}
+    if (strlen(subdirs)) {
+        Com_sprintf( search, sizeof(search), "%s/%s", basedir, subdirs );
+    }
+    else {
+        Com_sprintf( search, sizeof(search), "%s", basedir );
+    }
 
-	if ((fdir = opendir(search)) == NULL) {
-		return;
-	}
+    if ((fdir = opendir(search)) == NULL) {
+        return;
+    }
 
-	while ((d = readdir(fdir)) != NULL) {
-		Com_sprintf(filename, sizeof(filename), "%s/%s", search, d->d_name);
-		if (stat(filename, &st) == -1)
-			continue;
+    while ((d = readdir(fdir)) != NULL) {
+        Com_sprintf(filename, sizeof(filename), "%s/%s", search, d->d_name);
+        if (stat(filename, &st) == -1)
+            continue;
 
-		if (st.st_mode & S_IFDIR) {
-			if (Q_stricmp(d->d_name, ".") && Q_stricmp(d->d_name, "..")) {
-				if (strlen(subdirs)) {
-					Com_sprintf( newsubdirs, sizeof(newsubdirs), "%s/%s", subdirs, d->d_name);
-				}
-				else {
-					Com_sprintf( newsubdirs, sizeof(newsubdirs), "%s", d->d_name);
-				}
-				Sys_ListFilteredFiles( basedir, newsubdirs, filter, list, numfiles );
-			}
-		}
-		if ( *numfiles >= MAX_FOUND_FILES - 1 ) {
-			break;
-		}
-		Com_sprintf( filename, sizeof(filename), "%s/%s", subdirs, d->d_name );
-		if (!Com_FilterPath( filter, filename, qfalse ))
-			continue;
-		list[ *numfiles ] = CopyString( filename );
-		(*numfiles)++;
-	}
+        if (st.st_mode & S_IFDIR) {
+            if (Q_stricmp(d->d_name, ".") && Q_stricmp(d->d_name, "..")) {
+                if (strlen(subdirs)) {
+                    Com_sprintf( newsubdirs, sizeof(newsubdirs), "%s/%s", subdirs, d->d_name);
+                }
+                else {
+                    Com_sprintf( newsubdirs, sizeof(newsubdirs), "%s", d->d_name);
+                }
+                Sys_ListFilteredFiles( basedir, newsubdirs, filter, list, numfiles );
+            }
+        }
+        if ( *numfiles >= MAX_FOUND_FILES - 1 ) {
+            break;
+        }
+        Com_sprintf( filename, sizeof(filename), "%s/%s", subdirs, d->d_name );
+        if (!Com_FilterPath( filter, filename, qfalse ))
+            continue;
+        list[ *numfiles ] = CopyString( filename );
+        (*numfiles)++;
+    }
 
-	closedir(fdir);
+    closedir(fdir);
 }
 
 // bk001129 - in 1.17 this used to be
 // char **Sys_ListFiles( const char *directory, const char *extension, int *numfiles, qboolean wantsubs )
 char **Sys_ListFiles( const char *directory, const char *extension, char *filter, int *numfiles, qboolean wantsubs )
 {
-	struct dirent *d;
-	// char *p; // bk001204 - unused
-	DIR		*fdir;
-	qboolean dironly = wantsubs;
-	char		search[MAX_OSPATH];
-	int			nfiles;
-	char		**listCopy;
-	char		*list[MAX_FOUND_FILES];
-	//int			flag; // bk001204 - unused
-	int			i;
-	struct stat st;
+    struct dirent *d;
+    // char *p; // bk001204 - unused
+    DIR		*fdir;
+    qboolean dironly = wantsubs;
+    char		search[MAX_OSPATH];
+    int			nfiles;
+    char		**listCopy;
+    char		*list[MAX_FOUND_FILES];
+    //int			flag; // bk001204 - unused
+    int			i;
+    struct stat st;
 
-	int			extLen;
+    int			extLen;
 
-	if (filter) {
+    if (filter) {
 
-		nfiles = 0;
-		Sys_ListFilteredFiles( directory, "", filter, list, &nfiles );
+        nfiles = 0;
+        Sys_ListFilteredFiles( directory, "", filter, list, &nfiles );
 
-		list[ nfiles ] = 0;
-		*numfiles = nfiles;
+        list[ nfiles ] = 0;
+        *numfiles = nfiles;
 
-		if (!nfiles)
-			return NULL;
+        if (!nfiles)
+            return NULL;
 
-		listCopy = Z_Malloc( ( nfiles + 1 ) * sizeof( *listCopy ) );
-		for ( i = 0 ; i < nfiles ; i++ ) {
-			listCopy[i] = list[i];
-		}
-		listCopy[i] = NULL;
+        listCopy = (char **)Z_Malloc( ( nfiles + 1 ) * sizeof( *listCopy ) );
+        for ( i = 0 ; i < nfiles ; i++ ) {
+            listCopy[i] = list[i];
+        }
+        listCopy[i] = NULL;
 
-		return listCopy;
-	}
+        return listCopy;
+    }
 
-	if ( !extension)
-		extension = "";
+    if ( !extension)
+        extension = "";
 
-	if ( extension[0] == '/' && extension[1] == 0 ) {
-		extension = "";
-		dironly = qtrue;
-	}
+    if ( extension[0] == '/' && extension[1] == 0 ) {
+        extension = "";
+        dironly = qtrue;
+    }
 
-	extLen = strlen( extension );
-	
-	// search
-	nfiles = 0;
+    extLen = strlen( extension );
 
-	if ((fdir = opendir(directory)) == NULL) {
-		*numfiles = 0;
-		return NULL;
-	}
+    // search
+    nfiles = 0;
 
-	while ((d = readdir(fdir)) != NULL) {
-		Com_sprintf(search, sizeof(search), "%s/%s", directory, d->d_name);
-		if (stat(search, &st) == -1)
-			continue;
-		if ((dironly && !(st.st_mode & S_IFDIR)) ||
-			(!dironly && (st.st_mode & S_IFDIR)))
-			continue;
+    if ((fdir = opendir(directory)) == NULL) {
+        *numfiles = 0;
+        return NULL;
+    }
 
-		if (*extension) {
-			if ( strlen( d->d_name ) < strlen( extension ) ||
-				Q_stricmp( 
-					d->d_name + strlen( d->d_name ) - strlen( extension ),
-					extension ) ) {
-				continue; // didn't match
-			}
-		}
+    while ((d = readdir(fdir)) != NULL) {
+        Com_sprintf(search, sizeof(search), "%s/%s", directory, d->d_name);
+        if (stat(search, &st) == -1)
+            continue;
+        if ((dironly && !(st.st_mode & S_IFDIR)) ||
+                (!dironly && (st.st_mode & S_IFDIR)))
+            continue;
 
-		if ( nfiles == MAX_FOUND_FILES - 1 )
-			break;
-		list[ nfiles ] = CopyString( d->d_name );
-		nfiles++;
-	}
+        if (*extension) {
+            if ( strlen( d->d_name ) < strlen( extension ) ||
+                    Q_stricmp(
+                        d->d_name + strlen( d->d_name ) - strlen( extension ),
+                        extension ) ) {
+                continue; // didn't match
+            }
+        }
 
-	list[ nfiles ] = 0;
+        if ( nfiles == MAX_FOUND_FILES - 1 )
+            break;
+        list[ nfiles ] = CopyString( d->d_name );
+        nfiles++;
+    }
 
-	closedir(fdir);
+    list[ nfiles ] = 0;
 
-	// return a copy of the list
-	*numfiles = nfiles;
+    closedir(fdir);
 
-	if ( !nfiles ) {
-		return NULL;
-	}
+    // return a copy of the list
+    *numfiles = nfiles;
 
-	listCopy = Z_Malloc( ( nfiles + 1 ) * sizeof( *listCopy ) );
-	for ( i = 0 ; i < nfiles ; i++ ) {
-		listCopy[i] = list[i];
-	}
-	listCopy[i] = NULL;
+    if ( !nfiles ) {
+        return NULL;
+    }
 
-	return listCopy;
+    listCopy = (char **)Z_Malloc( ( nfiles + 1 ) * sizeof( *listCopy ) );
+    for ( i = 0 ; i < nfiles ; i++ ) {
+        listCopy[i] = list[i];
+    }
+    listCopy[i] = NULL;
+
+    return listCopy;
 }
 
 void	Sys_FreeFileList( char **list ) {
-	int		i;
+    int		i;
 
-	if ( !list ) {
-		return;
-	}
+    if ( !list ) {
+        return;
+    }
 
-	for ( i = 0 ; list[i] ; i++ ) {
-		Z_Free( list[i] );
-	}
+    for ( i = 0 ; list[i] ; i++ ) {
+        Z_Free( list[i] );
+    }
 
-	Z_Free( list );
+    Z_Free( list );
 }
 
-char *Sys_Cwd( void ) 
+char *Sys_Cwd( void )
 {
-	static char cwd[MAX_OSPATH];
+    static char cwd[MAX_OSPATH];
 
-	getcwd( cwd, sizeof( cwd ) - 1 );
-	cwd[MAX_OSPATH-1] = 0;
+    getcwd( cwd, sizeof( cwd ) - 1 );
+    cwd[MAX_OSPATH-1] = 0;
 
-	return cwd;
+    return cwd;
 }
 
 void Sys_SetDefaultCDPath(const char *path)
 {
-	Q_strncpyz(cdPath, path, sizeof(cdPath));
+    Q_strncpyz(cdPath, path, sizeof(cdPath));
 }
 
 char *Sys_DefaultCDPath(void)
 {
-        return cdPath;
+    return cdPath;
 }
 
 void Sys_SetDefaultInstallPath(const char *path)
 {
-	Q_strncpyz(installPath, path, sizeof(installPath));
+    Q_strncpyz(installPath, path, sizeof(installPath));
 }
 
 char *Sys_DefaultInstallPath(void)
 {
-	if (*installPath)
-		return installPath;
-	else
-		return Sys_Cwd();
+    if (*installPath)
+        return installPath;
+    else
+        return Sys_Cwd();
 }
 
 void Sys_SetDefaultHomePath(const char *path)
 {
-	Q_strncpyz(homePath, path, sizeof(homePath));
+    Q_strncpyz(homePath, path, sizeof(homePath));
 }
 
 char *Sys_DefaultHomePath(void)
 {
-	char *p;
+    char *p;
 
-        if (*homePath)
-            return homePath;
-            
-	if ((p = getenv("HOME")) != NULL) {
-		Q_strncpyz(homePath, p, sizeof(homePath));
+    if (*homePath)
+        return homePath;
+
+    if ((p = getenv("HOME")) != NULL) {
+        Q_strncpyz(homePath, p, sizeof(homePath));
 #ifdef MACOS_X
-		Q_strcat(homePath, sizeof(homePath), "/Library/Application Support/Quake3");
+        Q_strcat(homePath, sizeof(homePath), "/Library/Application Support/Quake3");
 #else
-		Q_strcat(homePath, sizeof(homePath), "/.q3a");
+        Q_strcat(homePath, sizeof(homePath), "/.q3a");
 #endif
-		if (mkdir(homePath, 0777)) {
-			if (errno != EEXIST) 
-				Sys_Error("Unable to create directory \"%s\", error is %s(%d)\n", homePath, strerror(errno), errno);
-		}
-		return homePath;
-	}
-	return ""; // assume current dir
+        if (mkdir(homePath, 0777)) {
+            if (errno != EEXIST)
+                Sys_Error("Unable to create directory \"%s\", error is %s(%d)\n", homePath, strerror(errno), errno);
+        }
+        return homePath;
+    }
+    return ""; // assume current dir
 }
 
 //============================================
 
 int Sys_GetProcessorId( void )
 {
-	return CPUID_GENERIC;
+    return CPUID_GENERIC;
 }
 
 void Sys_ShowConsole( int visLevel, qboolean quitOnClose )
@@ -417,19 +417,19 @@ void Sys_ShowConsole( int visLevel, qboolean quitOnClose )
 
 char *Sys_GetCurrentUser( void )
 {
-	struct passwd *p;
+    struct passwd *p;
 
-	if ( (p = getpwuid( getuid() )) == NULL ) {
-		return "player";
-	}
-	return p->pw_name;
+    if ( (p = getpwuid( getuid() )) == NULL ) {
+        return "player";
+    }
+    return p->pw_name;
 }
 
 #if defined(__linux__)
-// TTimo 
+// TTimo
 // sysconf() in libc, POSIX.1 compliant
 unsigned int Sys_ProcessorCount()
 {
-  return sysconf(_SC_NPROCESSORS_ONLN);
+    return sysconf(_SC_NPROCESSORS_ONLN);
 }
 #endif

@@ -110,7 +110,7 @@ int G_ParseInfos( char *buf, int max, char *infos[] )
             Info_SetValueForKey( info, key, token );
         }
         //NOTE: extra space for arena number
-        infos[count] = G_Alloc(strlen(info) + strlen("\\num\\") + strlen(va("%d", MAX_ARENAS)) + 1);
+        infos[count] = (char *)G_Alloc(strlen(info) + strlen("\\num\\") + strlen(va("%d", MAX_ARENAS)) + 1);
         if (infos[count])
         {
             strcpy(infos[count], info);
@@ -289,7 +289,7 @@ void G_AddRandomBot( int team )
             num++;
         }
     }
-    num = random() * num;
+    num = (int)(random() * num);
     for ( n = 0; n < g_numBots ; n++ )
     {
         value = Info_ValueForKey( g_botInfos[n], "name" );

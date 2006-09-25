@@ -90,8 +90,8 @@ void DeathmatchScoreboardMessage( gentity_t *ent )
     }
 
     SV_GameSendServerCommand( ent-g_entities, va("scores %i %i %i%s", i,
-                            level.teamScores[TEAM_RED], level.teamScores[TEAM_BLUE],
-                            string ) );
+                              level.teamScores[TEAM_RED], level.teamScores[TEAM_BLUE],
+                              string ) );
 }
 
 
@@ -454,7 +454,7 @@ void Cmd_LevelShot_f( gentity_t *ent )
     if ( g_gametype->integer != 0 )
     {
         SV_GameSendServerCommand( ent-g_entities,
-                                "print \"Must be in g_gametype 0 for levelshot\n\"" );
+                                  "print \"Must be in g_gametype 0 for levelshot\n\"" );
         return;
     }
 
@@ -527,22 +527,22 @@ void BroadcastTeamChange( gclient_t *client, int oldTeam )
     if ( client->sess.sessionTeam == TEAM_RED )
     {
         SV_GameSendServerCommand( -1, va("cp \"%s" S_COLOR_WHITE " joined the red team.\n\"",
-                                       client->pers.netname) );
+                                         client->pers.netname) );
     }
     else if ( client->sess.sessionTeam == TEAM_BLUE )
     {
         SV_GameSendServerCommand( -1, va("cp \"%s" S_COLOR_WHITE " joined the blue team.\n\"",
-                                       client->pers.netname));
+                                         client->pers.netname));
     }
     else if ( client->sess.sessionTeam == TEAM_SPECTATOR && oldTeam != TEAM_SPECTATOR )
     {
         SV_GameSendServerCommand( -1, va("cp \"%s" S_COLOR_WHITE " joined the spectators.\n\"",
-                                       client->pers.netname));
+                                         client->pers.netname));
     }
     else if ( client->sess.sessionTeam == TEAM_FREE )
     {
         SV_GameSendServerCommand( -1, va("cp \"%s" S_COLOR_WHITE " joined the battle.\n\"",
-                                       client->pers.netname));
+                                         client->pers.netname));
     }
 }
 
@@ -619,13 +619,13 @@ void SetTeam( gentity_t *ent, char *s )
             if ( team == TEAM_RED && counts[TEAM_RED] - counts[TEAM_BLUE] > 1 )
             {
                 SV_GameSendServerCommand( ent->client->ps.clientNum,
-                                        "cp \"Red team has too many players.\n\"" );
+                                          "cp \"Red team has too many players.\n\"" );
                 return; // ignore the request
             }
             if ( team == TEAM_BLUE && counts[TEAM_BLUE] - counts[TEAM_RED] > 1 )
             {
                 SV_GameSendServerCommand( ent->client->ps.clientNum,
-                                        "cp \"Blue team has too many players.\n\"" );
+                                          "cp \"Blue team has too many players.\n\"" );
                 return; // ignore the request
             }
 
@@ -686,7 +686,7 @@ void SetTeam( gentity_t *ent, char *s )
         client->sess.spectatorTime = level.time;
     }
 
-    client->sess.sessionTeam = team;
+    client->sess.sessionTeam = (team_t)team;
     client->sess.spectatorState = specState;
     client->sess.spectatorClient = specClient;
 
@@ -940,8 +940,8 @@ static void G_SayTo( gentity_t *ent, gentity_t *other, int mode, int color, cons
     }
 
     SV_GameSendServerCommand( other-g_entities, va("%s \"%s%c%c%s\"",
-                            mode == SAY_TEAM ? "tchat" : "chat",
-                            name, Q_COLOR_ESCAPE, color, message));
+                              mode == SAY_TEAM ? "tchat" : "chat",
+                              name, Q_COLOR_ESCAPE, color, message));
 }
 
 #define EC		"\x19"
@@ -1333,9 +1333,9 @@ static char	*gc_orders[] = {
 
 void Cmd_GameCommand_f( gentity_t *ent )
 {
-    int		player;
-    int		order;
-    char	str[MAX_TOKEN_CHARS];
+    int             player;
+    unsigned int    order;
+    char            str[MAX_TOKEN_CHARS];
 
     Cmd_ArgvBuffer( 1, str, sizeof( str ) );
     player = atoi( str );

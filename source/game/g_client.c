@@ -233,7 +233,7 @@ gentity_t *SelectRandomFurthestSpawnPoint ( vec3_t avoidPoint, vec3_t origin, ve
     }
 
     // select a random spot from the spawn points furthest away
-    rnd = random() * (numSpots / 2);
+    rnd = (int)(random() * (numSpots / 2));
 
     VectorCopy (list_spot[rnd]->s.origin, origin);
     origin[2] += 9;
@@ -525,7 +525,7 @@ TeamCount
 Returns number of players on a team
 ================
 */
-team_t TeamCount( int ignoreClientNum, int team )
+int TeamCount( int ignoreClientNum, team_t team )
 {
     int		i;
     int		count = 0;
@@ -795,7 +795,7 @@ void ClientUserinfoChanged( int clientNum )
         if ( strcmp( oldname, client->pers.netname ) )
         {
             SV_GameSendServerCommand( -1, va("print \"%s" S_COLOR_WHITE " renamed to %s\n\"", oldname,
-                                           client->pers.netname) );
+                                             client->pers.netname) );
         }
     }
 
@@ -942,7 +942,7 @@ restarts.
 char *ClientConnect( int clientNum, qboolean firstTime, qboolean isBot )
 {
     char		*value;
-//	char		*areabits;
+    //	char		*areabits;
     gclient_t	*client;
     char		userinfo[MAX_INFO_STRING];
     gentity_t	*ent;
@@ -979,7 +979,7 @@ char *ClientConnect( int clientNum, qboolean firstTime, qboolean isBot )
     ent->client = level.clients + clientNum;
     client = ent->client;
 
-//	areabits = client->areabits;
+    //	areabits = client->areabits;
 
     memset( client, 0, sizeof(*client) );
 
@@ -1022,9 +1022,9 @@ char *ClientConnect( int clientNum, qboolean firstTime, qboolean isBot )
     CalculateRanks();
 
     // for statistics
-//	client->areabits = areabits;
-//	if ( !client->areabits )
-//		client->areabits = G_Alloc( (botlib_export->aas.AAS_PointReachabilityAreaIndex( NULL ) + 7) / 8 );
+    //	client->areabits = areabits;
+    //	if ( !client->areabits )
+    //		client->areabits = G_Alloc( (botlib_export->aas.AAS_PointReachabilityAreaIndex( NULL ) + 7) / 8 );
 
     return NULL;
 }
@@ -1112,7 +1112,7 @@ void ClientSpawn(gentity_t *ent)
     gentity_t	*spawnPoint;
     int		flags;
     int		savedPing;
-//	char	*savedAreaBits;
+    //	char	*savedAreaBits;
     int		accuracy_hits, accuracy_shots;
     int		eventSequence;
     char	userinfo[MAX_INFO_STRING];
@@ -1186,7 +1186,7 @@ void ClientSpawn(gentity_t *ent)
     saved = client->pers;
     savedSess = client->sess;
     savedPing = client->ps.ping;
-//	savedAreaBits = client->areabits;
+    //	savedAreaBits = client->areabits;
     accuracy_hits = client->accuracy_hits;
     accuracy_shots = client->accuracy_shots;
     for ( i = 0 ; i < MAX_PERSISTANT ; i++ )
@@ -1200,7 +1200,7 @@ void ClientSpawn(gentity_t *ent)
     client->pers = saved;
     client->sess = savedSess;
     client->ps.ping = savedPing;
-//	client->areabits = savedAreaBits;
+    //	client->areabits = savedAreaBits;
     client->accuracy_hits = accuracy_hits;
     client->accuracy_shots = accuracy_shots;
     client->lastkilled_client = -1;
@@ -1222,7 +1222,7 @@ void ClientSpawn(gentity_t *ent)
     if ( client->pers.maxHealth < 1 || client->pers.maxHealth > 100 )
         client->pers.maxHealth = 100;
 
-	client->pers.maxHealth *= 0.25;
+    client->pers.maxHealth = (int)(client->pers.maxHealth * 0.25);
 
     // clear entity values
     client->ps.stats[STAT_MAX_HEALTH] = client->pers.maxHealth;
