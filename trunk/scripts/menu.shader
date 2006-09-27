@@ -21,17 +21,13 @@ menuback
 	nopicmip
 	nomipmaps
 	{
-		map		gfx\2d\menuback.jpg
-		tcmod		scroll .01 0
+		map		gfx\2d\stars.jpg
+		tcmod		scroll .001 0
+		tcmod		scale 8 6
 	}
-}
-
-menubacknologo
-{
-	nopicmip
-	nomipmaps
 	{
-		map		gfx\2d\menuback.jpg
+		map		gfx\2d\menuback.tga
 		tcmod		scroll .01 0
+		blendfunc	blend
 	}
 }
