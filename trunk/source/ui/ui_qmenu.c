@@ -1795,7 +1795,7 @@ void Menu_Cache( void )
     uis.charsetProp		= RE_RegisterShaderNoMip( "menu/art/font1_prop.tga" );
     uis.charsetPropGlow	= RE_RegisterShaderNoMip( "menu/art/font1_prop_glo.tga" );
     uis.charsetPropB	= RE_RegisterShaderNoMip( "menu/art/font2_prop.tga" );
-    uis.cursor          = RE_RegisterShaderNoMip( "menu/art/3_cursor2" );
+    uis.cursor          = RE_RegisterShaderNoMip( "menu/art/cursor_pointer" );
     uis.rb_on           = RE_RegisterShaderNoMip( "menu/art/switch_on" );
     uis.rb_off          = RE_RegisterShaderNoMip( "menu/art/switch_off" );
 
