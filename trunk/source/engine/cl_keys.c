@@ -1163,7 +1163,7 @@ void CL_KeyEvent (int key, qboolean down, unsigned time)
     else
     {
         keys[key].repeats = 0;
-        anykeydown--;
+        anykeydown = qfalse;
         if (anykeydown < 0)
         {
             anykeydown = 0;

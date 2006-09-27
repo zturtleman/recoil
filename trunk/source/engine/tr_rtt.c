@@ -95,7 +95,7 @@ image_t *Fbo_genDepthRenderBuffer(int width, int height, int bits)
         {
             image_t *image;
 
-            image = tr.images[tr.numImages] = Hunk_Alloc( sizeof( image_t ), h_low );
+            image = tr.images[tr.numImages] = (image_t *)Hunk_Alloc( sizeof( image_t ), h_low );
             image->width = width;
             image->height = height;
             image->internalFormat =	internalFormat;
@@ -127,7 +127,7 @@ image_t *Fbo_genStencilRenderBuffer(int width, int height, int bits)
     {
         image_t *image;
 
-        image = tr.images[tr.numImages] = Hunk_Alloc( sizeof( image_t ), h_low );
+        image = tr.images[tr.numImages] = (image_t *)Hunk_Alloc( sizeof( image_t ), h_low );
         image->width = width;
         image->height = height;
         image->internalFormat =	internalFormat;
@@ -156,7 +156,7 @@ image_t *Fbo_genRenderTarget(int width, int height, int bits, filter_e filter, i
     {
         image_t *image;
 
-        image = tr.images[tr.numImages] = Hunk_Alloc( sizeof( image_t ), h_low );
+        image = tr.images[tr.numImages] = (image_t *)Hunk_Alloc( sizeof( image_t ), h_low );
         image->width = width;
         image->height = height;
         image->internalFormat =	internalFormat;

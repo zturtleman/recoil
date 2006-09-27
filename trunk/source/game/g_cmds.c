@@ -201,12 +201,11 @@ Returns a player number for either a number or name string
 Returns -1 if invalid
 ==================
 */
-int ClientNumberFromString( gentity_t *to, char *s )
+unsigned int ClientNumberFromString( gentity_t *to, char *s )
 {
-    gclient_t	*cl;
-    int			idnum;
-    char		s2[MAX_STRING_CHARS];
-    char		n2[MAX_STRING_CHARS];
+    gclient_t    *cl;
+    unsigned int idnum;
+    char         s2[MAX_STRING_CHARS], n2[MAX_STRING_CHARS];
 
     // numeric values are just slot numbers
     if (s[0] >= '0' && s[0] <= '9')
@@ -215,14 +214,14 @@ int ClientNumberFromString( gentity_t *to, char *s )
         if ( idnum < 0 || idnum >= level.maxclients )
         {
             SV_GameSendServerCommand( to-g_entities, va("print \"Bad client slot: %i\n\"", idnum));
-            return -1;
+            return MAX_CLIENTS;
         }
 
         cl = &level.clients[idnum];
         if ( cl->pers.connected != CON_CONNECTED )
         {
             SV_GameSendServerCommand( to-g_entities, va("print \"Client %i is not active\n\"", idnum));
-            return -1;
+            return MAX_CLIENTS;
         }
         return idnum;
     }
@@ -243,7 +242,7 @@ int ClientNumberFromString( gentity_t *to, char *s )
     }
 
     SV_GameSendServerCommand( to-g_entities, va("print \"User %s is not on the server\n\"", s));
-    return -1;
+    return MAX_CLIENTS;
 }
 
 /*
@@ -553,12 +552,12 @@ SetTeam
 */
 void SetTeam( gentity_t *ent, char *s )
 {
-    int					team, oldTeam;
-    gclient_t			*client;
-    int					clientNum;
-    spectatorState_t	specState;
-    int					specClient;
-    int					teamLeader;
+    team_t           team, oldTeam;
+    gclient_t        *client;
+    unsigned int     clientNum;
+    spectatorState_t specState;
+    int              specClient;
+    unsigned int     teamLeader;
 
     //
     // see what change is requested
@@ -646,7 +645,7 @@ void SetTeam( gentity_t *ent, char *s )
         team = TEAM_SPECTATOR;
     }
     else if ( g_maxGameClients->integer > 0 &&
-              level.numNonSpectatorClients >= g_maxGameClients->integer )
+              level.numNonSpectatorClients >= (unsigned int)g_maxGameClients->integer )
     {
         team = TEAM_SPECTATOR;
     }
@@ -695,7 +694,7 @@ void SetTeam( gentity_t *ent, char *s )
     {
         teamLeader = TeamLeader( team );
         // if there is no team leader or the team leader is a bot and this client is not a bot
-        if ( teamLeader == -1 || ( !(g_entities[clientNum].r.svFlags & SVF_BOT) && (g_entities[teamLeader].r.svFlags & SVF_BOT) ) )
+        if ( teamLeader == MAX_CLIENTS || ( !(g_entities[clientNum].r.svFlags & SVF_BOT) && (g_entities[teamLeader].r.svFlags & SVF_BOT) ) )
         {
             SetLeader( team, clientNum );
         }
@@ -846,8 +845,7 @@ Cmd_FollowCycle_f
 */
 void Cmd_FollowCycle_f( gentity_t *ent, int dir )
 {
-    int		clientnum;
-    int		original;
+    unsigned int clientnum, original;
 
     // if they are playing a tournement game, count as a loss
     if ( (g_gametype->integer == GT_TOURNAMENT )
@@ -948,7 +946,7 @@ static void G_SayTo( gentity_t *ent, gentity_t *other, int mode, int color, cons
 
 void G_Say( gentity_t *ent, gentity_t *target, int mode, const char *chatText )
 {
-    int			j;
+    unsigned int			j;
     gentity_t	*other;
     int			color;
     char		name[64];
@@ -1046,7 +1044,7 @@ Cmd_Tell_f
 */
 static void Cmd_Tell_f( gentity_t *ent )
 {
-    int			targetNum;
+    unsigned int			targetNum;
     gentity_t	*target;
     char		*p;
     char		arg[MAX_TOKEN_CHARS];
@@ -1130,7 +1128,7 @@ static void G_VoiceTo( gentity_t *ent, gentity_t *other, int mode, const char *i
 
 void G_Voice( gentity_t *ent, gentity_t *target, int mode, const char *id, qboolean voiceonly )
 {
-    int			j;
+    unsigned int			j;
     gentity_t	*other;
 
     if ( g_gametype->integer < GT_TEAM && mode == SAY_TEAM )
@@ -1191,7 +1189,7 @@ Cmd_VoiceTell_f
 */
 static void Cmd_VoiceTell_f( gentity_t *ent, qboolean voiceonly )
 {
-    int			targetNum;
+    unsigned int			targetNum;
     gentity_t	*target;
     char		*id;
     char		arg[MAX_TOKEN_CHARS];
@@ -1235,7 +1233,7 @@ Cmd_VoiceTaunt_f
 static void Cmd_VoiceTaunt_f( gentity_t *ent )
 {
     gentity_t *who;
-    int i;
+    unsigned int i;
 
     if (!ent->client)
     {
@@ -1243,7 +1241,7 @@ static void Cmd_VoiceTaunt_f( gentity_t *ent )
     }
 
     // insult someone who just killed you
-    if (ent->enemy && ent->enemy->client && ent->enemy->client->lastkilled_client == ent->s.number)
+    if (ent->enemy && ent->enemy->client && ent->enemy->client->lastkilled_client == (int)ent->s.number)
     {
         // i am a dead corpse
         if (!(ent->enemy->r.svFlags & SVF_BOT))
@@ -1258,7 +1256,7 @@ static void Cmd_VoiceTaunt_f( gentity_t *ent )
         return;
     }
     // insult someone you just killed
-    if (ent->client->lastkilled_client >= 0 && ent->client->lastkilled_client != ent->s.number)
+    if (ent->client->lastkilled_client >= 0 && ent->client->lastkilled_client != (int)ent->s.number)
     {
         who = g_entities + ent->client->lastkilled_client;
         if (who->client)
@@ -1383,7 +1381,7 @@ Cmd_CallVote_f
 */
 void Cmd_CallVote_f( gentity_t *ent )
 {
-    int		i;
+    unsigned int		i;
     char	arg1[MAX_STRING_TOKENS];
     char	arg2[MAX_STRING_TOKENS];
 
@@ -1572,9 +1570,9 @@ Cmd_CallTeamVote_f
 */
 void Cmd_CallTeamVote_f( gentity_t *ent )
 {
-    int		i, team, cs_offset;
-    char	arg1[MAX_STRING_TOKENS];
-    char	arg2[MAX_STRING_TOKENS];
+    unsigned int i;
+    int          team, cs_offset;
+    char         arg1[MAX_STRING_TOKENS], arg2[MAX_STRING_TOKENS];
 
     team = ent->client->sess.sessionTeam;
     if ( team == TEAM_RED )
@@ -1835,7 +1833,7 @@ void Cmd_Stats_f( gentity_t *ent )
 ClientCommand
 =================
 */
-void ClientCommand( int clientNum )
+void ClientCommand(unsigned int clientNum)
 {
     gentity_t *ent;
     char	cmd[MAX_TOKEN_CHARS];

@@ -39,13 +39,10 @@ UpdateTournamentInfo
 */
 void UpdateTournamentInfo( void )
 {
-    int			i;
-    gentity_t	*player;
-    int			playerClientNum;
-    int			n, accuracy, perfect;
-    unsigned int        buflen, msglen;
-    char		buf[32];
-    char		msg[MAX_STRING_CHARS];
+    int             n, accuracy, perfect;
+    char            buf[32], msg[MAX_STRING_CHARS];
+    unsigned int    playerClientNum, i, buflen, msglen;
+    gentity_t       *player;
 
     // find the real player
     player = NULL;
@@ -53,19 +50,15 @@ void UpdateTournamentInfo( void )
     {
         player = &g_entities[i];
         if ( !player->inuse )
-        {
             continue;
-        }
         if ( !( player->r.svFlags & SVF_BOT ) )
-        {
             break;
-        }
     }
+
     // this should never happen!
     if ( !player || i == level.maxclients )
-    {
         return;
-    }
+
     playerClientNum = i;
 
     CalculateRanks();
@@ -77,13 +70,10 @@ void UpdateTournamentInfo( void )
     else
     {
         if( player->client->accuracy_shots )
-        {
             accuracy = player->client->accuracy_hits * 100 / player->client->accuracy_shots;
-        }
         else
-        {
             accuracy = 0;
-        }
+
         perfect = ( level.clients[playerClientNum].ps.persistant[PERS_RANK] == 0 && player->client->ps.persistant[PERS_KILLED] == 0 ) ? 1 : 0;
         Com_sprintf( msg, sizeof(msg), "postgame %i %i %i %i %i %i %i %i", level.numNonSpectatorClients, playerClientNum, accuracy,
                      player->client->ps.persistant[PERS_IMPRESSIVE_COUNT], player->client->ps.persistant[PERS_EXCELLENT_COUNT],

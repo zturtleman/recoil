@@ -310,7 +310,7 @@ Just prints the rest of the line to the console
 */
 void Cmd_Echo_f (void)
 {
-    int		i;
+    unsigned int i;
 
     for (i=1 ; i<Cmd_Argc() ; i++)
         Com_Printf ("%s ",Cmd_Argv(i));
@@ -336,7 +336,7 @@ cmd_function_t;
 
 
 static	unsigned int     cmd_argc;
-static	char             *cmd_argv[MAX_STRING_TOKENS];		// points into cmd_tokenized
+static  char             *cmd_argv[MAX_STRING_TOKENS];		// points into cmd_tokenized
 static	char             cmd_tokenized[BIG_INFO_STRING+MAX_STRING_TOKENS];	// will have 0 bytes inserted
 static	char             cmd_cmd[BIG_INFO_STRING]; // the original command we received (no token processing)
 
@@ -347,7 +347,7 @@ static	cmd_function_t	*cmd_functions;		// possible commands to execute
 Cmd_Argc
 ============
 */
-int		Cmd_Argc( void )
+unsigned int Cmd_Argc( void )
 {
     return cmd_argc;
 }
@@ -357,12 +357,10 @@ int		Cmd_Argc( void )
 Cmd_Argv
 ============
 */
-char	*Cmd_Argv( unsigned int arg )
+char *Cmd_Argv( unsigned int arg )
 {
-    if ( (unsigned)arg >= cmd_argc )
-    {
+    if(arg >= cmd_argc )
         return "";
-    }
     return cmd_argv[arg];
 }
 
@@ -374,7 +372,7 @@ The interpreted versions use this because
 they can't have pointers returned to them
 ============
 */
-void	Cmd_ArgvBuffer( int arg, char *buffer, int bufferLength )
+void	Cmd_ArgvBuffer(unsigned int arg, char *buffer, unsigned int bufferLength )
 {
     Q_strncpyz( buffer, Cmd_Argv( arg ), bufferLength );
 }
@@ -440,7 +438,7 @@ The interpreted versions use this because
 they can't have pointers returned to them
 ============
 */
-void	Cmd_ArgsBuffer( char *buffer, int bufferLength )
+void	Cmd_ArgsBuffer( char *buffer, unsigned int bufferLength )
 {
     Q_strncpyz( buffer, Cmd_Args(), bufferLength );
 }
@@ -792,4 +790,3 @@ void Cmd_Init (void)
     Cmd_AddCommand ("echo",Cmd_Echo_f);
     Cmd_AddCommand ("wait", Cmd_Wait_f);
 }
-

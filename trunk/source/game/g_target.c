@@ -485,8 +485,7 @@ void SP_target_position( gentity_t *self )
 
 static void target_location_linkup(gentity_t *ent)
 {
-    int i;
-    int n;
+    unsigned int i, n;
 
     if (level.locationLinked)
         return;
@@ -497,9 +496,7 @@ static void target_location_linkup(gentity_t *ent)
 
     SV_SetConfigstring( CS_LOCATIONS, "unknown" );
 
-    for (i = 0, ent = g_entities, n = 1;
-            i < level.num_entities;
-            i++, ent++)
+    for (i = 0, ent = g_entities, n = 1; i < level.num_entities; i++, ent++)
     {
         if (ent->classname && !Q_stricmp(ent->classname, "target_location"))
         {

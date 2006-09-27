@@ -86,9 +86,9 @@ void SND_setup()
 
     scs = (cv->integer*1536);
 
-    buffer = malloc(scs*sizeof(sndBuffer) );
+    buffer = (sndBuffer*)malloc(scs*sizeof(sndBuffer) );
     // allocate the stack based hunk allocator
-    sfxScratchBuffer = malloc(SND_CHUNK_SIZE * sizeof(short) * 4);	//Hunk_Alloc(SND_CHUNK_SIZE * sizeof(short) * 4);
+    sfxScratchBuffer = (short *)malloc(SND_CHUNK_SIZE * sizeof(short) * 4);	//Hunk_Alloc(SND_CHUNK_SIZE * sizeof(short) * 4);
     sfxScratchPointer = NULL;
 
     inUse = scs*sizeof(sndBuffer);
@@ -313,7 +313,7 @@ static int ResampleSfxRaw( short *sfx, int inrate, int inwidth, int samples, byt
     outcount = samples / stepscale;
 
     samplefrac = 0;
-    fracstep = stepscale * 256;
+    fracstep = (int)(stepscale * 256);
 
     for (i=0 ; i<outcount ; i++)
     {
@@ -381,7 +381,7 @@ qboolean S_LoadSound( sfx_t *sfx )
         Com_DPrintf(S_COLOR_YELLOW "WARNING: %s is not a 22kHz wav file\n", sfx->soundName);
     }
 
-    samples = Hunk_AllocateTempMemory(info.samples * sizeof(short) * 2);
+    samples = (short *)Hunk_AllocateTempMemory(info.samples * sizeof(short) * 2);
 
     sfx->lastTimeUsed = Com_Milliseconds()+1;
 

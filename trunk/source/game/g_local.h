@@ -110,12 +110,12 @@ playerTeamState_t;
 // MUST be dealt with in G_InitSessionData() / G_ReadSessionData() / G_WriteSessionData()
 typedef struct
 {
-    team_t		sessionTeam;
-    int			spectatorTime;		// for determining next-in-line to play
-    spectatorState_t	spectatorState;
-    int			spectatorClient;	// for chasecam and follow mode
-    int			wins, losses;		// tournament stats
-    qboolean	teamLeader;			// true when this client is a team leader
+    team_t           sessionTeam;
+    int              spectatorTime;		// for determining next-in-line to play
+    spectatorState_t spectatorState;
+    unsigned int     spectatorClient;	// for chasecam and follow mode
+    int              wins, losses;		// tournament stats
+    qboolean         teamLeader;			// true when this client is a team leader
 }
 clientSession_t;
 
@@ -224,42 +224,42 @@ struct gclient_s
 
 typedef struct
 {
-    struct gclient_s	*clients;		// [maxclients]
+    struct gclient_s *clients;		// [maxclients]
 
-    struct gentity_s	*gentities;
-    int			gentitySize;
-    int			num_entities;		// current number, <= MAX_GENTITIES
+    struct gentity_s *gentities;
+    unsigned         intgentitySize;
+    unsigned int     num_entities;		// current number, <= MAX_GENTITIES
 
-    int			warmupTime;			// restart match at this time
+    int              warmupTime;			// restart match at this time
 
-    fileHandle_t	logFile;
+    fileHandle_t     logFile;
 
     // store latched cvars here that we want to get at often
-    int			maxclients;
+    unsigned int     maxclients;
 
-    int			framenum;
-    int			time;					// in msec
-    int			previousTime;			// so movers can back up when blocked
+    int              framenum;
+    int              time;					// in msec
+    int              previousTime;			// so movers can back up when blocked
 
-    int			startTime;				// level.time the map was started
+    int              startTime;				// level.time the map was started
 
-    int			teamScores[TEAM_NUM_TEAMS];
-    int			lastTeamLocationTime;		// last time of client team location update
+    int              teamScores[TEAM_NUM_TEAMS];
+    int              lastTeamLocationTime;		// last time of client team location update
 
-    qboolean	newSession;				// don't use any old session data, because
+    qboolean         newSession;				// don't use any old session data, because
     // we changed gametype
 
-    qboolean	restarted;				// waiting for a map_restart to fire
+    qboolean         restarted;				// waiting for a map_restart to fire
 
-    int			numConnectedClients;
-    int			numNonSpectatorClients;	// includes connecting clients
-    int			numPlayingClients;		// connected, non-spectators
-    int			sortedClients[MAX_CLIENTS];		// sorted by score
-    int			follow1, follow2;		// clientNums for auto-follow spectators
+    unsigned int     numConnectedClients;
+    unsigned int     numNonSpectatorClients;	// includes connecting clients
+    unsigned int     numPlayingClients;		// connected, non-spectators
+    unsigned int     sortedClients[MAX_CLIENTS];		// sorted by score
+    unsigned int     follow1, follow2;		// clientNums for auto-follow spectators
 
-    int			snd_fry;				// sound index for standing in lava
+    int              snd_fry;				// sound index for standing in lava
 
-    int			warmupModificationCount;	// for detecting if g_warmup is changed
+    int              warmupModificationCount;	// for detecting if g_warmup is changed
 
     // voting state
     char		voteString[MAX_STRING_CHARS];
@@ -460,9 +460,9 @@ void Weapon_HookThink (gentity_t *ent);
 //
 // g_client.c
 //
-team_t TeamCount( int ignoreClientNum, int team );
-int TeamLeader( int team );
-team_t PickTeam( int ignoreClientNum );
+unsigned int TeamCount(unsigned int ignoreClientNum, team_t team );
+unsigned int TeamLeader(team_t team);
+team_t PickTeam(unsigned int ignoreClientNum);
 void SetClientViewAngle( gentity_t *ent, vec3_t angle );
 gentity_t *SelectSpawnPoint ( vec3_t avoidPoint, vec3_t origin, vec3_t angles );
 void CopyToBodyQue( gentity_t *ent );
@@ -520,16 +520,16 @@ void QDECL G_Error( const char *fmt, ... );
 //
 // g_client.c
 //
-char *ClientConnect( int clientNum, qboolean firstTime, qboolean isBot );
-void ClientUserinfoChanged( int clientNum );
-void ClientDisconnect( int clientNum );
-void ClientBegin( int clientNum );
-void ClientCommand( int clientNum );
+char *ClientConnect( unsigned int clientNum, qboolean firstTime, qboolean isBot );
+void ClientUserinfoChanged( unsigned int clientNum );
+void ClientDisconnect( unsigned int clientNum );
+void ClientBegin( unsigned int clientNum );
+void ClientCommand( unsigned int clientNum );
 
 //
 // g_active.c
 //
-void ClientThink( int clientNum );
+void ClientThink(unsigned int clientNum );
 void ClientEndFrame( gentity_t *ent );
 void G_RunClient( gentity_t *ent );
 
@@ -655,11 +655,11 @@ extern	cvar_t	*g_enableBreath;
 extern	cvar_t	*g_singlePlayer;
 extern	cvar_t	*g_proxMineTimeout;
 
-void	Cmd_ArgvBuffer( int arg, char *buffer, int bufferLength );
+void	Cmd_ArgvBuffer(unsigned int arg, char *buffer, unsigned int bufferLength );
 void Cbuf_AddText( const char *text );
 void Cvar_Set( const char *var_name, const char *value);
 void CL_AddReliableCommand( const char *cmd );
-void	Cmd_ArgsBuffer( char *buffer, int bufferLength );
+void	Cmd_ArgsBuffer( char *buffer, unsigned int bufferLength );
 void Cvar_VariableStringBuffer( const char *var_name, char *buffer, int bufsize );
 void CL_AddCgameCommand( const char *cmdName );
 void RE_ClearScene( void );
@@ -705,18 +705,18 @@ clipHandle_t CM_TempBoxModel( const vec3_t mins, const vec3_t maxs, int capsule 
 void CM_TransformedBoxTrace(trace_t *results, const vec3_t start, const vec3_t end, vec3_t mins, vec3_t maxs, clipHandle_t model, int brushmask, const vec3_t origin, const vec3_t angles, int capsule);
 int	CM_TransformedPointContents( const vec3_t p, clipHandle_t model, const vec3_t origin, const vec3_t angles);
 void R_RemapShader(const char *shaderName, const char *newShaderName, const char *timeOffset);
-int		Cmd_Argc( void );
+unsigned int		Cmd_Argc( void );
 qboolean CL_GetServerCommand( int serverCommandNumber );
 void	CL_GetCurrentSnapshotNumber( int *snapshotNumber, int *serverTime );
-void S_Respatialize( int entityNum, const vec3_t head, vec3_t axis[3], int inwater );
+void S_Respatialize(unsigned int entityNum, const vec3_t head, vec3_t axis[3], int inwater );
 void CL_SetUserCmdValue( int userCmdValue, float sensitivityScale );
 int Cvar_VariableIntegerValue( const char *var_name );
 void SV_SetConfigstring (int index, const char *val);
 void SV_GetServerinfo( char *buffer, int bufferSize );
 int SV_PointContents( const vec3_t p, int passEntityNum );
 void SV_GetUserinfo( int index, char *buffer, int bufferSize );
-int SV_BotGetSnapshotEntity( int client, int sequence );
-int SV_BotGetConsoleMessage( int client, char *buf, int size );
+int SV_BotGetSnapshotEntity(unsigned int client, unsigned int sequence );
+int SV_BotGetConsoleMessage(unsigned int client, char *buf, unsigned int size );
 void SV_ClientThink (client_t *cl, usercmd_t *cmd);
 void SV_AdjustAreaPortalState( gentity_t *ent, qboolean open );
 void SV_SetBrushModel( gentity_t *ent, const char *name );

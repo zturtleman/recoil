@@ -409,7 +409,7 @@ static void R_MipMap2( unsigned *in, int inWidth, int inHeight )
 
     outWidth = inWidth >> 1;
     outHeight = inHeight >> 1;
-    temp = Hunk_AllocateTempMemory( outWidth * outHeight * 4 );
+    temp = (unsigned *)Hunk_AllocateTempMemory( outWidth * outHeight * 4 );
 
     inWidthMask = inWidth - 1;
     inHeightMask = inHeight - 1;
@@ -589,7 +589,7 @@ static void Upload32( unsigned *data,
 
     if ( scaled_width != width || scaled_height != height )
     {
-        resampledBuffer = Hunk_AllocateTempMemory( scaled_width * scaled_height * 4 );
+        resampledBuffer = (unsigned *)Hunk_AllocateTempMemory( scaled_width * scaled_height * 4 );
         ResampleTexture (data, width, height, resampledBuffer, scaled_width, scaled_height);
         data = resampledBuffer;
         width = scaled_width;
@@ -629,7 +629,7 @@ static void Upload32( unsigned *data,
         scaled_height >>= 1;
     }
 
-    scaledBuffer = Hunk_AllocateTempMemory( sizeof( unsigned ) * scaled_width * scaled_height );
+    scaledBuffer = (unsigned *)Hunk_AllocateTempMemory( sizeof( unsigned ) * scaled_width * scaled_height );
 
     //
     // scan the texture for each channel's max values
@@ -817,7 +817,7 @@ image_t *R_CreateImage( const char *name, const byte *pic, int width, int height
         Com_Error( ERR_DROP, "R_CreateImage: MAX_DRAWIMAGES hit\n");
     }
 
-    image = tr.images[tr.numImages] = Hunk_Alloc( sizeof( image_t ), h_low );
+    image = tr.images[tr.numImages] = (image_t *)Hunk_Alloc( sizeof( image_t ), h_low );
     image->texnum = 1024 + tr.numImages;
 //	qglGenTextures(1, &image->texnum);
     tr.numImages++;
@@ -983,7 +983,7 @@ static void LoadBMP( const char *name, byte **pic, int *width, int *height )
     if ( height )
         *height = rows;
 
-    bmpRGBA = CL_RefMalloc( numPixels * 4 );
+    bmpRGBA = (byte *)CL_RefMalloc( numPixels * 4 );
     *pic = bmpRGBA;
 
 
@@ -1102,7 +1102,7 @@ static void LoadPCX ( const char *filename, byte **pic, byte **palette, int *wid
         return;
     }
 
-    out = CL_RefMalloc ( (ymax+1) * (xmax+1) );
+    out = (byte *)CL_RefMalloc ( (ymax+1) * (xmax+1) );
 
     *pic = out;
 
@@ -1110,7 +1110,7 @@ static void LoadPCX ( const char *filename, byte **pic, byte **palette, int *wid
 
     if (palette)
     {
-        *palette = CL_RefMalloc(768);
+        *palette = (byte *)CL_RefMalloc(768);
         Com_Memcpy (*palette, (byte *)pcx + len - 768, 768);
     }
 
@@ -1171,7 +1171,7 @@ static void LoadPCX32 ( const char *filename, byte **pic, int *width, int *heigh
     }
 
     c = (*width) * (*height);
-    pic32 = *pic = CL_RefMalloc(4 * c );
+    pic32 = *pic = (byte *)CL_RefMalloc(4 * c );
     for (i = 0 ; i < c ; i++)
     {
         p = pic8[i];
@@ -1268,7 +1268,7 @@ static void LoadTGA ( const char *name, byte **pic, int *width, int *height)
     if (height)
         *height = rows;
 
-    targa_rgba = CL_RefMalloc (numPixels*4);
+    targa_rgba = (byte *)CL_RefMalloc (numPixels*4);
     *pic = targa_rgba;
 
     if (targa_header.id_length != 0)
@@ -1539,7 +1539,7 @@ static void LoadJPG( const char *filename, unsigned char **pic, int *width, int 
     /* JSAMPLEs per row in output buffer */
     row_stride = cinfo.output_width * cinfo.output_components;
 
-    out = CL_RefMalloc(cinfo.output_width*cinfo.output_height*cinfo.output_components);
+    out = (byte *)CL_RefMalloc(cinfo.output_width*cinfo.output_height*cinfo.output_components);
 
     *pic = out;
     *width = cinfo.output_width;
@@ -1844,7 +1844,7 @@ void SaveJPG(char * filename, int quality, int image_width, int image_height, un
      * VERY IMPORTANT: use "b" option to fopen() if you are on a machine that
      * requires it in order to write binary files.
      */
-    out = Hunk_AllocateTempMemory(image_width*image_height*4);
+    out = (byte *)Hunk_AllocateTempMemory(image_width*image_height*4);
     jpegDest(&cinfo, out, image_width*image_height*4);
 
     /* Step 3: set parameters for compression */
@@ -2158,7 +2158,7 @@ static void R_CreateFogImage( void )
     float	d;
     float	borderColor[4];
 
-    data = Hunk_AllocateTempMemory( FOG_S * FOG_T * 4 );
+    data = (byte *)Hunk_AllocateTempMemory( FOG_S * FOG_T * 4 );
 
     g = 2.0;
 
@@ -2606,7 +2606,7 @@ qhandle_t RE_RegisterSkin( const char *name )
         return 0;
     }
     tr.numSkins++;
-    skin = Hunk_Alloc( sizeof( skin_t ), h_low );
+    skin = (skin_t *)Hunk_Alloc( sizeof( skin_t ), h_low );
     tr.skins[hSkin] = skin;
     Q_strncpyz( skin->name, name, sizeof( skin->name ) );
     skin->numSurfaces = 0;
@@ -2618,7 +2618,7 @@ qhandle_t RE_RegisterSkin( const char *name )
     if ( strcmp( name + strlen( name ) - 5, ".skin" ) )
     {
         skin->numSurfaces = 1;
-        skin->surfaces[0] = Hunk_Alloc( sizeof(skin->surfaces[0]), h_low );
+        skin->surfaces[0] = (skinSurface_t *)Hunk_Alloc( sizeof(skin->surfaces[0]), h_low );
         skin->surfaces[0]->shader = R_FindShader( name, LIGHTMAP_NONE, qtrue );
         return hSkin;
     }
@@ -2657,7 +2657,7 @@ qhandle_t RE_RegisterSkin( const char *name )
         // parse the shader name
         token = CommaParse( &text_p );
 
-        surf = skin->surfaces[ skin->numSurfaces ] = Hunk_Alloc( sizeof( *skin->surfaces[0] ), h_low );
+        surf = skin->surfaces[ skin->numSurfaces ] = (skinSurface_t *)Hunk_Alloc( sizeof( *skin->surfaces[0] ), h_low );
         Q_strncpyz( surf->name, surfName, sizeof( surf->name ) );
         surf->shader = R_FindShader( token, LIGHTMAP_NONE, qtrue );
         skin->numSurfaces++;
@@ -2688,10 +2688,10 @@ void	R_InitSkins( void )
     tr.numSkins = 1;
 
     // make the default skin have all default shaders
-    skin = tr.skins[0] = Hunk_Alloc( sizeof( skin_t ), h_low );
+    skin = tr.skins[0] = (skin_t *)Hunk_Alloc( sizeof( skin_t ), h_low );
     Q_strncpyz( skin->name, "<default skin>", sizeof( skin->name )  );
     skin->numSurfaces = 1;
-    skin->surfaces[0] = Hunk_Alloc( sizeof( *skin->surfaces ), h_low );
+    skin->surfaces[0] = (skinSurface_t *)Hunk_Alloc( sizeof( *skin->surfaces ), h_low );
     skin->surfaces[0]->shader = tr.defaultShader;
 }
 

@@ -79,7 +79,7 @@ int SV_BotAllocateClient(void)
 SV_BotFreeClient
 ==================
 */
-void SV_BotFreeClient( int clientNum )
+void SV_BotFreeClient( unsigned int clientNum )
 {
     client_t	*cl;
 
@@ -621,7 +621,7 @@ void SV_BotInitBotLib(void)
 SV_BotGetConsoleMessage
 ==================
 */
-int SV_BotGetConsoleMessage( int client, char *buf, int size )
+int SV_BotGetConsoleMessage(unsigned int client, char *buf, unsigned int size )
 {
     client_t	*cl;
     int			index;
@@ -676,7 +676,7 @@ int EntityInPVS( int client, int entityNum )
 SV_BotGetSnapshotEntity
 ==================
 */
-int SV_BotGetSnapshotEntity( int client, int sequence )
+int SV_BotGetSnapshotEntity( unsigned int client, unsigned int sequence )
 {
     client_t			*cl;
     clientSnapshot_t	*frame;

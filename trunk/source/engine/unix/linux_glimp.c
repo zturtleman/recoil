@@ -844,7 +844,7 @@ static qboolean GLW_StartDriverAndSetMode( const char *drivername,
     fullscreen = qfalse;		
 	}
 
-  err = GLW_SetMode( drivername, mode, fullscreen );
+  err = (rserr_t)GLW_SetMode( drivername, mode, fullscreen );
 
   switch ( err )
   {
@@ -1452,9 +1452,6 @@ void GLimp_EndFrame (void)
   {
     qglXSwapBuffers(dpy, win);
   }
-
-  // check logging
-  QGL_EnableLogging( (qboolean)r_logFile->integer ); // bk001205 - was ->value
 }
 
 #ifdef SMP

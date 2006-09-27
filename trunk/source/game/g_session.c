@@ -141,7 +141,7 @@ void G_InitSessionData( gclient_t *client, char *userinfo )
             case GT_FFA:
             case GT_SINGLE_PLAYER:
                 if ( g_maxGameClients->integer > 0 &&
-                        level.numNonSpectatorClients >= g_maxGameClients->integer )
+                        level.numNonSpectatorClients >= (unsigned int)g_maxGameClients->integer )
                 {
                     sess->sessionTeam = TEAM_SPECTATOR;
                 }
@@ -203,15 +203,11 @@ G_WriteSessionData
 */
 void G_WriteSessionData( void )
 {
-    int		i;
+    unsigned int i;
 
     Cvar_Set( "session", va("%i", g_gametype->integer) );
 
     for ( i = 0 ; i < level.maxclients ; i++ )
-    {
         if ( level.clients[i].pers.connected == CON_CONNECTED )
-        {
             G_WriteClientSessionData( &level.clients[i] );
-        }
-    }
 }

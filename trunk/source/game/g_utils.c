@@ -150,20 +150,12 @@ Broadcasts a command to only a specific team
 */
 void G_TeamCommand( team_t team, char *cmd )
 {
-    int		i;
+    unsigned int i;
 
     for ( i = 0 ; i < level.maxclients ; i++ )
-    {
-        if ( level.clients[i].pers.connected == CON_CONNECTED )
-        {
-            if ( level.clients[i].sess.sessionTeam == team )
-            {
-                SV_GameSendServerCommand( i, va("%s", cmd ));
-            }
-        }
-    }
+        if ( level.clients[i].pers.connected == CON_CONNECTED && level.clients[i].sess.sessionTeam == team )
+            SV_GameSendServerCommand( i, va("%s", cmd ));
 }
-
 
 /*
 =============
@@ -438,8 +430,8 @@ angles and bad trails.
 */
 gentity_t *G_Spawn( void )
 {
-    int			i, force;
-    gentity_t	*e;
+    unsigned int i, force;
+    gentity_t    *e;
 
     e = NULL;	// shut up warning
     i = 0;		// shut up warning
@@ -451,32 +443,25 @@ gentity_t *G_Spawn( void )
         for ( i = MAX_CLIENTS ; i<level.num_entities ; i++, e++)
         {
             if ( e->inuse )
-            {
                 continue;
-            }
 
             // the first couple seconds of server time can involve a lot of
             // freeing and allocating, so relax the replacement policy
             if ( !force && e->freetime > level.startTime + 2000 && level.time - e->freetime < 1000 )
-            {
                 continue;
-            }
 
             // reuse this slot
             G_InitGentity( e );
             return e;
         }
         if ( i != MAX_GENTITIES )
-        {
             break;
-        }
     }
+
     if ( i == ENTITYNUM_MAX_NORMAL )
     {
         for (i = 0; i < MAX_GENTITIES; i++)
-        {
             Com_Printf("%4i: %s\n", i, g_entities[i].classname);
-        }
         Com_Error(ERR_DROP,  "G_Spawn: no free entities" );
     }
 
@@ -497,22 +482,19 @@ G_EntitiesFree
 */
 qboolean G_EntitiesFree( void )
 {
-    int			i;
-    gentity_t	*e;
+    unsigned int i;
+    gentity_t	 *e;
 
     e = &g_entities[MAX_CLIENTS];
     for ( i = MAX_CLIENTS; i < level.num_entities; i++, e++)
     {
         if ( e->inuse )
-        {
             continue;
-        }
         // slot available
         return qtrue;
     }
     return qfalse;
 }
-
 
 /*
 =================

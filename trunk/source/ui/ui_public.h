@@ -99,7 +99,7 @@ void Key_GetBindingBuf( int keynum, char *buf, int buflen );
 void Key_KeynumToStringBuf( int keynum, char *buf, int buflen );
 void SCR_UpdateScreen( void );
 void CL_GetGlconfig( glconfig_t *glconfig );
-void	Cmd_ArgvBuffer( int arg, char *buffer, int bufferLength );
+void	Cmd_ArgvBuffer(unsigned int arg, char *buffer, unsigned int bufferLength);
 void RE_StretchPic ( float x, float y, float w, float h,
                      float s1, float t1, float s2, float t2, qhandle_t hShader );
 void Key_ClearStates (void);

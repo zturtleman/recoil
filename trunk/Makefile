@@ -100,7 +100,7 @@ ifeq ($(PLATFORM),linux)
   endif
   endif
 
-  BASE_CFLAGS = -Wall -fno-strict-aliasing -Wimplicit -pipe -Werror # -Wstrict-prototypes
+  BASE_CFLAGS = -Wall -fno-strict-aliasing -Wimplicit -pipe # -Wstrict-prototypes
 
   OPTIMIZE = -O3 -ffast-math -funroll-loops -fomit-frame-pointer
 
@@ -448,28 +448,14 @@ ifeq ($(USE_CCACHE),1)
   CC := ccache $(CC)
 endif
 
-CLEANUP=astyle
-
-DO_CC=$(CLEANUP) $< ; $(CC) $(NOTSHLIBCFLAGS) $(CFLAGS) -o $@ -c $<
+DO_CC=$(CC) $(NOTSHLIBCFLAGS) $(CFLAGS) -o $@ -c $<
 DO_GL_CC=$(DO_CC) $(GL_CFLAGS) $(MINGW_CFLAGS)
-DO_TGD_CC=$(CLEANUP) $< ; $(CC) -DLIBTEXGEN=\"$(LIBSDIR)libtexgen.$(ARCH)$(SHLIBEXT)\" $(NOTSHLIBCFLAGS) $(CFLAGS) -o $@ -c $<
-DO_SMP_CC=$(CLEANUP) $< ; $(CC) $(NOTSHLIBCFLAGS) $(CFLAGS) -DSMP -o $@ -c $< $(SAVEOUTPUT)
-DO_BOT_CC=$(CLEANUP) $< ; $(CC) $(NOTSHLIBCFLAGS) $(CFLAGS) $(BOTCFLAGS) -DBOTLIB -o $@ -c $<
-DO_SHLIB_CC=$(CLEANUP) $< ; $(CC) $(CFLAGS) $(SHLIBCFLAGS) -o $@ -c $<
-DO_DED_CC=$(CLEANUP) $< ; $(CC) $(NOTSHLIBCFLAGS) -DDEDICATED $(CFLAGS) -o $@ -c $<
+DO_TGD_CC=$(CC) -DLIBTEXGEN=\"$(LIBSDIR)libtexgen.$(ARCH)$(SHLIBEXT)\" $(NOTSHLIBCFLAGS) $(CFLAGS) -o $@ -c $<
+DO_SMP_CC=$(CC) $(NOTSHLIBCFLAGS) $(CFLAGS) -DSMP -o $@ -c $< $(SAVEOUTPUT)
+DO_BOT_CC=$(CC) $(NOTSHLIBCFLAGS) $(CFLAGS) $(BOTCFLAGS) -DBOTLIB -o $@ -c $<
+DO_SHLIB_CC=$(CC) $(CFLAGS) $(SHLIBCFLAGS) -o $@ -c $<
+DO_DED_CC=$(CC) $(NOTSHLIBCFLAGS) -DDEDICATED $(CFLAGS) -o $@ -c $<
 DO_WINDRES=$(WINDRES) -i $< -o $@
-
-ifneq ($(SAVEOUTPUT),0)
-  SAVEOUTPUT= > output.txt
-#  DO_CC += $(SAVEOUTPUT)
-#  DO_GL_CC += $(SAVEOUTPUT)
-#  DO_TGD_CC += $(SAVEOUTPUT)
-#  DO_SMP_CC += $(SAVEOUTPUT)
-#  DO_BOT_CC += $(SAVEOUTPUT)
-#  DO_SHLIB_CC += $(SAVEOUTPUT)
-#  DO_DED_CC += $(SAVEOUTPUT)
-#  DO_WINDRES += $(SAVEOUTPUT)
-endif
 
 RBC=$(SO)engine/client-$(B)/
 RBD=$(SO)engine/ded-$(B)/
@@ -487,11 +473,11 @@ release: build_release
 
 build_debug: B=$(BD)
 build_debug: makedirs
-	$(MAKE) targets B=$(BD) CFLAGS="$(CFLAGS) $(DEBUG_CFLAGS) $(DEPEND_CFLAGS)" $(SAVEOUTPUT)
+	$(MAKE) targets B=$(BD) CFLAGS="$(CFLAGS) $(DEBUG_CFLAGS) $(DEPEND_CFLAGS)"
 
 build_release: B=$(BR)
 build_release: makedirs
-	$(MAKE) targets B=$(BR) CFLAGS="$(CFLAGS) $(RELEASE_CFLAGS) $(DEPEND_CFLAGS)" $(SAVEOUTPUT)
+	$(MAKE) targets B=$(BR) CFLAGS="$(CFLAGS) $(RELEASE_CFLAGS) $(DEPEND_CFLAGS)"
 
 #Build both debug and release builds
 all:build_debug build_release
@@ -572,7 +558,6 @@ RECOILOBJS=\
 	$(RBC)cl_console.o\
 	$(RBC)common.o\
 	$(RBC)sv_ccmds.o\
-	$(RBC)tr_extentions.o\
 	$(RBC)tr_shade.o\
 	$(RBC)cl_input.o\
 	$(RBC)cvar.o\
@@ -874,7 +859,6 @@ $(RBC)tr_scene.o: $(SO)engine/tr_scene.c; $(DO_GL_CC)
 $(RBC)cl_console.o: $(SO)engine/cl_console.c; $(DO_CC)
 $(RBC)common.o: $(SO)engine/common.c; $(DO_CC)
 $(RBC)sv_ccmds.o: $(SO)engine/sv_ccmds.c; $(DO_CC)
-$(RBC)tr_extentions.o: $(SO)engine/tr_extentions.c; $(DO_GL_CC)
 $(RBC)tr_shade.o: $(SO)engine/tr_shade.c; $(DO_GL_CC)
 $(RBC)cl_input.o: $(SO)engine/cl_input.c; $(DO_CC)
 $(RBC)cvar.o: $(SO)engine/cvar.c; $(DO_CC)

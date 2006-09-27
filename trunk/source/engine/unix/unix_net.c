@@ -557,7 +557,7 @@ int NET_IPSocket (char *net_interface, int port)
 
     address.sin_family = AF_INET;
 
-    if( bind (newsocket, (sockaddr *)&address, sizeof(address)) == -1)
+    if( bind (newsocket, (struct sockaddr *)&address, sizeof(address)) == -1)
     {
         Com_Printf ("ERROR: UDP_OpenSocket: bind: %s\n", NET_ErrorString());
         close (newsocket);
