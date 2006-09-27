@@ -147,7 +147,6 @@ void UI_MainMenu( void )
     Menu.draw = Main_MenuDraw;
     Menu.fullscreen = qtrue;
     Menu.wrapAround = qtrue;
-    Menu.showlogo = qtrue;
 
     Cvar_VariableStringBuffer( "com_errorMessage", errorMessage, sizeof(errorMessage) );
     if (strlen(errorMessage))

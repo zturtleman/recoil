@@ -1801,7 +1801,6 @@ void Menu_Cache( void )
 
     uis.whiteShader = RE_RegisterShaderNoMip( "white" );
 	uis.menuBackShader	= RE_RegisterShaderNoMip( "menuback" );
-    uis.menuBackNoLogoShader = RE_RegisterShaderNoMip( "menubacknologo" );
 
     menu_in_sound	= S_RegisterSound( "sound/misc/menu1.wav", qfalse );
     menu_move_sound	= S_RegisterSound( "sound/misc/menu2.wav", qfalse );

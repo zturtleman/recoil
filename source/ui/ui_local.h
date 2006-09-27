@@ -156,7 +156,6 @@ typedef struct _tag_menuframework
 
     qboolean	wrapAround;
     qboolean	fullscreen;
-    qboolean	showlogo;
 
     char        *menuPic;
 }
@@ -573,7 +572,6 @@ typedef struct
     qboolean			debug;
     qhandle_t			whiteShader;
     qhandle_t			menuBackShader;
-    qhandle_t			menuBackNoLogoShader;
     qhandle_t			charset;
     qhandle_t			charsetProp;
     qhandle_t			charsetPropGlow;
