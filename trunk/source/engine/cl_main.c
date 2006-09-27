@@ -2220,7 +2220,7 @@ void CL_InitRenderer( void )
     RE_BeginRegistration( &cls.glconfig );
 
     // load character sets
-    cls.charSetShader = RE_RegisterShader( "gfx/2d/bigchars" );
+    cls.charSetShader = RE_RegisterShader( "hud/2d/bigchars" );
     cls.whiteShader = RE_RegisterShader( "white" );
     cls.consoleShader = RE_RegisterShader( "console" );
     g_console_field_width = cls.glconfig.vidWidth / SMALLCHAR_WIDTH - 2;

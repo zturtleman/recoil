@@ -1594,7 +1594,7 @@ static void CG_DrawDisconnect( void )
     x = 640 - 48;
     y = 480 - 48;
 
-    CG_DrawPic( x, y, 48, 48, RE_RegisterShader("gfx/2d/net.tga" ) );
+    CG_DrawPic( x, y, 48, 48, RE_RegisterShader("hud/2d/net.tga" ) );
 }
 
 

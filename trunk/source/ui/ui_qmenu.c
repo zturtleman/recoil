@@ -1791,7 +1791,7 @@ Menu_Cache
 */
 void Menu_Cache( void )
 {
-    uis.charset			= RE_RegisterShaderNoMip( "gfx/2d/bigchars" );
+    uis.charset			= RE_RegisterShaderNoMip( "hud/2d/bigchars" );
     uis.charsetProp		= RE_RegisterShaderNoMip( "menu/art/font1_prop.tga" );
     uis.charsetPropGlow	= RE_RegisterShaderNoMip( "menu/art/font1_prop_glo.tga" );
     uis.charsetPropB	= RE_RegisterShaderNoMip( "menu/art/font2_prop.tga" );

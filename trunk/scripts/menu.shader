@@ -21,12 +21,12 @@ menuback
 	nopicmip
 	nomipmaps
 	{
-		map		gfx\2d\stars.jpg
+		map		menu\art\stars.jpg
 		tcmod		scroll .001 0
 		tcmod		scale 8 6
 	}
 	{
-		map		gfx\2d\menuback.tga
+		map		menu\art\menuback.tga
 		tcmod		scroll .01 0
 		blendfunc	blend
 	}

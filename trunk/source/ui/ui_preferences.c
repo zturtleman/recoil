@@ -411,7 +411,7 @@ void Preferences_Cache( void )
     RE_RegisterShaderNoMip( ART_FRAMER );
     RE_RegisterShaderNoMip( ART_BACK0 );
     RE_RegisterShaderNoMip( ART_BACK1 );
-    s_preferences.crosshairShader = RE_RegisterShaderNoMip("gfx/2d/crosshair");
+    s_preferences.crosshairShader = RE_RegisterShaderNoMip("hud/2d/crosshair");
 }
 
 /*
