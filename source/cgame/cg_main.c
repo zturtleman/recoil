@@ -597,17 +597,17 @@ static void CG_RegisterGraphics( void )
     int			i;
     char		items[MAX_ITEMS+1];
     static char		*sb_nums[11] = {
-                                    "gfx/2d/numbers/big0",
-                                    "gfx/2d/numbers/big1",
-                                    "gfx/2d/numbers/big2",
-                                    "gfx/2d/numbers/big3",
-                                    "gfx/2d/numbers/big4",
-                                    "gfx/2d/numbers/big5",
-                                    "gfx/2d/numbers/big6",
-                                    "gfx/2d/numbers/big7",
-                                    "gfx/2d/numbers/big8",
-                                    "gfx/2d/numbers/big9",
-                                    "gfx/2d/numbers/bigminus",
+                                    "hud/2d/numbers/big0",
+                                    "hud/2d/numbers/big1",
+                                    "hud/2d/numbers/big2",
+                                    "hud/2d/numbers/big3",
+                                    "hud/2d/numbers/big4",
+                                    "hud/2d/numbers/big5",
+                                    "hud/2d/numbers/big6",
+                                    "hud/2d/numbers/big7",
+                                    "hud/2d/numbers/big8",
+                                    "hud/2d/numbers/big9",
+                                    "hud/2d/numbers/bigminus",
                                 };
 
     // clear any references to old media
@@ -634,7 +634,7 @@ static void CG_RegisterGraphics( void )
 
     cgs.media.viewBloodShader = RE_RegisterShader( "viewBloodBlend" );
 
-    cgs.media.deferShader = RE_RegisterShaderNoMip( "gfx/2d/defer.tga" );
+    cgs.media.deferShader = RE_RegisterShaderNoMip( "hud/2d/defer.tga" );
 
     cgs.media.scoreboardName = RE_RegisterShaderNoMip( "menu/tab/name.tga" );
     cgs.media.scoreboardPing = RE_RegisterShaderNoMip( "menu/tab/ping.tga" );
@@ -651,11 +651,11 @@ static void CG_RegisterGraphics( void )
 
     cgs.media.waterBubbleShader = RE_RegisterShader( "waterBubble" );
 
-    cgs.media.tracerShader = RE_RegisterShader( "gfx/misc/tracer" );
-    cgs.media.selectShader = RE_RegisterShader( "gfx/2d/select" );
-    cgs.media.crosshairShader = RE_RegisterShader("gfx/2d/crosshair");
+    cgs.media.tracerShader = RE_RegisterShader( "hud/misc/tracer" );
+    cgs.media.selectShader = RE_RegisterShader( "hud/2d/select" );
+    cgs.media.crosshairShader = RE_RegisterShader("hud/2d/crosshair");
 
-    cgs.media.backTileShader = RE_RegisterShader( "gfx/2d/backtile" );
+    cgs.media.backTileShader = RE_RegisterShader( "hud/2d/backtile" );
     cgs.media.noammoShader = RE_RegisterShader( "icons/noammo" );
 
     // powerup shaders
@@ -691,7 +691,7 @@ static void CG_RegisterGraphics( void )
     {
         cgs.media.friendShader = RE_RegisterShader( "sprites/foe" );
         cgs.media.redQuadShader = RE_RegisterShader("powerups/blueflag" );
-        cgs.media.teamStatusBar = RE_RegisterShader( "gfx/2d/colorbar.tga" );
+        cgs.media.teamStatusBar = RE_RegisterShader( "hud/2d/colorbar.tga" );
     }
 
     cgs.media.armorModel = RE_RegisterModel( "models/powerups/armor/armor_yel.md3" );
@@ -713,7 +713,7 @@ static void CG_RegisterGraphics( void )
 
     cgs.media.smoke2 = RE_RegisterModel( "models/weapons2/shells/s_shell.md3" );
 
-    cgs.media.balloonShader = RE_RegisterShader( "sprites/balloon3" );
+    cgs.media.balloonShader = RE_RegisterShader( "hud/2d/balloon_talk" );
 
     cgs.media.bloodExplosionShader = RE_RegisterShader( "bloodExplosion" );
 
@@ -747,10 +747,10 @@ static void CG_RegisterGraphics( void )
     }
 
     // wall marks
-    cgs.media.bulletMarkShader = RE_RegisterShader( "gfx/damage/bullet_mrk" );
-    cgs.media.burnMarkShader = RE_RegisterShader( "gfx/damage/burn_med_mrk" );
-    cgs.media.holeMarkShader = RE_RegisterShader( "gfx/damage/hole_lg_mrk" );
-    cgs.media.energyMarkShader = RE_RegisterShader( "gfx/damage/plasma_mrk" );
+    cgs.media.bulletMarkShader = RE_RegisterShader( "hud/damage/bullet_mrk" );
+    cgs.media.burnMarkShader = RE_RegisterShader( "hud/damage/burn_med_mrk" );
+    cgs.media.holeMarkShader = RE_RegisterShader( "hud/damage/hole_lg_mrk" );
+    cgs.media.energyMarkShader = RE_RegisterShader( "hud/damage/plasma_mrk" );
     cgs.media.shadowMarkShader = RE_RegisterShader( "markShadow" );
     cgs.media.wakeMarkShader = RE_RegisterShader( "wake" );
     cgs.media.bloodMarkShader = RE_RegisterShader( "bloodMark" );
