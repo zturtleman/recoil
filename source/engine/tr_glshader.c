@@ -175,7 +175,7 @@ void Shader_Compile(glShader_t *shader)
             shader->numSamplers = 0;
 			shader->numUniforms = 0;
 
-			name = malloc(maxLength);
+			name = (char *)malloc(maxLength);
             for(i = 0; i < nUniforms; i++)
             {
                 GLint length, size, location;
@@ -1069,12 +1069,12 @@ void Shader_Convert(shader_t *pShader)
 		"}\n"
 	);
 
-	vText = malloc(strlen(varying) + strlen(vuniforms) + strlen(vfunctions) + strlen(vmain) + strlen(vmain2) + 4);
+	vText = (char *)malloc(strlen(varying) + strlen(vuniforms) + strlen(vfunctions) + strlen(vmain) + strlen(vmain2) + 4);
 	memset(vText, 0, strlen(varying) + strlen(vuniforms) + strlen(vfunctions) + strlen(vmain) + strlen(vmain2) + 4);
 	sprintf(vText, "%s\n%s\n%s%s%s", varying, vuniforms, vfunctions, vmain, vmain2);
 	shader.vertexText = vText;
 
-	fText = malloc(strlen(varying) + strlen(funiforms) + strlen(ffunctions) + strlen(fmain) + 4);
+	fText = (char *)malloc(strlen(varying) + strlen(funiforms) + strlen(ffunctions) + strlen(fmain) + 4);
 	memset(fText, 0, strlen(varying) + strlen(funiforms) + strlen(ffunctions) + strlen(fmain) + 4);
 	sprintf(fText, "%s\n%s\n%s%s", varying, funiforms, ffunctions, fmain);
 	shader.fragmentText = fText;
@@ -1093,7 +1093,7 @@ void Shader_Convert(shader_t *pShader)
 	if(shader.program)
 	{
 		CL_RefPrintf(PRINT_DEVELOPER, "OK\n");
-		pShader->glShader = Hunk_Alloc(sizeof(glShader_t), h_low);
+		pShader->glShader = (glShader_t *)Hunk_Alloc(sizeof(glShader_t), h_low);
 		Com_Memcpy(pShader->glShader, &shader, sizeof(glShader_t));
 		pShader->glShader->name = pShader->name;
 		pShader->glShader->cfuncs = cfuncs;

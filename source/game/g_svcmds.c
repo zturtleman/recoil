@@ -326,8 +326,8 @@ Svcmd_EntityList_f
 */
 void	Svcmd_EntityList_f (void)
 {
-    int			e;
-    gentity_t		*check;
+    unsigned int e;
+    gentity_t    *check;
 
     check = g_entities+1;
     for (e = 1; e < level.num_entities ; e++, check++)
@@ -390,14 +390,13 @@ void	Svcmd_EntityList_f (void)
 
 gclient_t	*ClientForString( const char *s )
 {
-    gclient_t	*cl;
-    int			i;
-    int			idnum;
+    gclient_t    *cl;
+    unsigned int i, idnum;
 
     // numeric values are just slot numbers
     if ( s[0] >= '0' && s[0] <= '9' )
     {
-        idnum = atoi( s );
+        idnum = (unsigned int)atoi( s );
         if ( idnum < 0 || idnum >= level.maxclients )
         {
             Com_Printf( "Bad client slot: %i\n", idnum );
@@ -539,4 +538,3 @@ qboolean	ConsoleCommand( void )
 
     return qfalse;
 }
-

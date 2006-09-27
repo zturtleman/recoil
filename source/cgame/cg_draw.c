@@ -867,7 +867,7 @@ static float CG_DrawTeamOverlay( float y, qboolean right, qboolean upper )
                 if (ci->powerups & (1 << j))
                 {
 
-                    item = BG_FindItemForPowerup( j );
+                    item = BG_FindItemForPowerup((powerup_t)j);
 
                     if (item)
                     {
@@ -1183,7 +1183,7 @@ static float CG_DrawPowerups( float y )
     x = 640 - ICON_SIZE - CHAR_WIDTH * 2;
     for ( i = 0 ; i < active ; i++ )
     {
-        item = BG_FindItemForPowerup( sorted[i] );
+        item = BG_FindItemForPowerup((powerup_t)sorted[i] );
 
         if (item)
         {

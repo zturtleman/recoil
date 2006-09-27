@@ -885,7 +885,7 @@ ClientThink
 A new command has arrived from the client
 ==================
 */
-void ClientThink( int clientNum )
+void ClientThink(unsigned int clientNum )
 {
     gentity_t *ent;
 

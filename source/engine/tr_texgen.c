@@ -45,7 +45,7 @@ void InitTexgenModule(void)
 {
     PFNTEXGENLIBEXPORTPROC TexgenLibExport;
 
-    if(_inited)
+    if(_inited || 1)
         return;
 
     r_texgen_detail = Cvar_Get("r_texgen_detail", "9", CVAR_ARCHIVE);
@@ -54,22 +54,23 @@ void InitTexgenModule(void)
     tgi.Print = MyLogMessage;
     tgi.Malloc = CL_RefMalloc;
 
-    Com_Printf("trying to load %i:", LIBTEXGEN);
+    Com_Printf("trying to load %s:", LIBTEXGEN);
     if(DynlibOpen(&lib, LIBTEXGEN))
     {
-        Com_Printf("success\n");
         TexgenLibExport = (PFNTEXGENLIBEXPORTPROC)DynlibGetAddress(lib, "TexgenLibExport");
         TexgenLibExport(&tgi);
 
         lastScriptUsed = NULL;
 
         _inited = qtrue;
+
+        Com_Printf("success\n");
         return;
     }
     Com_Printf("failure\n");
 }
 
-void LoadTexgenImages(const char *name, const char *slots[], void **pics[], int numSlots, int *width, int *height)
+void LoadTexgenImages(const char *name, const char *slots[], byte **pics[], int numSlots, int *width, int *height)
 {
     char *script;
     int length, size, i;
@@ -95,7 +96,7 @@ void LoadTexgenImages(const char *name, const char *slots[], void **pics[], int 
         if(length == -1)
             return;
 
-        script = malloc(sizeof(char) * length);
+        script = (char *)malloc(sizeof(char) * length);
 
         FS_Read2(script, length, f);
         FS_FCloseFile(f);
@@ -112,10 +113,10 @@ void LoadTexgenImages(const char *name, const char *slots[], void **pics[], int 
     }
 }
 
-void LoadTexGenImage(const char *name, void **pic, int *width, int *height)
+void LoadTexGenImage(const char *name, byte **pic, int *width, int *height)
 {
     const char *names[1];
-    void **pics[1];
+    byte **pics[1];
 
     names[0] = "output";
     pics[0] = pic;
@@ -129,7 +130,7 @@ image_t *R_FindTexgenImage(const char *name, const char *slot, qboolean mipmap, 
     int		width, height;
     char altname[MAX_QPATH];
     const char *slots[1];
-    void **pics[1], *pic;
+    byte **pics[1], *pic;
 
     if (!name)
         return NULL;
@@ -148,7 +149,7 @@ image_t *R_FindTexgenImage(const char *name, const char *slot, qboolean mipmap, 
 
     if(pic)
     {
-        image = R_CreateImage((char *)altname, pic, width, height, mipmap, allowPicmip, glWrapClampMode);
+        image = R_CreateImage((char *)altname, (byte *)pic, width, height, mipmap, allowPicmip, glWrapClampMode);
         Z_Free( pic );
         return image;
     }

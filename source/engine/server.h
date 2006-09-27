@@ -72,11 +72,11 @@ typedef struct
     char			*entityParsePoint;	// used during game VM init
 
     // the game virtual machine will update these on init and changes
-    gentity_t	*gentities;
-    int				num_entities;		// current number, <= MAX_GENTITIES
+    gentity_t       *gentities;
+    unsigned int    num_entities;		// current number, <= MAX_GENTITIES
 
     playerState_t	*gameClients;
-    int				gameClientSize;		// will be > sizeof(playerState_t) due to game private data
+    unsigned int    gameClientSize;		// will be > sizeof(playerState_t) due to game private data
 
     int				restartTime;
 }
@@ -91,8 +91,8 @@ typedef struct
     int				areabytes;
     byte			areabits[MAX_MAP_AREA_BYTES];		// portalarea visibility bits
     playerState_t	ps;
-    int				num_entities;
-    int				first_entity;		// into the circular sv_packet_entities[]
+    unsigned int    num_entities;
+    unsigned int    first_entity;		// into the circular sv_packet_entities[]
     // the entities MUST be in increasing state number
     // order, otherwise the delta compression will fail
     int				messageSent;		// time the message was transmitted
@@ -338,13 +338,13 @@ qboolean	SV_inPVS (const vec3_t p1, const vec3_t p2);
 //
 void		SV_BotFrame( int time );
 int			SV_BotAllocateClient(void);
-void		SV_BotFreeClient( int clientNum );
+void		SV_BotFreeClient( unsigned int clientNum );
 
 void		SV_BotInitCvars(void);
 int			SV_BotLibSetup( void );
 int			SV_BotLibShutdown( void );
-int			SV_BotGetSnapshotEntity( int client, int ent );
-int			SV_BotGetConsoleMessage( int client, char *buf, int size );
+int			SV_BotGetSnapshotEntity(unsigned int client, unsigned int ent);
+int			SV_BotGetConsoleMessage(unsigned int client, char *buf, unsigned int size);
 
 int BotImport_DebugPolygonCreate(int color, int numPoints, vec3_t *points);
 void BotImport_DebugPolygonDelete(int id);

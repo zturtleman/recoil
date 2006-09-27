@@ -1467,11 +1467,11 @@ void	CG_ParticleExplosion (char *animStr, vec3_t origin, vec3_t vel, int duratio
 extern qboolean		initparticles;
 int CG_NewParticleArea ( int num );
 
-void	Cmd_ArgvBuffer( int arg, char *buffer, int bufferLength );
+void	Cmd_ArgvBuffer( unsigned int arg, char *buffer, unsigned int bufferLength );
 void Cbuf_AddText( const char *text );
 void Cvar_Set( const char *var_name, const char *value);
 void CL_AddReliableCommand( const char *cmd );
-void	Cmd_ArgsBuffer( char *buffer, int bufferLength );
+void	Cmd_ArgsBuffer( char *buffer, unsigned int bufferLength );
 void Cvar_VariableStringBuffer( const char *var_name, char *buffer, int bufsize );
 void CL_AddCgameCommand( const char *cmdName );
 void RE_ClearScene( void );
@@ -1521,11 +1521,11 @@ clipHandle_t CM_TempBoxModel( const vec3_t mins, const vec3_t maxs, int capsule 
 void CM_TransformedBoxTrace(trace_t *results, const vec3_t start, const vec3_t end, vec3_t mins, vec3_t maxs, clipHandle_t model, int brushmask, const vec3_t origin, const vec3_t angles, int capsule);
 int	CM_TransformedPointContents( const vec3_t p, clipHandle_t model, const vec3_t origin, const vec3_t angles);
 void R_RemapShader(const char *shaderName, const char *newShaderName, const char *timeOffset);
-int		Cmd_Argc( void );
+unsigned int Cmd_Argc( void );
 qboolean CL_GetServerCommand( int serverCommandNumber );
 qboolean	CL_GetSnapshot( int snapshotNumber, snapshot_t *snapshot );
 void	CL_GetCurrentSnapshotNumber( int *snapshotNumber, int *serverTime );
-void S_Respatialize( int entityNum, const vec3_t head, vec3_t axis[3], int inwater );
+void S_Respatialize( unsigned int entityNum, const vec3_t head, vec3_t axis[3], int inwater );
 void CL_SetUserCmdValue( int userCmdValue, float sensitivityScale );
 
 void clFireWeapon(centity_t *ent, qboolean alt);

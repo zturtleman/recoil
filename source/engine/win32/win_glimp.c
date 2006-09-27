@@ -70,7 +70,6 @@ static qboolean s_classRegistered = qfalse;
 //
 // function declaration
 //
-void	 QGL_EnableLogging( qboolean enable );
 qboolean QGL_Init( const char *dllname );
 void     QGL_Shutdown( void );
 
@@ -1247,9 +1246,6 @@ void GLimp_EndFrame (void)
             SwapBuffers( glw_state.hDC );
         }
     }
-
-    // check logging
-    QGL_EnableLogging( r_logFile->integer );
 }
 
 static void GLW_StartOpenGL( void )

@@ -48,26 +48,21 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 int Pickup_Powerup( gentity_t *ent, gentity_t *other )
 {
-    int			quantity;
-    int			i;
-    gclient_t	*client;
+    int				quantity;
+    unsigned int	i;
+    gclient_t		*client;
 
     if ( !other->client->ps.powerups[ent->item->giTag] )
     {
         // round timing to seconds to make multiple powerup timers
         // count in sync
-        other->client->ps.powerups[ent->item->giTag] =
-            level.time - ( level.time % 1000 );
+        other->client->ps.powerups[ent->item->giTag] = level.time - ( level.time % 1000 );
     }
 
     if ( ent->count )
-    {
         quantity = ent->count;
-    }
     else
-    {
         quantity = ent->item->quantity;
-    }
 
     other->client->ps.powerups[ent->item->giTag] += quantity * 1000;
 
@@ -864,4 +859,3 @@ void G_RunItem( gentity_t *ent )
 
     G_BounceItem( ent, &tr );
 }
-

@@ -33,7 +33,7 @@ PUSHMOVE
 ===============================================================================
 */
 
-void MatchTeam( gentity_t *teamLeader, int moverState, int time );
+void MatchTeam( gentity_t *teamLeader, moverState_t moverState, int time );
 
 typedef struct
 {

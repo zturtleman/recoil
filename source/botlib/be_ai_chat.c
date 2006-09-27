@@ -1970,7 +1970,7 @@ bot_replychat_t *BotLoadReplyChat(char *filename)
     botimport.Print(PRT_MESSAGE, "loaded %s\n", filename);
     //
     //BotDumpReplyChat(replychatlist);
-    if (bot_developer)
+    if (bot_developer->integer)
     {
         BotCheckReplyChatIntegrety(replychatlist);
     } //end if
@@ -2166,7 +2166,7 @@ bot_chat_t *BotLoadInitialChat(char *chatfile, char *chatname)
     botimport.Print(PRT_MESSAGE, "loaded %s from %s\n", chatname, chatfile);
     //
     //BotDumpInitialChat(chat);
-    if (bot_developer)
+    if (bot_developer->integer)
     {
         BotCheckInitialChatIntegrety(chat);
     } //end if

@@ -58,11 +58,9 @@ model_t *R_AllocModel( void )
     model_t		*mod;
 
     if ( tr.numModels == MAX_MOD_KNOWN )
-    {
         return NULL;
-    }
 
-    mod = Hunk_Alloc( sizeof( *tr.models[tr.numModels] ), h_low );
+    mod = (model_t *)Hunk_Alloc( sizeof( *tr.models[tr.numModels] ), h_low );
     mod->index = tr.numModels;
     tr.models[tr.numModels] = mod;
     tr.numModels++;
@@ -269,7 +267,7 @@ static qboolean R_LoadMD3 (model_t *mod, int lod, void *buffer, const char *mod_
     mod->type = MOD_MESH;
     size = LittleLong(pinmodel->ofsEnd);
     mod->dataSize += size;
-    mod->md3[lod] = Hunk_Alloc( size, h_low );
+    mod->md3[lod] = (md3Header_t *)Hunk_Alloc( size, h_low );
 
     Com_Memcpy (mod->md3[lod], buffer, LittleLong(pinmodel->ofsEnd) );
 
@@ -444,7 +442,7 @@ static qboolean R_LoadMD4( model_t *mod, void *buffer, const char *mod_name )
     mod->type = MOD_MD4;
     size = LittleLong(pinmodel->ofsEnd);
     mod->dataSize += size;
-    md4 = mod->md4 = Hunk_Alloc( size, h_low );
+    md4 = mod->md4 = (md4Header_t *)Hunk_Alloc( size, h_low );
 
     Com_Memcpy( md4, buffer, LittleLong(pinmodel->ofsEnd) );
 

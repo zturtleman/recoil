@@ -67,7 +67,7 @@ typedef struct
 
     menutext_s		bots[7];
 
-    menubitmap_s	delete;
+    menubitmap_s	remove;
     menubitmap_s	back;
 
     int				numBots;
@@ -314,16 +314,16 @@ static void UI_RemoveBotsMenu_Init( void )
         removeBotsMenuInfo.bots[n].style			= UI_LEFT|UI_SMALLFONT;
     }
 
-    removeBotsMenuInfo.delete.generic.type		= MTYPE_BITMAP;
-    removeBotsMenuInfo.delete.generic.name		= ART_DELETE0;
-    removeBotsMenuInfo.delete.generic.flags		= QMF_LEFT_JUSTIFY|QMF_PULSEIFFOCUS;
-    removeBotsMenuInfo.delete.generic.id		= ID_DELETE;
-    removeBotsMenuInfo.delete.generic.callback	= UI_RemoveBotsMenu_DeleteEvent;
-    removeBotsMenuInfo.delete.generic.x			= 320+128-128;
-    removeBotsMenuInfo.delete.generic.y			= 256+128-64;
-    removeBotsMenuInfo.delete.width  			= 128;
-    removeBotsMenuInfo.delete.height  			= 64;
-    removeBotsMenuInfo.delete.focuspic			= ART_DELETE1;
+    removeBotsMenuInfo.remove.generic.type		= MTYPE_BITMAP;
+    removeBotsMenuInfo.remove.generic.name		= ART_DELETE0;
+    removeBotsMenuInfo.remove.generic.flags		= QMF_LEFT_JUSTIFY|QMF_PULSEIFFOCUS;
+    removeBotsMenuInfo.remove.generic.id		= ID_DELETE;
+    removeBotsMenuInfo.remove.generic.callback	= UI_RemoveBotsMenu_DeleteEvent;
+    removeBotsMenuInfo.remove.generic.x			= 320+128-128;
+    removeBotsMenuInfo.remove.generic.y			= 256+128-64;
+    removeBotsMenuInfo.remove.width  			= 128;
+    removeBotsMenuInfo.remove.height  			= 64;
+    removeBotsMenuInfo.remove.focuspic			= ART_DELETE1;
 
     removeBotsMenuInfo.back.generic.type		= MTYPE_BITMAP;
     removeBotsMenuInfo.back.generic.name		= ART_BACK0;
@@ -345,7 +345,7 @@ static void UI_RemoveBotsMenu_Init( void )
     {
         Menu_AddItem( &removeBotsMenuInfo.menu, &removeBotsMenuInfo.bots[n] );
     }
-    Menu_AddItem( &removeBotsMenuInfo.menu, &removeBotsMenuInfo.delete );
+    Menu_AddItem( &removeBotsMenuInfo.menu, &removeBotsMenuInfo.remove );
     Menu_AddItem( &removeBotsMenuInfo.menu, &removeBotsMenuInfo.back );
 
     removeBotsMenuInfo.baseBotNum = 0;

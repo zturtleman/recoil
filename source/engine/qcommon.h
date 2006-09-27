@@ -339,12 +339,12 @@ void	Cmd_RemoveCommand( const char *cmd_name );
 void	Cmd_CommandCompletion( void(*callback)(const char *s) );
 // callback with each valid string
 
-int		Cmd_Argc (void);
-char	*Cmd_Argv (int arg);
-void	Cmd_ArgvBuffer( int arg, char *buffer, int bufferLength );
+unsigned int		Cmd_Argc (void);
+char	*Cmd_Argv (unsigned int arg);
+void	Cmd_ArgvBuffer(unsigned int arg, char *buffer, unsigned int bufferLength );
 char	*Cmd_Args (void);
-char	*Cmd_ArgsFrom( int arg );
-void	Cmd_ArgsBuffer( char *buffer, int bufferLength );
+char	*Cmd_ArgsFrom(unsigned int arg);
+void	Cmd_ArgsBuffer( char *buffer, unsigned int bufferLength );
 char	*Cmd_Cmd (void);
 // The functions that execute commands get their parameters with these
 // functions. Cmd_Argv () will return an empty string, not a NULL
@@ -647,8 +647,8 @@ void 		QDECL Com_Error( int code, const char *fmt, ... );
 void 		Com_Quit_f( void );
 int			Com_EventLoop( void );
 int			Com_Milliseconds( void );	// will be journaled properly
-unsigned	Com_BlockChecksum( const void *buffer, int length );
-unsigned	Com_BlockChecksumKey (void *buffer, int length, int key);
+unsigned int Com_BlockChecksum( const void *buffer, unsigned int length );
+unsigned int Com_BlockChecksumKey (void *buffer, int length, int key);
 int			Com_HashKey(char *string, int maxlen);
 int			Com_Filter(char *filter, char *name, int casesensitive);
 int			Com_FilterPath(char *filter, char *name, int casesensitive);

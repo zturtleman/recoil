@@ -195,7 +195,7 @@ baseline will be transmitted
 void SV_CreateBaseline( void )
 {
     gentity_t *svent;
-    int				entnum;
+    unsigned int entnum;
 
     for ( entnum = 1; entnum < sv.num_entities ; entnum++ )
     {

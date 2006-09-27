@@ -1608,7 +1608,7 @@ void Menu_Draw( menuframework_s *menu )
 
     UI_DrawHandlePic(0, 0, 640, 64, RE_RegisterShaderNoMip("menu/art/menu_topslice.jpg"));
 
-    itemptr = Menu_ItemAtCursor( menu );
+    itemptr = (menucommon_s*)Menu_ItemAtCursor( menu );
     if(itemptr)
     {
         if(itemptr->statusbar)
@@ -1674,7 +1674,7 @@ sfxHandle_t Menu_DefaultKey( menuframework_s *m, int key )
         return 0;
 
     // route key stimulus to widget
-    item = Menu_ItemAtCursor( m );
+    item = (menucommon_s*)Menu_ItemAtCursor( m );
     if (item && !(item->flags & (QMF_GRAYED|QMF_INACTIVE)))
     {
         switch (item->type)

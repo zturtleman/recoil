@@ -217,16 +217,16 @@ struct gentity_s
 
 //===============================================================
 
-void G_RunFrame( int levelTime );
-void SV_Trace( trace_t *results, const vec3_t start, vec3_t mins, vec3_t maxs, const vec3_t end, int passEntityNum, int contentmask, int capsule );
-int SV_PointContents( const vec3_t p, int passEntityNum );
-int BotAIStartFrame( int time );
-char *ClientConnect( int clientNum, qboolean firstTime, qboolean isBot );
-void ClientBegin( int clientNum );
-qboolean	ConsoleCommand( void );
-void G_InitGame( int levelTime, int randomSeed, int restart );
-void G_ShutdownGame( int restart );
-void ClientThink( int clientNum );
-void ClientCommand( int clientNum );
-void ClientUserinfoChanged( int clientNum );
-void ClientDisconnect( int clientNum );
+void G_RunFrame(int levelTime);
+void SV_Trace(trace_t *results, const vec3_t start, vec3_t mins, vec3_t maxs, const vec3_t end, int passEntityNum, int contentmask, int capsule);
+int SV_PointContents(const vec3_t p, int passEntityNum);
+int BotAIStartFrame(int time);
+char *ClientConnect(unsigned int clientNum, qboolean firstTime, qboolean isBot);
+void ClientBegin(unsigned int clientNum);
+qboolean	ConsoleCommand(void);
+void G_InitGame(int levelTime, int randomSeed, int restart);
+void G_ShutdownGame(int restart);
+void ClientThink(unsigned int clientNum);
+void ClientCommand(unsigned int clientNum);
+void ClientUserinfoChanged(unsigned int clientNum);
+void ClientDisconnect(unsigned int clientNum);

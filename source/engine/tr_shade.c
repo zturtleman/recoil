@@ -921,7 +921,7 @@ static void ComputeColors( shaderStage_t *pStage )
             float len;
             vec3_t v;
 
-            VectorSubtract( tess.xyz[i], backEnd.viewParms.or.origin, v );
+            VectorSubtract( tess.xyz[i], backEnd.viewParms.ori.origin, v );
             len = VectorLength( v );
 
             len /= tess.shader->portalRange;
@@ -1464,7 +1464,7 @@ void RB_StageIteratorOpenGLShader( void )
 		Shader_setConstant1f("identityLight", tr.identityLight);
 
 	if(afuncs & (A_Lighting_Specular | A_Portal) || tfuncs & T_Enviroment_Mapped)
-		Shader_setConstant3f("viewOrigin", backEnd.or.viewOrigin[0], backEnd.or.viewOrigin[1], backEnd.or.viewOrigin[2]);
+		Shader_setConstant3f("viewOrigin", backEnd.ori.viewOrigin[0], backEnd.ori.viewOrigin[1], backEnd.ori.viewOrigin[2]);
 
 	if(tfuncs & (TM_Scroll | TM_Turbulent | TM_Rotate))
 		Shader_setConstant1f("shaderTime", tess.shaderTime);

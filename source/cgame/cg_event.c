@@ -363,7 +363,7 @@ static void CG_UseItem( centity_t *cent )
         }
         else
         {
-            item = BG_FindItemForHoldable( itemNum );
+            item = BG_FindItemForHoldable((holdable_t)itemNum );
             CG_CenterPrint( va("Use %s", item->pickup_name), SCREEN_HEIGHT * 0.30, BIGCHAR_WIDTH );
         }
     }

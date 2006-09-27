@@ -1501,7 +1501,7 @@ redump:
     }
     if (cinTable[currentHandle].inMemory && (cinTable[currentHandle].status != FMV_EOF))
     {
-        cinTable[currentHandle].inMemory--;
+        cinTable[currentHandle].inMemory = qfalse;
         framedata += 8;
         goto redump;
     }
@@ -1875,8 +1875,8 @@ void CIN_DrawCinematic (int handle)
             ll = 9;
         }
 
-        buf3 = (int*)buf;
-        buf2 = Hunk_AllocateTempMemory( 256*256*4 );
+        buf3 = (int *)buf;
+        buf2 = (int *)Hunk_AllocateTempMemory( 256*256*4 );
         if (xm==2 && ym==2)
         {
             byte *bc2, *bc3;

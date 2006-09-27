@@ -2874,24 +2874,19 @@ this is ugly
 */
 int BotModelMinsMaxs(int modelindex, int eType, int contents, vec3_t mins, vec3_t maxs)
 {
-    gentity_t *ent;
-    int i;
+    gentity_t    *ent;
+    unsigned int i;
 
     ent = &g_entities[0];
     for (i = 0; i < level.num_entities; i++, ent++)
     {
         if ( !ent->inuse )
-        {
             continue;
-        }
         if ( eType && ent->s.eType != eType)
-        {
             continue;
-        }
         if ( contents && ent->r.contents != contents)
-        {
             continue;
-        }
+
         if (ent->s.modelindex == modelindex)
         {
             if (mins)
@@ -4379,26 +4374,22 @@ BotSetEntityNumForGoalWithModel
 */
 void BotSetEntityNumForGoalWithModel(bot_goal_t *goal, int eType, char *modelname)
 {
-    gentity_t *ent;
-    int i, modelindex;
-    vec3_t dir;
+    gentity_t    *ent;
+    unsigned int i;
+    int          modelindex;
+    vec3_t       dir;
 
     modelindex = G_ModelIndex( modelname );
     ent = &g_entities[0];
     for (i = 0; i < level.num_entities; i++, ent++)
     {
         if ( !ent->inuse )
-        {
             continue;
-        }
         if ( eType && ent->s.eType != eType)
-        {
             continue;
-        }
         if (ent->s.modelindex != modelindex)
-        {
             continue;
-        }
+
         VectorSubtract(goal->origin, ent->s.origin, dir);
         if (VectorLengthSquared(dir) < Square(10))
         {
@@ -4415,21 +4406,18 @@ BotSetEntityNumForGoal
 */
 void BotSetEntityNumForGoal(bot_goal_t *goal, char *classname)
 {
-    gentity_t *ent;
-    int i;
-    vec3_t dir;
+    gentity_t    *ent;
+    unsigned int i;
+    vec3_t       dir;
 
     ent = &g_entities[0];
     for (i = 0; i < level.num_entities; i++, ent++)
     {
         if ( !ent->inuse )
-        {
             continue;
-        }
         if ( !Q_stricmp(ent->classname, classname) )
-        {
             continue;
-        }
+
         VectorSubtract(goal->origin, ent->s.origin, dir);
         if (VectorLengthSquared(dir) < Square(10))
         {

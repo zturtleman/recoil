@@ -55,9 +55,8 @@ Writes a delta update of an entityState_t list to the message.
 static void SV_EmitPacketEntities( clientSnapshot_t *from, clientSnapshot_t *to, msg_t *msg )
 {
     entityState_t	*oldent, *newent;
-    int		oldindex, newindex;
-    int		oldnum, newnum;
     int		from_num_entities;
+    unsigned int newnum, oldnum, newindex, oldindex;
 
     // generate the delta update
     if ( !from )
@@ -165,7 +164,7 @@ static void SV_WriteSnapshotToClient( client_t *client, msg_t *msg )
         lastframe = client->netchan.outgoingSequence - client->deltaMessage;
 
         // the snapshot's entities may still have rolled off the buffer, though
-        if ( oldframe->first_entity <= svs.nextSnapshotEntities - svs.numSnapshotEntities )
+        if ( oldframe->first_entity <= (unsigned int)(svs.nextSnapshotEntities - svs.numSnapshotEntities))
         {
             Com_DPrintf ("%s: Delta request from out of date entities.\n", client->name);
             oldframe = NULL;
@@ -320,7 +319,8 @@ SV_AddEntitiesVisibleFromPoint
 */
 static void SV_AddEntitiesVisibleFromPoint(vec3_t origin, clientSnapshot_t *frame, snapshotEntityNumbers_t *eNums, qboolean portal)
 {
-    int		e, i;
+    unsigned int e;
+    int		i;
     gentity_t *ent;
     svEntity_t	*svEnt;
     int		l;

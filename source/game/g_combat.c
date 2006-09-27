@@ -360,7 +360,7 @@ void CheckAlmostScored( gentity_t *self, gentity_t *attacker )
 player_die
 ==================
 */
-void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int damage, unsigned int meansOfDeath )
+void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int damage, int meansOfDeath )
 {
     gentity_t	*ent;
     int			anim;
@@ -414,7 +414,7 @@ void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
         killerName = "<world>";
     }
 
-    if ( meansOfDeath < 0 || meansOfDeath >= sizeof( modNames ) / sizeof( modNames[0] ) )
+    if ( meansOfDeath < 0 || (unsigned int)meansOfDeath >= sizeof( modNames ) / sizeof( modNames[0] ) )
     {
         obit = "<bad obituary>";
     }

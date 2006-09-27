@@ -58,7 +58,7 @@ botlib_globals_t botlibglobals;
 botlib_export_t be_botlib_export;
 botlib_import_t botimport;
 //
-int bot_developer;
+extern cvar_t *bot_developer;
 //qtrue if the library is setup
 int botlibsetup = qfalse;
 
@@ -155,7 +155,6 @@ int Export_BotLibSetup(void)
 {
     int		errnum;
 
-    bot_developer = (int)LibVarGetValue("bot_developer");
     memset( &botlibglobals, 0, sizeof(botlibglobals) ); // bk001207 - init
     //initialize byte swapping (litte endian etc.)
     //	Swap_Init();
