@@ -29,20 +29,22 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #define qglExtern(p, name) extern p q ## name
 #define qglDeclare(p, name) p q ## name
 #define qglGetFunction(p, name) do { q ## name = (p)qwglGetProcAddress( #name ); if( q ## name == NULL ) CL_RefPrintf( PRINT_ALL, "...!q" #name "\n"); } while(0)
-void *qwglGetProcAddress(char *symbol);
+extern void (*qwglGetProcAddress)(char *symbol);
 
 #if defined( __LINT__ )
 #   include <GL/gl.h>
 #   include "glext.h"
 #elif defined( _WIN32 )
-#   pragma warning (disable: 4201)
-#   pragma warning (disable: 4214)
-#   pragma warning (disable: 4514)
-#   pragma warning (disable: 4032)
-#   pragma warning (disable: 4201)
-#   pragma warning (disable: 4214)
+#   if defined(MSVC)
+#       pragma warning (disable: 4201)
+#       pragma warning (disable: 4214)
+#       pragma warning (disable: 4514)
+#       pragma warning (disable: 4032)
+#       pragma warning (disable: 4201)
+#       pragma warning (disable: 4214)
+#   endif
 #   include <windows.h>
-#   include <gl/gl.h>
+#   include <GL/gl.h>
 #   include "glext.h"
 #   include "wglext.h"
 #elif defined(MACOS_X)
@@ -85,7 +87,6 @@ extern HGLRC ( WINAPI * qwglCreateLayerContext)(HDC, int);
 extern BOOL  ( WINAPI * qwglDeleteContext)(HGLRC);
 extern HGLRC ( WINAPI * qwglGetCurrentContext)(VOID);
 extern HDC   ( WINAPI * qwglGetCurrentDC)(VOID);
-extern PROC  ( WINAPI * qwglGetProcAddress)(LPCSTR);
 extern BOOL  ( WINAPI * qwglMakeCurrent)(HDC, HGLRC);
 extern BOOL  ( WINAPI * qwglShareLists)(HGLRC, HGLRC);
 extern BOOL  ( WINAPI * qwglUseFontBitmaps)(HDC, DWORD, DWORD, DWORD);

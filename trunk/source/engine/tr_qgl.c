@@ -48,7 +48,6 @@ HGLRC ( WINAPI * qwglCreateLayerContext)(HDC, int);
 BOOL  ( WINAPI * qwglDeleteContext)(HGLRC);
 HGLRC ( WINAPI * qwglGetCurrentContext)(VOID);
 HDC   ( WINAPI * qwglGetCurrentDC)(VOID);
-PROC  ( WINAPI * qwglGetProcAddress)(LPCSTR);
 BOOL  ( WINAPI * qwglMakeCurrent)(HDC, HGLRC);
 BOOL  ( WINAPI * qwglShareLists)(HGLRC, HGLRC);
 BOOL  ( WINAPI * qwglUseFontBitmaps)(HDC, DWORD, DWORD, DWORD);
@@ -560,12 +559,16 @@ void QGL_Shutdown( void )
 #endif
 }
 
-void *qwglGetProcAddress(char *symbol)
+#if defined( __linux__ )
+void *lglGetProcAddress(char *symbol)
 {
 	if (glw_state.openglLibrary)
 		return DynlibGetAddress(glw_state.openglLibrary, symbol);
 	return NULL;
 }
+#endif
+
+extern void (*qwglGetProcAddress)(char *symbol);
 
 /*
 ** QGL_Init
@@ -581,6 +584,40 @@ qboolean QGL_Init( const char *dllname )
 		CL_RefPrintf(PRINT_ALL, "QGL_Init: Can't load %s\n", dllname);
 		return qfalse;
 	}
+
+#if defined( _WIN32 )
+	qwglCopyContext              = DynlibGetAddress(glw_state.openglLibrary, "wglCopyContext" );
+	qwglCreateContext            = DynlibGetAddress(glw_state.openglLibrary, "wglCreateContext" );
+	qwglCreateLayerContext       = DynlibGetAddress(glw_state.openglLibrary, "wglCreateLayerContext" );
+	qwglDeleteContext            = DynlibGetAddress(glw_state.openglLibrary, "wglDeleteContext" );
+	qwglDescribeLayerPlane       = DynlibGetAddress(glw_state.openglLibrary, "wglDescribeLayerPlane" );
+	qwglGetCurrentContext        = DynlibGetAddress(glw_state.openglLibrary, "wglGetCurrentContext" );
+	qwglGetCurrentDC             = DynlibGetAddress(glw_state.openglLibrary, "wglGetCurrentDC" );
+	qwglGetLayerPaletteEntries   = DynlibGetAddress(glw_state.openglLibrary, "wglGetLayerPaletteEntries" );
+	qwglGetProcAddress           = DynlibGetAddress(glw_state.openglLibrary, "wglGetProcAddress" );
+	qwglMakeCurrent              = DynlibGetAddress(glw_state.openglLibrary, "wglMakeCurrent" );
+	qwglRealizeLayerPalette      = DynlibGetAddress(glw_state.openglLibrary, "wglRealizeLayerPalette" );
+	qwglSetLayerPaletteEntries   = DynlibGetAddress(glw_state.openglLibrary, "wglSetLayerPaletteEntries" );
+	qwglShareLists               = DynlibGetAddress(glw_state.openglLibrary, "wglShareLists" );
+	qwglSwapLayerBuffers         = DynlibGetAddress(glw_state.openglLibrary, "wglSwapLayerBuffers" );
+	qwglUseFontBitmaps           = DynlibGetAddress(glw_state.openglLibrary, "wglUseFontBitmapsA" );
+	qwglUseFontOutlines          = DynlibGetAddress(glw_state.openglLibrary, "wglUseFontOutlinesA" );
+	
+	qwglChoosePixelFormat        = DynlibGetAddress(glw_state.openglLibrary, "wglChoosePixelFormat" );
+	qwglDescribePixelFormat      = DynlibGetAddress(glw_state.openglLibrary, "wglDescribePixelFormat" );
+	qwglGetPixelFormat           = DynlibGetAddress(glw_state.openglLibrary, "wglGetPixelFormat" );
+	qwglSetPixelFormat           = DynlibGetAddress(glw_state.openglLibrary, "wglSetPixelFormat" );
+	qwglSwapBuffers              = DynlibGetAddress(glw_state.openglLibrary, "wglSwapBuffers" );
+
+#elif defined( __linux__ )
+    qwglGetProcAddress = lglGetProcAddress;
+
+    qglGetFunction(PNFGLXDESTROYCONTEXTPROC, glXDestroyContext);
+    qglGetFunction(PNFGLXCHOOSEVISUALPROC, glXChooseVisual);
+    qglGetFunction(PNFGLXCREATECONTEXTPROC, glXCreateContext);
+    qglGetFunction(PNFGLXMAKECURRENTPROC, glXMakeCurrent);
+    qglGetFunction(PNFGLXSWAPBUFFERSPROC, glXSwapBuffers);
+#endif
 
     qglGetFunction(PNFGLARRAYELEMENTPROC, glArrayElement);
     qglGetFunction(PNFGLBINDTEXTUREPROC, glBindTexture);
@@ -646,38 +683,7 @@ qboolean QGL_Init( const char *dllname )
     qglGetFunction(PNFGLCOLORMASKPROC, glColorMask);
     qglGetFunction(PNFGLGETSTRINGPROC, glGetString);
 
-#if defined( _WIN32 )
-	qwglCopyContext              = GPA( "wglCopyContext" );
-	qwglCreateContext            = GPA( "wglCreateContext" );
-	qwglCreateLayerContext       = GPA( "wglCreateLayerContext" );
-	qwglDeleteContext            = GPA( "wglDeleteContext" );
-	qwglDescribeLayerPlane       = GPA( "wglDescribeLayerPlane" );
-	qwglGetCurrentContext        = GPA( "wglGetCurrentContext" );
-	qwglGetCurrentDC             = GPA( "wglGetCurrentDC" );
-	qwglGetLayerPaletteEntries   = GPA( "wglGetLayerPaletteEntries" );
-	qwglGetProcAddress           = GPA( "wglGetProcAddress" );
-	qwglMakeCurrent              = GPA( "wglMakeCurrent" );
-	qwglRealizeLayerPalette      = GPA( "wglRealizeLayerPalette" );
-	qwglSetLayerPaletteEntries   = GPA( "wglSetLayerPaletteEntries" );
-	qwglShareLists               = GPA( "wglShareLists" );
-	qwglSwapLayerBuffers         = GPA( "wglSwapLayerBuffers" );
-	qwglUseFontBitmaps           = GPA( "wglUseFontBitmapsA" );
-	qwglUseFontOutlines          = GPA( "wglUseFontOutlinesA" );
-	
-	qwglChoosePixelFormat        = GPA( "wglChoosePixelFormat" );
-	qwglDescribePixelFormat      = GPA( "wglDescribePixelFormat" );
-	qwglGetPixelFormat           = GPA( "wglGetPixelFormat" );
-	qwglSetPixelFormat           = GPA( "wglSetPixelFormat" );
-	qwglSwapBuffers              = GPA( "wglSwapBuffers" );
 
-#elif defined( __linux__ )
-    qglGetFunction(PNFGLXDESTROYCONTEXTPROC, glXDestroyContext);
-    qglGetFunction(PNFGLXCHOOSEVISUALPROC, glXChooseVisual);
-    qglGetFunction(PNFGLXCREATECONTEXTPROC, glXCreateContext);
-    qglGetFunction(PNFGLXMAKECURRENTPROC, glXMakeCurrent);
-    qglGetFunction(PNFGLXSWAPBUFFERSPROC, glXSwapBuffers);
-
-#endif
 
 	return qtrue;
 }
