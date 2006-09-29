@@ -1454,7 +1454,7 @@ BotAIStartFrame
 */
 int BotAIStartFrame(int time)
 {
-    int i;
+/*    int i;
     gentity_t	*ent;
     bot_entitystate_t state;
     int elapsed_time, thinktime;
@@ -1644,7 +1644,7 @@ int BotAIStartFrame(int time)
         SV_ClientThink(&svs.clients[botstates[i]->client], &botstates[i]->lastucmd);
     }
 
-    return qtrue;
+    return qtrue;*/
 }
 
 /*

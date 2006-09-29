@@ -214,7 +214,6 @@ typedef enum {
     STAT_ARMOR,
     STAT_DEAD_YAW,					// look this direction when dead (FIXME: get rid of?)
     STAT_CLIENTS_READY,				// bit mask of clients wishing to exit the intermission (FIXME: configstring?)
-    STAT_MAX_HEALTH,				// health / armor limit, changable by handicap
     STAT_CHARINDEX
 } statIndex_t;
 
@@ -313,14 +312,6 @@ typedef enum {
 
     HI_NUM_HOLDABLE
 } holdable_t;
-
-typedef enum {
-    WP_NONE,
-	WP_MELEE,
-	WP_RANGE,
-	WP_SPECIAL,
-    WP_NUM_WEAPONS
-} weapon_t;
 
 // reward sounds (stored in ps->persistant[PERS_PLAYEREVENTS])
 #define	PLAYEREVENT_DENIEDREWARD		0x0001

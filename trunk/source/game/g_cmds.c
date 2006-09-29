@@ -121,7 +121,7 @@ qboolean	CheatsOk( gentity_t *ent )
         SV_GameSendServerCommand( ent-g_entities, va("print \"Cheats are not enabled on this server.\n\""));
         return qfalse;
     }
-    if ( ent->health <= 0 )
+    if ( ent->health < 0 )
     {
         SV_GameSendServerCommand( ent-g_entities, va("print \"You must be alive to use this command.\n\""));
         return qfalse;
@@ -274,7 +274,7 @@ void Cmd_Give_f (gentity_t *ent)
 
     if (give_all || Q_stricmp( name, "health") == 0)
     {
-        ent->health = ent->client->ps.stats[STAT_MAX_HEALTH];
+        ent->health = 0;
         if (!give_all)
             return;
     }
@@ -505,7 +505,7 @@ void Cmd_Kill_f( gentity_t *ent )
     {
         return;
     }
-    if (ent->health <= 0)
+    if (ent->health < 0)
     {
         return;
     }
@@ -664,7 +664,7 @@ void SetTeam( gentity_t *ent, char *s )
     //
 
     // if the player was dead leave the body
-    if ( client->ps.stats[STAT_HEALTH] <= 0 )
+    if ( client->ps.stats[STAT_HEALTH] < 0 )
     {
         CopyToBodyQue(ent);
     }

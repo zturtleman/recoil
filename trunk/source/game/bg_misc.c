@@ -749,13 +749,9 @@ qboolean BG_CanItemBeGrabbed( int gametype, const entityState_t *ent, const play
         if ( ps->weaponAmmo[item->giTag] >= 1.0)
             return qfalse;		// can't hold any more
         return qtrue;
-
     case IT_ARMOR:
-
-        if ( ps->stats[STAT_ARMOR] >= ps->stats[STAT_MAX_HEALTH] * 2 )
-        {
+        if ( ps->stats[STAT_ARMOR] >= 100)
             return qfalse;
-        }
         return qtrue;
     case IT_HEALTH:
         // small and mega healths will go over the max, otherwise
@@ -1141,7 +1137,7 @@ void BG_PlayerStateToEntityState( playerState_t *ps, entityState_t *s, qboolean 
     s->clientNum = ps->clientNum;		// ET_PLAYER looks here instead of at number
     // so corpses can also reference the proper config
     s->eFlags = ps->eFlags;
-    if ( ps->stats[STAT_HEALTH] <= 0 )
+    if ( ps->stats[STAT_HEALTH] < 0 )
     {
         s->eFlags |= EF_DEAD;
     }
@@ -1227,7 +1223,7 @@ void BG_PlayerStateToEntityStateExtraPolate( playerState_t *ps, entityState_t *s
     s->clientNum = ps->clientNum;		// ET_PLAYER looks here instead of at number
     // so corpses can also reference the proper config
     s->eFlags = ps->eFlags;
-    if ( ps->stats[STAT_HEALTH] <= 0 )
+    if ( ps->stats[STAT_HEALTH] < 0 )
     {
         s->eFlags |= EF_DEAD;
     }

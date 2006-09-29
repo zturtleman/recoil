@@ -752,13 +752,6 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,
         }
         return;
     }
-    // reduce damage by the attacker's handicap value
-    // unless they are rocket jumping
-    if ( attacker->client && attacker != targ )
-    {
-        max = attacker->client->ps.stats[STAT_MAX_HEALTH];
-        damage = damage * max / 100;
-    }
 
     client = targ->client;
 
@@ -918,7 +911,7 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,
         if ( targ->client )
             targ->client->ps.stats[STAT_HEALTH] = targ->health;
 
-        if ( targ->health <= 0 )
+        if ( targ->health < 0 )
         {
             if ( client )
                 targ->flags |= FL_NO_KNOCKBACK;

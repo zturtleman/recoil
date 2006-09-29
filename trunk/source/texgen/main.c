@@ -45,8 +45,10 @@ void tgNewPainting(int width, int height)
 
 tg_interface_t *tgi;
 
+#ifdef __cplusplus
 extern "C" {
-void __cdecl TexgenLibExport(tg_interface_t *_tgi)
+#endif
+void TexgenLibExport(tg_interface_t *_tgi)
 {
     tgi = _tgi;
 
@@ -71,4 +73,6 @@ void __cdecl TexgenLibExport(tg_interface_t *_tgi)
     scratch = NULL;
     tgClearError();
 }
+#ifdef __cplusplus
 }
+#endif

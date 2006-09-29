@@ -1629,7 +1629,7 @@ static void PM_Weapon( void )
         return;
 
     // check for dead player
-    if ( pm->ps->stats[STAT_HEALTH] <= 0 )
+    if ( pm->ps->stats[STAT_HEALTH] < 0 )
     {
         pm->ps->selectedWeapon = WP_MELEE;
         return;
@@ -1640,7 +1640,7 @@ static void PM_Weapon( void )
     {
         if(!(pm->ps->pm_flags & PMF_USE_ITEM_HELD))
         {
-            if(bg_itemlist[pm->ps->stats[STAT_HOLDABLE_ITEM]].giTag != HI_MEDKIT || pm->ps->stats[STAT_HEALTH] < (pm->ps->stats[STAT_MAX_HEALTH] + 25) )
+            if(bg_itemlist[pm->ps->stats[STAT_HOLDABLE_ITEM]].giTag != HI_MEDKIT || pm->ps->stats[STAT_HEALTH] > 0)
             {
                 pm->ps->pm_flags |= PMF_USE_ITEM_HELD;
                 PM_AddEvent( EV_USE_ITEM0 + bg_itemlist[pm->ps->stats[STAT_HOLDABLE_ITEM]].giTag );
@@ -1734,7 +1734,7 @@ void PM_UpdateViewAngles( playerState_t *ps, const usercmd_t *cmd )
         return;		// no view changes at all
     }
 
-    if ( ps->pm_type != PM_SPECTATOR && ps->stats[STAT_HEALTH] <= 0 )
+    if ( ps->pm_type != PM_SPECTATOR && ps->stats[STAT_HEALTH] < 0 )
     {
         return;		// no view changes at all
     }
@@ -1782,7 +1782,7 @@ void PmoveSingle (pmove_t *pmove)
     pm->watertype = 0;
     pm->waterlevel = 0;
 
-    if ( pm->ps->stats[STAT_HEALTH] <= 0 )
+    if ( pm->ps->stats[STAT_HEALTH] < 0 )
     {
         pm->tracemask &= ~CONTENTS_BODY;	// corpses can fly through bodies
     }
@@ -1811,7 +1811,7 @@ void PmoveSingle (pmove_t *pmove)
         pm->ps->eFlags &= ~EF_FIRING;
 
     // clear the respawned flag if attack and use are cleared
-    if ( pm->ps->stats[STAT_HEALTH] > 0 &&
+    if ( pm->ps->stats[STAT_HEALTH] >= 0 &&
             !( pm->cmd.buttons & (BUTTON_ATTACK | BUTTON_USE_HOLDABLE) ) )
     {
         pm->ps->pm_flags &= ~PMF_RESPAWNED;

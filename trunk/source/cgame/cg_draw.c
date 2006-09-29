@@ -428,8 +428,7 @@ static void CG_DrawStatusBar( void )
         origin[1] = 0;
         origin[2] = 0;
         angles[YAW] = 90 + 20 * sin( cg.time / 1000.0 );
-        CG_Draw3DModel(CHAR_WIDTH*3 + TEXT_ICON_SPACE, 432, ICON_SIZE, ICON_SIZE,
-                        clAmmoModel(cent), 0, origin, angles );
+        CG_Draw3DModel(CHAR_WIDTH*3 + TEXT_ICON_SPACE, 432, ICON_SIZE, ICON_SIZE, clAmmoModel(cent), 0, origin, angles );
     }
 
     CG_DrawStatusBarHead( 185 + CHAR_WIDTH*3 + TEXT_ICON_SPACE );
@@ -459,7 +458,6 @@ static void CG_DrawStatusBar( void )
 
     //
     // ammo
-    //
     if ( cent->currentState.weapon )
     {
         value = ps->weaponAmmo[cent->currentState.weapon];
@@ -504,29 +502,19 @@ static void CG_DrawStatusBar( void )
     // health
     //
     value = ps->stats[STAT_HEALTH];
-    if ( value > 100 )
-    {
+    if ( value < 50 )
         RE_SetColor( colors[3] );		// white
-    }
-    else if (value > 25)
-    {
+    else if (value < 75)
         RE_SetColor( colors[0] );	// green
-    }
-    else if (value > 0)
-    {
-        color = (cg.time >> 8) & 1;	// flash
-        RE_SetColor( colors[color] );
-    }
+    else if (value < 125)
+        RE_SetColor( colors[(cg.time >> 8) & 1] ); // flash
     else
-    {
         RE_SetColor( colors[1] );	// red
-    }
 
     // stretch the health up when taking damage
     CG_DrawField ( 185, 432, 3, value);
     CG_ColorForHealth( hcolor );
     RE_SetColor( hcolor );
-
 
     //
     // armor
@@ -2360,7 +2348,7 @@ static void CG_Draw2D( void )
     else
     {
         // don't draw any status if dead or the scoreboard is being explicitly shown
-        if ( !cg.showScores && cg.snap->ps.stats[STAT_HEALTH] > 0 )
+        if ( !cg.showScores && cg.snap->ps.stats[STAT_HEALTH] >= 0 )
         {
 
             CG_DrawStatusBar();

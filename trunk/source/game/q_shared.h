@@ -1189,6 +1189,14 @@ gameState_t;
 
 #define PS_PMOVEFRAMECOUNTBITS	6
 
+typedef enum {
+    WP_NONE,
+	WP_MELEE,
+	WP_RANGE,
+	WP_SPECIAL,
+    WP_NUM_WEAPONS
+} weapon_t;
+
 // playerState_t is the information needed by both the client and server
 // to predict player motion and actions
 // nothing outside of pmove should modify these, or some degree of prediction error
@@ -1255,7 +1263,7 @@ typedef struct playerState_s
     int			persistant[MAX_PERSISTANT];	// stats that aren't cleared on death
     int			powerups[MAX_POWERUPS];	// level.time that the powerup runs out
 
-	float		weaponAmmo[4];
+	float		weaponAmmo[WP_NUM_WEAPONS];
 	int			weaponState;
 	int			weaponTime;
 	int			selectedWeapon; // can only be 0 1 or 2

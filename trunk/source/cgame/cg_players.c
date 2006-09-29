@@ -2401,6 +2401,8 @@ int CG_LightVerts( vec3_t normal, int numVerts, polyVert_t *verts )
 CG_Player
 ===============
 */
+vec3_t selfViewOrigin;
+vec3_t selfViewAxis[3];
 void CG_Player( centity_t *cent )
 {
     clientInfo_t	*ci;
@@ -2411,6 +2413,7 @@ void CG_Player( centity_t *cent )
     int				renderfx;
     qboolean		shadow;
     float			shadowPlane;
+    qboolean        isSelf;
 
     // the client number is stored in clientNum.  It can't be derived
     // from the entity number, because a single client may have
@@ -2435,7 +2438,8 @@ void CG_Player( centity_t *cent )
     {
         if (!cg.renderingThirdPerson)
         {
-            renderfx = RF_THIRD_PERSON;			// only draw in mirrors
+            isSelf = qtrue;
+            //renderfx = RF_THIRD_PERSON;			// only draw in mirrors
         }
         else
         {
@@ -2527,9 +2531,15 @@ void CG_Player( centity_t *cent )
     VectorCopy( cent->lerpOrigin, head.lightingOrigin );
 
     CG_PositionRotatedEntityOnTag( &head, &torso, ci->torsoModel, "tag_head");
+    
+    if(isSelf)
+    {
+        VectorCopy(head.origin, selfViewOrigin);
+        AxisCopy(head.axis, selfViewAxis);
+    }
 
     head.shadowPlane = shadowPlane;
-    head.renderfx = renderfx;
+    head.renderfx = renderfx | (isSelf) ? RF_THIRD_PERSON : 0;
 
     CG_AddRefEntityWithPowerups( &head, &cent->currentState, ci->team );
 

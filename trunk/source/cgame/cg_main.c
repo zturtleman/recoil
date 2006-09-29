@@ -921,7 +921,7 @@ void CG_Init( int serverMessageNum, int serverCommandSequence, int clientNum )
     cgs.serverCommandSequence = serverCommandSequence;
 
     // load a few needed things before we do any screen updates
-    cgs.media.charsetShader		= RE_RegisterShader( "gfx/2d/bigchars" );
+    cgs.media.charsetShader		= RE_RegisterShader( "hud/2d/bigchars" );
     cgs.media.whiteShader		= RE_RegisterShader( "white" );
     cgs.media.charsetProp		= RE_RegisterShaderNoMip( "menu/art/font1_prop.tga" );
     cgs.media.charsetPropGlow	= RE_RegisterShaderNoMip( "menu/art/font1_prop_glo.tga" );
