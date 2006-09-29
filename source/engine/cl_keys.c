@@ -418,11 +418,11 @@ void Field_KeyDownEvent( field_t *edit, int key )
 /*
 ==================
 Field_CharEvent
-==================
+=================
 */
 void Field_CharEvent( field_t *edit, int ch )
 {
-    int		len;
+    unsigned int len;
 
     if ( ch == 'v' - 'a' + 1 )
     {	// ctrl-v is paste
@@ -442,13 +442,10 @@ void Field_CharEvent( field_t *edit, int ch )
     {	// ctrl-h is backspace
         if ( edit->cursor > 0 )
         {
-            memmove( edit->buffer + edit->cursor - 1,
-                     edit->buffer + edit->cursor, len + 1 - edit->cursor );
+            memmove( edit->buffer + edit->cursor - 1, edit->buffer + edit->cursor, len + 1 - edit->cursor );
             edit->cursor--;
             if ( edit->cursor < edit->scroll )
-            {
                 edit->scroll--;
-            }
         }
         return;
     }
@@ -467,13 +464,9 @@ void Field_CharEvent( field_t *edit, int ch )
         return;
     }
 
-    //
     // ignore any other non printable chars
-    //
     if ( ch < 32 )
-    {
         return;
-    }
 
     if ( key_overstrikeMode )
     {
@@ -485,25 +478,19 @@ void Field_CharEvent( field_t *edit, int ch )
     else
     {	// insert mode
         if ( len == MAX_EDIT_LINE - 1 )
-        {
             return; // all full
-        }
-        memmove( edit->buffer + edit->cursor + 1,
-                 edit->buffer + edit->cursor, len + 1 - edit->cursor );
+
+        //memmove(edit->buffer + edit->cursor + 1, edit->buffer + edit->cursor, len + 1 - edit->cursor);
+        memcpy((void *)&edit->buffer[edit->cursor + 1], (void *)&edit->buffer[edit->cursor], len + 1 - edit->cursor);
         edit->buffer[edit->cursor] = ch;
         edit->cursor++;
     }
 
-
     if ( edit->cursor >= edit->widthInChars )
-    {
         edit->scroll++;
-    }
 
     if ( edit->cursor == len + 1)
-    {
         edit->buffer[edit->cursor] = 0;
-    }
 }
 
 /*
