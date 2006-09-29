@@ -44,7 +44,9 @@ void tgNewPainting(int width, int height)
 }
 
 tg_interface_t *tgi;
-void TexgenLibExport(tg_interface_t *_tgi)
+
+extern "C" {
+void __cdecl TexgenLibExport(tg_interface_t *_tgi)
 {
     tgi = _tgi;
 
@@ -68,4 +70,5 @@ void TexgenLibExport(tg_interface_t *_tgi)
     memset(slots, 0, sizeof(slot_t) * TEXSLOTS);
     scratch = NULL;
     tgClearError();
+}
 }

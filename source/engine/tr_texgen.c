@@ -45,7 +45,7 @@ void InitTexgenModule(void)
 {
     PFNTEXGENLIBEXPORTPROC TexgenLibExport;
 
-    if(_inited || 1)
+    if(_inited)
         return;
 
     r_texgen_detail = Cvar_Get("r_texgen_detail", "9", CVAR_ARCHIVE);
@@ -58,16 +58,21 @@ void InitTexgenModule(void)
     if(DynlibOpen(&lib, LIBTEXGEN))
     {
         TexgenLibExport = (PFNTEXGENLIBEXPORTPROC)DynlibGetAddress(lib, "TexgenLibExport");
-        TexgenLibExport(&tgi);
+        if(TexgenLibExport)
+        {
+            TexgenLibExport(&tgi);
 
-        lastScriptUsed = NULL;
+            lastScriptUsed = NULL;
 
-        _inited = qtrue;
+            _inited = qtrue;
 
-        Com_Printf("success\n");
+            Com_Printf(" success\n");
+            return;
+        }
+        Com_Printf(" failure to find TexgenLibExport\n");
         return;
     }
-    Com_Printf("failure\n");
+    Com_Printf(" failure to load\n");
 }
 
 void LoadTexgenImages(const char *name, const char *slots[], byte **pics[], int numSlots, int *width, int *height)

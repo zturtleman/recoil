@@ -135,7 +135,6 @@ ifeq ($(PLATFORM),linux)
 
   CLIENT_LDFLAGS=-L/usr/X11R6/$(LIB) -lX11 -lXext -lXxf86dga -lXxf86vm
   GL_CFLAGS = -I/usr/X11R6/include
-
 else # ifeq Linux
 
 #############################################################################
@@ -769,10 +768,10 @@ else
 		$(RBC)linux_glimp_smp.o
 endif
 
-$(BN)recoil.$(ARCH)$(BINEXT): $(RECOILOBJS) $(RECOILOBJS_SP)
+$(BN)recoil.$(ARCH)$(BINEXT): $(RECOILOBJS) $(RECOILOBJS_SP) $(LIBSDIR)libtexgen.$(ARCH)$(SHLIBEXT)
 	$(CC) -o $@ $(RECOILOBJS) $(RECOILOBJS_SP) $(CLIENT_LDFLAGS) $(LDFLAGS)
 
-$(BN)recoil-smp.$(ARCH)$(BINEXT): $(RECOILOBJS) $(RECOILOBJS_SMP)
+$(BN)recoil-smp.$(ARCH)$(BINEXT): $(RECOILOBJS) $(RECOILOBJS_SMP) $(LIBSDIR)libtexgen.$(ARCH)$(SHLIBEXT)
 	$(CC) -o $@ $(RECOILOBJS) $(RECOILOBJS_SMP) $(CLIENT_LDFLAGS) $(THREAD_LDFLAGS) $(LDFLAGS)
 
 $(RBC)jcapimin.o: $(SO)engine/jpeg-6/jcapimin.c; $(DO_CC)
@@ -1258,7 +1257,7 @@ TEXGENOBJS=\
 	$(TG)util.o
 
 $(LIBSDIR)libtexgen.$(ARCH)$(SHLIBEXT): $(TEXGENOBJS)
-	$(CC) $(SHLIBLDFLAGS) -o $@ $(TEXGENOBJS)
+	gcc $(SHLIBLDFLAGS) -o $@ $(TEXGENOBJS)
 
 $(TG)filters.o: $(SO)texgen/filters.c; $(DO_SHLIB_CC)
 $(TG)generators.o: $(SO)texgen/generators.c; $(DO_SHLIB_CC)
