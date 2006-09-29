@@ -2136,8 +2136,8 @@ journaled file
 // https://zerowing.idsoftware.com/bugzilla/show_bug.cgi?id=5
 #define	MAX_PUSHED_EVENTS	            1024
 // bk001129 - init, also static
-static int com_pushedEventsHead = 0;
-static int com_pushedEventsTail = 0;
+static unsigned int com_pushedEventsHead = 0;
+static unsigned int com_pushedEventsTail = 0;
 // bk001129 - static
 static sysEvent_t	com_pushedEvents[MAX_PUSHED_EVENTS];
 
@@ -2294,12 +2294,14 @@ Com_GetEvent
 */
 sysEvent_t	Com_GetEvent( void )
 {
+    sysEvent_t ev;
     if ( com_pushedEventsHead > com_pushedEventsTail )
     {
         com_pushedEventsTail++;
         return com_pushedEvents[ (com_pushedEventsTail-1) & (MAX_PUSHED_EVENTS-1) ];
     }
-    return Com_GetRealEvent();
+    ev = Com_GetRealEvent();
+    return ev;
 }
 
 /*
@@ -2372,7 +2374,6 @@ int Com_EventLoop( void )
             return ev.evTime;
         }
 
-
         switch ( ev.evType )
         {
         default:
@@ -2441,7 +2442,7 @@ int Com_EventLoop( void )
             Z_Free( ev.evPtr );
         }
     }
-
+    
     return 0;	// never reached
 }
 

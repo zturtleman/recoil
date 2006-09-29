@@ -1070,7 +1070,7 @@ Ptr should either be null, or point to a block of data that can
 be freed by the game later.
 ================
 */
-void Sys_QueEvent( int time, sysEventType_t type, int value, int value2, int ptrLength, void *ptr ) {
+void Sys_QueEvent( int time, sysEventType_t type, int value, int value2, unsigned int ptrLength, void *ptr ) {
     sysEvent_t  *ev;
 
     ev = &eventQue[ eventHead & MASK_QUED_EVENTS ];
