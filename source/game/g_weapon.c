@@ -541,7 +541,7 @@ qboolean LogAccuracyHit(gentity_t *target, gentity_t *attacker)
         return qfalse;
     }
 
-    if(target->client->ps.stats[STAT_HEALTH] <= 0)
+    if(target->client->ps.stats[STAT_HEALTH] < 0)
     {
         return qfalse;
     }

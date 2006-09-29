@@ -1,7 +1,7 @@
 
 
 
-models/players/default/varia
+models/players/samus/varia
 {	
 
 	{	map models/players/default/shiny.jpg
@@ -17,7 +17,7 @@ blendfunc GL_ONE GL_ZERO
 
 }
 
-models/players/default/normal
+models/players/samus/normal
 {	
 
 	{	map models/players/default/shiny.jpg
@@ -33,7 +33,7 @@ blendfunc GL_ONE GL_ZERO
 
 }
 
-models/players/default/gravity
+models/players/samus/gravity
 {	
 
 	{	map models/players/default/shiny.jpg
@@ -49,7 +49,7 @@ blendfunc GL_ONE GL_ZERO
 
 }
 
-models/players/default/helmet
+models/players/samus/helmet
 {	
 
 	{	map models/players/default/shiny.jpg
@@ -65,7 +65,7 @@ blendfunc GL_ONE GL_ZERO
 
 }
 
-models/players/default/scan
+models/players/samus/scan
 {
 	{	
 		map models/players/default/visor_light.tga

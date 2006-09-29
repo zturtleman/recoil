@@ -135,7 +135,7 @@ void P_WorldEffects( gentity_t *ent )
         {
             // drown!
             ent->client->airOutTime += 1000;
-            if ( ent->health > 0 )
+            if ( ent->health >= 0 )
             {
                 // take more damage the longer underwater
                 ent->damage += 2;
@@ -176,7 +176,7 @@ void P_WorldEffects( gentity_t *ent )
     if (waterlevel &&
             (ent->watertype&(CONTENTS_LAVA|CONTENTS_SLIME)) )
     {
-        if (ent->health > 0
+        if (ent->health >= 0
                 && ent->pain_debounce_time <= level.time	)
         {
 
@@ -288,7 +288,7 @@ void	G_TouchTriggers( gentity_t *ent )
     if(isClient)
     {
         // dead clients don't activate triggers!
-        if (ent->client->ps.stats[STAT_HEALTH] <= 0)
+        if (ent->client->ps.stats[STAT_HEALTH] < 0)
             return;
 
         VectorSubtract( ent->client->ps.origin, range, mins );
@@ -469,44 +469,20 @@ void ClientTimerActions( gentity_t *ent, int msec )
 
     while ( client->timeResidual >= 1000 )
     {
+        int hRegen;
+
         client->timeResidual -= 1000;
 
-        // regenerate
-        if ( client->ps.powerups[PW_REGEN] )
-        {
-            if ( ent->health < client->ps.stats[STAT_MAX_HEALTH])
-            {
-                ent->health += 15;
-                if ( ent->health > client->ps.stats[STAT_MAX_HEALTH] * 1.1 )
-                {
-                    ent->health = (int)(client->ps.stats[STAT_MAX_HEALTH] * 1.1);
-                }
-                G_AddEvent( ent, EV_POWERUP_REGEN, 0 );
-            }
-            else if ( ent->health < client->ps.stats[STAT_MAX_HEALTH] * 2)
-            {
-                ent->health += 5;
-                if ( ent->health > client->ps.stats[STAT_MAX_HEALTH] * 2 )
-                {
-                    ent->health = client->ps.stats[STAT_MAX_HEALTH] * 2;
-                }
-                G_AddEvent( ent, EV_POWERUP_REGEN, 0 );
-            }
-        }
-        else
-        {
-            // count down health when over max
-            if ( ent->health > client->ps.stats[STAT_MAX_HEALTH] )
-            {
-                ent->health--;
-            }
-        }
+        hRegen = (client->ps.powerups[PW_REGEN]) ? 5 : 1;
+        ent->health -= hRegen;
+        if ( ent->health < 0)
+            ent->health = 0;
+
+        // ammo regen
 
         // count down armor when over max
-        if ( client->ps.stats[STAT_ARMOR] > client->ps.stats[STAT_MAX_HEALTH] )
-        {
+        if(client->ps.stats[STAT_ARMOR] > 0)
             client->ps.stats[STAT_ARMOR]--;
-        }
     }
 }
 
@@ -631,7 +607,7 @@ void ClientEvents( gentity_t *ent, int oldEventSequence )
             TeleportPlayer( ent, origin, angles );
             break;
         case EV_USE_ITEM2:		// medkit
-            ent->health = ent->client->ps.stats[STAT_MAX_HEALTH] + 25;
+            ent->health = 0;
             break;
         default:
             break;
@@ -759,7 +735,7 @@ void ClientThink_real( gentity_t *ent )
 
     if ( client->noclip )
         client->ps.pm_type = PM_NOCLIP;
-    else if ( client->ps.stats[STAT_HEALTH] <= 0 )
+    else if ( client->ps.stats[STAT_HEALTH] < 0 )
         client->ps.pm_type = PM_DEAD;
     else
         client->ps.pm_type = PM_NORMAL;
@@ -866,7 +842,7 @@ void ClientThink_real( gentity_t *ent )
     client->latched_buttons |= client->buttons & ~client->oldbuttons;
 
     // check for respawning
-    if ( client->ps.stats[STAT_HEALTH] <= 0 )
+    if ( client->ps.stats[STAT_HEALTH] < 0 )
     {
         // forcerespawn is to prevent users from waiting out powerups
         if((level.time > client->respawnTime) && ((g_forcerespawn->integer > 0 && (level.time - client->respawnTime) > g_forcerespawn->integer * 1000) || (ucmd->buttons & (BUTTON_ATTACK | BUTTON_USE_HOLDABLE))))

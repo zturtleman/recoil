@@ -259,7 +259,7 @@ static void CG_OffsetThirdPersonView( void )
     VectorCopy( cg.refdefViewAngles, focusAngles );
 
     // if dead, look at killer
-    if ( cg.predictedPlayerState.stats[STAT_HEALTH] <= 0 )
+    if ( cg.predictedPlayerState.stats[STAT_HEALTH] < 0 )
     {
         focusAngles[YAW] = cg.predictedPlayerState.stats[STAT_DEAD_YAW];
         cg.refdefViewAngles[YAW] = cg.predictedPlayerState.stats[STAT_DEAD_YAW];
@@ -317,8 +317,9 @@ static void CG_OffsetThirdPersonView( void )
     }
     cg.refdefViewAngles[PITCH] = -180 / M_PI * atan2( focusPoint[2], focusDist );
     cg.refdefViewAngles[YAW] -= cg_thirdPersonAngle->value;
+    
+    AnglesToAxis( cg.refdefViewAngles, cg.refdef.viewaxis );
 }
-
 
 // this causes a compiler bug on mac MrC compiler
 static void CG_StepOffset( void )
@@ -342,6 +343,7 @@ CG_OffsetFirstPersonView
 */
 static void CG_OffsetFirstPersonView( void )
 {
+#if 0
     float			*origin;
     float			*angles;
     float			bob;
@@ -361,7 +363,7 @@ static void CG_OffsetFirstPersonView( void )
     angles = cg.refdefViewAngles;
 
     // if dead, fix the angle and don't add any kick
-    if ( cg.snap->ps.stats[STAT_HEALTH] <= 0 )
+    if ( cg.snap->ps.stats[STAT_HEALTH] < 0 )
     {
         angles[ROLL] = 40;
         angles[PITCH] = -15;
@@ -482,6 +484,15 @@ static void CG_OffsetFirstPersonView( void )
         VectorMA( cg.refdef.vieworg, 3, forward, cg.refdef.vieworg );
         VectorMA( cg.refdef.vieworg, NECK_LENGTH, up, cg.refdef.vieworg );
     }
+#endif
+
+    AnglesToAxis( cg.refdefViewAngles, cg.refdef.viewaxis );
+#else
+    extern vec3_t selfViewOrigin;
+    extern vec3_t selfViewAxis[3];
+    
+    VectorCopy(selfViewOrigin, cg.refdef.vieworg);
+    AxisCopy(selfViewAxis, cg.refdef.viewaxis);
 #endif
 }
 
@@ -760,9 +771,6 @@ static int CG_CalcViewValues( void )
         CG_OffsetFirstPersonView();
     }
 
-    // position eye reletive to origin
-    AnglesToAxis( cg.refdefViewAngles, cg.refdef.viewaxis );
-
     if ( cg.hyperspace )
     {
         cg.refdef.rdflags |= RDF_NOWORLDMODEL | RDF_HYPERSPACE;
@@ -893,7 +901,7 @@ void CG_DrawActiveFrame( int serverTime, stereoFrame_t stereoView, qboolean demo
     CG_PredictPlayerState();
 
     // decide on third person view
-    cg.renderingThirdPerson = cg_thirdPerson->integer || (cg.snap->ps.stats[STAT_HEALTH] <= 0);
+    cg.renderingThirdPerson = cg_thirdPerson->integer || (cg.snap->ps.stats[STAT_HEALTH] < 0);
 
     // build cg.refdef
     inwater = CG_CalcViewValues();
@@ -912,7 +920,7 @@ void CG_DrawActiveFrame( int serverTime, stereoFrame_t stereoView, qboolean demo
         CG_AddParticles ();
         CG_AddLocalEntities();
     }
-    CG_AddViewWeapon( &cg.predictedPlayerState );
+    //CG_AddViewWeapon( &cg.predictedPlayerState );
 
     // add buffered sounds
     CG_PlayBufferedSounds();

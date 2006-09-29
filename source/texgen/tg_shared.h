@@ -1,4 +1,4 @@
-#ifndef WINDOWS
+#ifndef __cdecl
 #define __cdecl
 #endif
 

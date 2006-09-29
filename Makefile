@@ -230,8 +230,8 @@ else # ifeq darwin
 # SETUP AND BUILD -- MINGW32
 #############################################################################
 ifeq ($(PLATFORM),mingw32)
-  CC=i586-mingw32msvc-gcc
-  WINDRES=i586-mingw32msvc-windres
+  CC=gcc
+  WINDRES=windres
 
   ARCH=x86
 
@@ -252,7 +252,7 @@ ifeq ($(PLATFORM),mingw32)
 
   BINEXT=.exe
 
-  LDFLAGS= -mwindows -lwsock32 -lgdi32 -lwinmm -lole32
+  LDFLAGS= -mwindows -L/usr/i586-mingw32msvc/lib/ -lwsock32 -lgdi32 -lwinmm -lole32
   CLIENT_LDFLAGS=
 
   ifeq ($(ARCH),x86)

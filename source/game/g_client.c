@@ -746,14 +746,6 @@ void ClientUserinfoChanged(unsigned int clientNum)
                                         oldname, client->pers.netname));
         }
     }
-    // set max health
-    health = atoi(Info_ValueForKey(userinfo, "handicap"));
-    client->pers.maxHealth = health;
-    if (client->pers.maxHealth < 1 || client->pers.maxHealth > 100)
-    {
-        client->pers.maxHealth = 100;
-    }
-    client->ps.stats[STAT_MAX_HEALTH] = client->pers.maxHealth;
 
     // set model
     if (g_gametype->integer >= GT_TEAM)
@@ -843,19 +835,14 @@ void ClientUserinfoChanged(unsigned int clientNum)
     if (ent->r.svFlags & SVF_BOT)
     {
         s = va
-            ("n\\%s\\t\\%i\\model\\%s\\hmodel\\%s\\c1\\%s\\c2\\%s\\hc\\%i\\w\\%i\\l\\%i\\skill\\%s\\tt\\%d\\tl\\%d",
-             client->pers.netname, team, model, headModel, c1, c2,
-             client->pers.maxHealth, client->sess.wins,
-             client->sess.losses, Info_ValueForKey(userinfo, "skill"),
-             teamTask, teamLeader);
+            ("n\\%s\\t\\%i\\model\\%s\\hmodel\\%s\\c1\\%s\\c2\\%s\\w\\%i\\l\\%i\\skill\\%s\\tt\\%d\\tl\\%d",
+             client->pers.netname, team, model, headModel, c1, c2, client->sess.wins, client->sess.losses, Info_ValueForKey(userinfo, "skill"), teamTask, teamLeader);
     }
     else
     {
         s = va
-            ("n\\%s\\t\\%i\\model\\%s\\hmodel\\%s\\g_redteam\\%s\\g_blueteam\\%s\\c1\\%s\\c2\\%s\\hc\\%i\\w\\%i\\l\\%i\\tt\\%d\\tl\\%d",
-             client->pers.netname, client->sess.sessionTeam, model,
-             headModel, redTeam, blueTeam, c1, c2, client->pers.maxHealth,
-             client->sess.wins, client->sess.losses, teamTask, teamLeader);
+            ("n\\%s\\t\\%i\\model\\%s\\hmodel\\%s\\g_redteam\\%s\\g_blueteam\\%s\\c1\\%s\\c2\\%s\\w\\%i\\l\\%i\\tt\\%d\\tl\\%d",
+             client->pers.netname, client->sess.sessionTeam, model, headModel, redTeam, blueTeam, c1, c2, client->sess.wins, client->sess.losses, teamTask, teamLeader);
     }
 
     SV_SetConfigstring(CS_PLAYERS + clientNum, s);
@@ -1078,9 +1065,7 @@ void ClientSpawn(gentity_t * ent)
     else if (g_gametype->integer >= GT_CTF)
     {
         // all base oriented team games use the CTF spawn points
-        spawnPoint = SelectCTFSpawnPoint(client->sess.sessionTeam,
-                                         client->pers.teamState.
-                                         state, spawn_origin, spawn_angles);
+        spawnPoint = SelectCTFSpawnPoint(client->sess.sessionTeam, client->pers.teamState. state, spawn_origin, spawn_angles);
     }
     else
     {
@@ -1090,31 +1075,23 @@ void ClientSpawn(gentity_t * ent)
             if (!client->pers.initialSpawn && client->pers.localClient)
             {
                 client->pers.initialSpawn = qtrue;
-                spawnPoint =
-                    SelectInitialSpawnPoint(spawn_origin, spawn_angles);
+                spawnPoint = SelectInitialSpawnPoint(spawn_origin, spawn_angles);
             }
             else
             {
                 // don't spawn near existing origin if possible
-                spawnPoint =
-                    SelectSpawnPoint(client->ps.origin, spawn_origin,
-                                     spawn_angles);
+                spawnPoint = SelectSpawnPoint(client->ps.origin, spawn_origin, spawn_angles);
             }
 
             // Tim needs to prevent bots from spawning at the initial
             // point
             // on q3dm0...
-            if ((spawnPoint->flags & FL_NO_BOTS)
-                && (ent->r.svFlags & SVF_BOT))
-            {
+            if ((spawnPoint->flags & FL_NO_BOTS) && (ent->r.svFlags & SVF_BOT))
                 continue;       // try again
-            }
+
             // just to be symetric, we have a nohumans option...
-            if ((spawnPoint->flags & FL_NO_HUMANS)
-                && !(ent->r.svFlags & SVF_BOT))
-            {
+            if ((spawnPoint->flags & FL_NO_HUMANS) && !(ent->r.svFlags & SVF_BOT))
                 continue;       // try again
-            }
 
             break;
 
@@ -1128,8 +1105,7 @@ void ClientSpawn(gentity_t * ent)
 
     // toggle the teleport bit so the client knows to not lerp
     // and never clear the voted flag
-    flags =
-        ent->client->ps.eFlags & (EF_TELEPORT_BIT | EF_VOTED | EF_TEAMVOTED);
+    flags = ent->client->ps.eFlags & (EF_TELEPORT_BIT | EF_VOTED | EF_TEAMVOTED);
     flags ^= EF_TELEPORT_BIT;
 
     // clear everything but the persistant data
@@ -1141,9 +1117,8 @@ void ClientSpawn(gentity_t * ent)
     accuracy_hits = client->accuracy_hits;
     accuracy_shots = client->accuracy_shots;
     for (i = 0; i < MAX_PERSISTANT; i++)
-    {
         persistant[i] = client->ps.persistant[i];
-    }
+
     eventSequence = client->ps.eventSequence;
 
     memset(client, 0, sizeof(*client)); // bk FIXME: Com_Memset?
@@ -1157,9 +1132,8 @@ void ClientSpawn(gentity_t * ent)
     client->lastkilled_client = -1;
 
     for (i = 0; i < MAX_PERSISTANT; i++)
-    {
         client->ps.persistant[i] = persistant[i];
-    }
+
     client->ps.eventSequence = eventSequence;
     // increment the spawncount so the client will detect the respawn
     client->ps.persistant[PERS_SPAWN_COUNT]++;
@@ -1168,15 +1142,7 @@ void ClientSpawn(gentity_t * ent)
     client->airOutTime = level.time + 12000;
 
     SV_GetUserinfo(index, userinfo, sizeof(userinfo));
-    // set max health
-    client->pers.maxHealth = atoi(Info_ValueForKey(userinfo, "handicap"));
-    if (client->pers.maxHealth < 1 || client->pers.maxHealth > 100)
-        client->pers.maxHealth = 100;
 
-    client->pers.maxHealth = (int) (client->pers.maxHealth * 0.25);
-
-    // clear entity values
-    client->ps.stats[STAT_MAX_HEALTH] = client->pers.maxHealth;
     client->ps.eFlags = flags;
 
     ent->s.groundEntityNum = ENTITYNUM_NONE;
@@ -1195,15 +1161,6 @@ void ClientSpawn(gentity_t * ent)
     VectorCopy(playerMaxs, ent->r.maxs);
 
     client->ps.clientNum = index;
-
-    client->ps.weaponAmmo[WP_MELEE] = 100;
-    client->ps.weaponAmmo[WP_RANGE] = 100;
-    client->ps.weaponAmmo[WP_SPECIAL] = 100;
-    client->ps.selectedWeapon = WP_MELEE;
-
-    // health will count down towards max_health
-    ent->health = client->ps.stats[STAT_HEALTH] =
-        client->ps.stats[STAT_MAX_HEALTH];
 
     G_SetOrigin(ent, spawn_origin);
     VectorCopy(spawn_origin, client->ps.origin);
@@ -1266,6 +1223,13 @@ void ClientSpawn(gentity_t * ent)
 
     // clear entity state values
     BG_PlayerStateToEntityState(&client->ps, &ent->s, qtrue);
+    
+    client->ps.weaponAmmo[WP_MELEE] = 100;
+    client->ps.weaponAmmo[WP_RANGE] = 100;
+    client->ps.weaponAmmo[WP_SPECIAL] = 100;
+    client->ps.selectedWeapon = WP_MELEE;
+
+    ent->health = client->ps.stats[STAT_HEALTH] = 0;
 }
 
 
