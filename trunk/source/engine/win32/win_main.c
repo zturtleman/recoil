@@ -33,15 +33,15 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #include <io.h>
 #include <conio.h>
 
-qboolean DynlibOpen(DYNLIBTYPE *lib, char *name)
+qboolean DynlibOpen(DYNLIBTYPE *lib, const char *name)
 {
-	*lib = LoadLibrary(name);
-	return (*lib);
+	*lib = (DYNLIBTYPE)LoadLibrary(name);
+	return (*lib) ? qtrue : qfalse;
 }
 
-void *DynlibGetAddress(DYNLIBTYPE lib, char *name)
+void *DynlibGetAddress(DYNLIBTYPE lib, const char *name)
 {
-	return (lib) ? GetProcAddress(lib, name) : NULL;
+	return (void *)((lib) ? GetProcAddress(lib, name) : 0);
 }
 
 void DynlibClose(DYNLIBTYPE lib)
@@ -60,7 +60,7 @@ static char		sys_cmdline[MAX_STRING_CHARS];
 // define this to use alternate spanking method
 // I found out that the regular way doesn't work on my box for some reason
 // see the associated spank.sh script
-#define ALT_SPANK
+//#define ALT_SPANK
 #ifdef ALT_SPANK
 #include <stdio.h>
 #include <sys\stat.h>
@@ -1173,6 +1173,11 @@ are initialized
 */
 #define OSR2_BUILD_NUMBER 1111
 #define WIN98_BUILD_NUMBER 1998
+
+int Sys_GetProcessorId( void )
+{
+    return CPUID_GENERIC;
+}
 
 void Sys_Init( void )
 {
