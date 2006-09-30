@@ -460,6 +460,8 @@ void QGL_Shutdown( void )
 	}
 
 	glw_state.openglLibrary = NULL;
+    
+    qwglGetProcAddress = NULL;
 
     qglShutdown(PNFGLARRAYELEMENTPROC, glArrayElement);
     qglShutdown(PNFGLBINDTEXTUREPROC, glBindTexture);
@@ -534,7 +536,7 @@ void QGL_Shutdown( void )
 	qwglGetCurrentContext        = NULL;
 	qwglGetCurrentDC             = NULL;
 	qwglGetLayerPaletteEntries   = NULL;
-	qwglGetProcAddress           = NULL;
+	
 	qwglMakeCurrent              = NULL;
 	qwglRealizeLayerPalette      = NULL;
 	qwglSetLayerPaletteEntries   = NULL;
@@ -568,7 +570,7 @@ void *lglGetProcAddress(char *symbol)
 }
 #endif
 
-extern void (*qwglGetProcAddress)(char *symbol);
+void *(APIENTRY * qwglGetProcAddress)(char *symbol);
 
 /*
 ** QGL_Init

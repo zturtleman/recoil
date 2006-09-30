@@ -1514,11 +1514,12 @@ typedef enum _flag_status {
 #define min(a, b) (((a) < (b)) ? (a) : (b))
 #define clamp(v, i, a) ((v > a) ? a : (v < i) ? i : v)
 
-#if defined( _WIN32 )
+#ifdef WIN32
 #define DYNLIBTYPE int *
 #else
 #define DYNLIBTYPE void *
 #endif
+
 qboolean DynlibOpen(DYNLIBTYPE *lib, const char *name);
 void *DynlibGetAddress(DYNLIBTYPE lib, const char *name);
 void DynlibClose(DYNLIBTYPE lib);

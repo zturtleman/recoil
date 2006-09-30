@@ -24,7 +24,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #include "tr_local.h"
 
 #define min(a, b) (((a) < (b)) ? (a) : (b))
-#define	WAVEVALUE( table, base, amplitude, phase, freq )  ((base) + table[ myftol( ( ( (phase) + tess.shaderTime * (freq) ) * FUNCTABLE_SIZE ) ) & FUNCTABLE_MASK ] * (amplitude))
+#define	WAVEVALUE( table, base, amplitude, phase, freq )  ((base) + table[ (long)( ( ( (phase) + tess.shaderTime * (freq) ) * FUNCTABLE_SIZE ) ) & FUNCTABLE_MASK ] * (amplitude))
 
 static float *TableForFunc( genFunc_t func )
 {
@@ -1057,18 +1057,6 @@ void RB_CalcRotateTexCoords( float degsPerSecond, float *st )
 
     RB_CalcTransformTexCoords( &tmi, st );
 }
-
-#if id386 && !( (defined __linux__ || defined __FreeBSD__ ) && (defined __i386__ ) ) // rb010123
-
-long myftol( float f )
-{
-    static int tmp;
-    __asm fld f
-    __asm fistp tmp
-    __asm mov eax, tmp
-}
-
-#endif
 
 /*
 ** RB_CalcSpecularAlpha

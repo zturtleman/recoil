@@ -244,7 +244,7 @@ static image_t *R_BindAnimatedImage( textureBundle_t *bundle )
 
     // it is necessary to do this messy calc to make sure animations line up
     // exactly with waveforms of the same frequency
-    index = myftol(tess.shaderTime * bundle->imageAnimationSpeed * FUNCTABLE_SIZE) >> FUNCTABLE_SIZE2;
+    index = (long)(tess.shaderTime * bundle->imageAnimationSpeed * FUNCTABLE_SIZE) >> FUNCTABLE_SIZE2;
 
 	return bundle->image[(index < 0) ? 0 : index % bundle->numImageAnimations];
 }
