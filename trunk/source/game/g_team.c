@@ -22,6 +22,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 //
 
 #include "g_local.h"
+#include <stddef.h>
 
 
 typedef struct teamgame_s
@@ -452,7 +453,7 @@ void Team_FragBonuses(gentity_t *targ, gentity_t *inflictor, gentity_t *attacker
         carrier = NULL;
     }
     flag = NULL;
-    while ((flag = G_Find (flag, FOFS(classname), c)) != NULL)
+    while ((flag = G_Find (flag, offsetof(gentity_t, classname), c)) != NULL)
     {
         if (!(flag->flags & FL_DROPPED_ITEM))
             break;
@@ -565,7 +566,7 @@ gentity_t *Team_ResetFlag( int team )
     }
 
     ent = NULL;
-    while ((ent = G_Find (ent, FOFS(classname), c)) != NULL)
+    while ((ent = G_Find (ent, offsetof(gentity_t, classname), c)) != NULL)
     {
         if (ent->flags & FL_DROPPED_ITEM)
             G_FreeEntity(ent);
@@ -1013,7 +1014,7 @@ gentity_t *SelectRandomTeamSpawnPoint( int teamstate, team_t team )
 
     spot = NULL;
 
-    while ((spot = G_Find (spot, FOFS(classname), classname)) != NULL)
+    while ((spot = G_Find (spot, offsetof(gentity_t, classname), classname)) != NULL)
     {
         if ( SpotWouldTelefrag( spot ) )
         {
@@ -1026,7 +1027,7 @@ gentity_t *SelectRandomTeamSpawnPoint( int teamstate, team_t team )
 
     if ( !count )
     {	// no spots that won't telefrag
-        return G_Find( NULL, FOFS(classname), classname);
+        return G_Find( NULL, offsetof(gentity_t, classname), classname);
     }
 
     selection = rand() % count;

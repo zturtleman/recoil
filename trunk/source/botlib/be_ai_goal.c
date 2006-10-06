@@ -45,6 +45,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #include "be_ai_weight.h"
 #include "../game/be_ai_goal.h"
 #include "../game/be_ai_move.h"
+#include <stddef.h>
 
 //#define DEBUG_AI_GOAL
 #ifdef RANDOMIZE
@@ -129,18 +130,16 @@ typedef struct iteminfo_s
     int number;							//number of the item info
 } iteminfo_t;
 
-#define ITEMINFO_OFS(x)	(int)&(((iteminfo_t *)0)->x)
-
 fielddef_t iteminfo_fields[] =
     {
-        {"name", ITEMINFO_OFS(name), FT_STRING},
-        {"model", ITEMINFO_OFS(model), FT_STRING},
-        {"modelindex", ITEMINFO_OFS(modelindex), FT_INT},
-        {"type", ITEMINFO_OFS(type), FT_INT},
-        {"index", ITEMINFO_OFS(index), FT_INT},
-        {"respawntime", ITEMINFO_OFS(respawntime), FT_FLOAT},
-        {"mins", ITEMINFO_OFS(mins), FT_FLOAT|FT_ARRAY, 3},
-        {"maxs", ITEMINFO_OFS(maxs), FT_FLOAT|FT_ARRAY, 3},
+        {"name", offsetof(iteminfo_t, name), FT_STRING},
+        {"model", offsetof(iteminfo_t, model), FT_STRING},
+        {"modelindex", offsetof(iteminfo_t, modelindex), FT_INT},
+        {"type", offsetof(iteminfo_t, type), FT_INT},
+        {"index", offsetof(iteminfo_t, index), FT_INT},
+        {"respawntime", offsetof(iteminfo_t, respawntime), FT_FLOAT},
+        {"mins", offsetof(iteminfo_t, mins), FT_FLOAT|FT_ARRAY, 3},
+        {"maxs", offsetof(iteminfo_t, maxs), FT_FLOAT|FT_ARRAY, 3},
         {0, 0, 0}
     };
 

@@ -22,6 +22,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 //
 
 #include "g_local.h"
+#include <stddef.h>
 
 level_locals_t	level;
 
@@ -872,7 +873,7 @@ void FindIntermissionPoint( void )
     vec3_t		dir;
 
     // find the intermission spot
-    ent = G_Find (NULL, FOFS(classname), "info_player_intermission");
+    ent = G_Find (NULL, offsetof(gentity_t, classname), "info_player_intermission");
     if ( !ent )
     {	// the map creator forgot to put in an intermission point...
         SelectSpawnPoint ( vec3_origin, level.intermission_origin, level.intermission_angle );

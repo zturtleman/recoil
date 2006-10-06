@@ -21,6 +21,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 //
 #include "g_local.h"
+#include <stddef.h>
 
 //==========================================================
 
@@ -44,7 +45,7 @@ void Use_Target_Give( gentity_t *ent, gentity_t *other, gentity_t *activator )
 
     memset( &trace, 0, sizeof( trace ) );
     t = NULL;
-    while ( (t = G_Find (t, FOFS(targetname), ent->target)) != NULL )
+    while ( (t = G_Find (t, offsetof(gentity_t, targetname), ent->target)) != NULL )
     {
         if ( !t->item )
         {
@@ -357,7 +358,7 @@ void target_laser_start (gentity_t *self)
 
     if (self->target)
     {
-        ent = G_Find (NULL, FOFS(targetname), self->target);
+        ent = G_Find (NULL, offsetof(gentity_t, targetname), self->target);
         if (!ent)
         {
             Com_Printf ("%s at %s: %s is a bad target\n", self->classname, vtos(self->s.origin), self->target);
