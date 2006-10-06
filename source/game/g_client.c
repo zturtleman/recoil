@@ -21,6 +21,7 @@
  */
 // 
 #include "g_local.h"
+#include <stddef.h>
 
 // g_client.c -- client functions that don't happen every frame
 
@@ -118,7 +119,7 @@ gentity_t *SelectNearestDeathmatchSpawnPoint(const vec3_t from)
     nearestSpot = NULL;
     spot = NULL;
 
-    while ((spot = G_Find(spot, FOFS(classname), "info_player_deathmatch")) != NULL)
+    while ((spot = G_Find(spot, offsetof(gentity_t, classname), "info_player_deathmatch")) != NULL)
     {
         VectorSubtract(spot->s.origin, from, delta);
         dist = VectorLength(delta);
@@ -150,7 +151,7 @@ gentity_t *SelectRandomDeathmatchSpawnPoint(void)
     spot = NULL;
 
     while ((spot =
-            G_Find(spot, FOFS(classname), "info_player_deathmatch")) != NULL)
+            G_Find(spot, offsetof(gentity_t, classname), "info_player_deathmatch")) != NULL)
     {
         if (SpotWouldTelefrag(spot))
         {
@@ -162,7 +163,7 @@ gentity_t *SelectRandomDeathmatchSpawnPoint(void)
 
     if (!count)
     {                           // no spots that won't telefrag
-        return G_Find(NULL, FOFS(classname), "info_player_deathmatch");
+        return G_Find(NULL, offsetof(gentity_t, classname), "info_player_deathmatch");
     }
 
     selection = rand() % count;
@@ -188,7 +189,7 @@ gentity_t *SelectRandomFurthestSpawnPoint(vec3_t avoidPoint, vec3_t origin,
     spot = NULL;
 
     while ((spot =
-            G_Find(spot, FOFS(classname), "info_player_deathmatch")) != NULL)
+            G_Find(spot, offsetof(gentity_t, classname), "info_player_deathmatch")) != NULL)
     {
         if (SpotWouldTelefrag(spot))
         {
@@ -224,7 +225,7 @@ gentity_t *SelectRandomFurthestSpawnPoint(vec3_t avoidPoint, vec3_t origin,
     }
     if (!numSpots)
     {
-        spot = G_Find(NULL, FOFS(classname), "info_player_deathmatch");
+        spot = G_Find(NULL, offsetof(gentity_t, classname), "info_player_deathmatch");
         if (!spot)
             Com_Error(ERR_DROP, "Couldn't find a spawn point");
         VectorCopy(spot->s.origin, origin);
@@ -292,7 +293,7 @@ gentity_t *SelectInitialSpawnPoint(vec3_t origin, vec3_t angles)
 
     spot = NULL;
     while ((spot =
-            G_Find(spot, FOFS(classname), "info_player_deathmatch")) != NULL)
+            G_Find(spot, offsetof(gentity_t, classname), "info_player_deathmatch")) != NULL)
     {
         if (spot->spawnflags & 1)
         {

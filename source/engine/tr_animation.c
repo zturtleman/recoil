@@ -21,6 +21,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
 #include "tr_local.h"
+#include <stdint.h>
 
 /*
  
@@ -93,7 +94,7 @@ void RB_SurfaceAnim( md4Surface_t *surface )
     }
     header = (md4Header_t *)((byte *)surface + surface->ofsHeader);
 
-    frameSize = (int)( &((md4Frame_t *)0)->bones[ header->numBones ] );
+    frameSize = (intptr_t)( &((md4Frame_t *)0)->bones[ header->numBones ] );
 
     frame = (md4Frame_t *)((byte *)header + header->ofsFrames +
                            backEnd.currentEntity->e.frame * frameSize );

@@ -22,6 +22,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 // tr_init.c -- functions that are not called every frame
 
 #include "tr_local.h"
+#include <stdint.h>
 
 glconfig_t	glConfig;
 glstate_t	glState;
@@ -1129,7 +1130,7 @@ void R_Init( void )
 
 //	Swap_Init();
 
-    if ( (int)tess.xyz & 15 )
+    if ( (intptr_t)tess.xyz & 15 )
     {
         Com_Printf( "WARNING: tess.xyz not 16 byte aligned\n" );
     }

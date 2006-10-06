@@ -22,6 +22,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 // tr_map.c
 
 #include "tr_local.h"
+#include <stdint.h>
 
 /*
  
@@ -389,7 +390,7 @@ static void ParseFace( dsurface_t *ds, drawVert_t *verts, msurface_t *surf, int 
     numIndexes = LittleLong( ds->numIndexes );
 
     // create the srfSurfaceFace_t
-    sfaceSize = ( int ) &((srfSurfaceFace_t *)0)->points[numPoints];
+    sfaceSize = ( intptr_t ) &((srfSurfaceFace_t *)0)->points[numPoints];
     ofsIndexes = sfaceSize;
     sfaceSize += sizeof( int ) * numIndexes;
 

@@ -22,6 +22,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 // tr_models.c -- model loading and caching
 
 #include "tr_local.h"
+#include <stdint.h>
 
 #define	LL(x) x=LittleLong(x)
 
@@ -464,7 +465,7 @@ static qboolean R_LoadMD4( model_t *mod, void *buffer, const char *mod_name )
     // we don't need to swap tags in the renderer, they aren't used
 
     // swap all the frames
-    frameSize = (int)( &((md4Frame_t *)0)->bones[ md4->numBones ] );
+    frameSize = (intptr_t)( &((md4Frame_t *)0)->bones[ md4->numBones ] );
     for ( i = 0 ; i < md4->numFrames ; i++, frame++)
     {
         frame = (md4Frame_t *) ( (byte *)md4 + md4->ofsFrames + i * frameSize );

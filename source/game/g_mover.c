@@ -22,6 +22,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 //
 
 #include "g_local.h"
+#include <stddef.h>
 
 
 
@@ -1454,7 +1455,7 @@ void Think_SetupTrainTargets( gentity_t *ent )
 {
     gentity_t		*path, *next, *start;
 
-    ent->nextTrain = G_Find( NULL, FOFS(targetname), ent->target );
+    ent->nextTrain = G_Find( NULL, offsetof(gentity_t, targetname), ent->target );
     if ( !ent->nextTrain )
     {
         Com_Printf( "func_train at %s with an unfound target\n",
@@ -1483,7 +1484,7 @@ void Think_SetupTrainTargets( gentity_t *ent )
         next = NULL;
         do
         {
-            next = G_Find( next, FOFS(targetname), path->target );
+            next = G_Find( next, offsetof(gentity_t, targetname), path->target );
             if ( !next )
             {
                 Com_Printf( "Train corner at %s without a target path_corner\n",

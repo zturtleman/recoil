@@ -23,6 +23,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 // g_combat.c
 
 #include "g_local.h"
+#include <stddef.h>
 
 
 /*
@@ -295,7 +296,7 @@ void CheckAlmostCapture( gentity_t *self, gentity_t *attacker )
         ent = NULL;
         do
         {
-            ent = G_Find(ent, FOFS(classname), classname);
+            ent = G_Find(ent, offsetof(gentity_t, classname), classname);
         }
         while (ent && (ent->flags & FL_DROPPED_ITEM));
         // if we found the destination flag and it's not picked up
@@ -337,7 +338,7 @@ void CheckAlmostScored( gentity_t *self, gentity_t *attacker )
         {
             classname = "team_blueobelisk";
         }
-        ent = G_Find(NULL, FOFS(classname), classname);
+        ent = G_Find(NULL, offsetof(gentity_t, classname), classname);
         // if we found the destination obelisk
         if ( ent )
         {

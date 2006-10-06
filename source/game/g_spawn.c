@@ -22,6 +22,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 //
 
 #include "g_local.h"
+#include <stddef.h>
 
 qboolean	G_SpawnString( const char *key, const char *defaultString, char **out )
 {
@@ -104,26 +105,26 @@ typedef struct
 gfield_t;
 
 gfield_t fields[] = {
-                        {"classname", FOFS(classname), F_LSTRING},
-                        {"origin", FOFS(s.origin), F_VECTOR},
-                        {"model", FOFS(model), F_LSTRING},
-                        {"model2", FOFS(model2), F_LSTRING},
-                        {"spawnflags", FOFS(spawnflags), F_INT},
-                        {"speed", FOFS(speed), F_FLOAT},
-                        {"target", FOFS(target), F_LSTRING},
-                        {"targetname", FOFS(targetname), F_LSTRING},
-                        {"message", FOFS(message), F_LSTRING},
-                        {"team", FOFS(team), F_LSTRING},
-                        {"wait", FOFS(wait), F_FLOAT},
-                        {"random", FOFS(random), F_FLOAT},
-                        {"count", FOFS(count), F_INT},
-                        {"health", FOFS(health), F_INT},
+                        {"classname", offsetof(gentity_t, classname), F_LSTRING},
+                        {"origin", offsetof(gentity_t, s.origin), F_VECTOR},
+                        {"model", offsetof(gentity_t, model), F_LSTRING},
+                        {"model2", offsetof(gentity_t, model2), F_LSTRING},
+                        {"spawnflags", offsetof(gentity_t, spawnflags), F_INT},
+                        {"speed", offsetof(gentity_t, speed), F_FLOAT},
+                        {"target", offsetof(gentity_t, target), F_LSTRING},
+                        {"targetname", offsetof(gentity_t, targetname), F_LSTRING},
+                        {"message", offsetof(gentity_t, message), F_LSTRING},
+                        {"team", offsetof(gentity_t, team), F_LSTRING},
+                        {"wait", offsetof(gentity_t, wait), F_FLOAT},
+                        {"random", offsetof(gentity_t, random), F_FLOAT},
+                        {"count", offsetof(gentity_t, count), F_INT},
+                        {"health", offsetof(gentity_t, health), F_INT},
                         {"light", 0, F_IGNORE},
-                        {"dmg", FOFS(damage), F_INT},
-                        {"angles", FOFS(s.angles), F_VECTOR},
-                        {"angle", FOFS(s.angles), F_ANGLEHACK},
-                        {"targetShaderName", FOFS(targetShaderName), F_LSTRING},
-                        {"targetShaderNewName", FOFS(targetShaderNewName), F_LSTRING},
+                        {"dmg", offsetof(gentity_t, damage), F_INT},
+                        {"angles", offsetof(gentity_t, s.angles), F_VECTOR},
+                        {"angle", offsetof(gentity_t, s.angles), F_ANGLEHACK},
+                        {"targetShaderName", offsetof(gentity_t, targetShaderName), F_LSTRING},
+                        {"targetShaderNewName", offsetof(gentity_t, targetShaderNewName), F_LSTRING},
 
                         {NULL}
                     };

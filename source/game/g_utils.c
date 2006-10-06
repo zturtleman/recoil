@@ -23,6 +23,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 // g_utils.c -- misc utility functions for game module
 
 #include "g_local.h"
+#include <stddef.h>
 
 typedef struct
 {
@@ -216,7 +217,7 @@ gentity_t *G_PickTarget (char *targetname)
 
     while(1)
     {
-        ent = G_Find (ent, FOFS(targetname), targetname);
+        ent = G_Find (ent, offsetof(gentity_t, targetname), targetname);
         if (!ent)
             break;
         choice[num_choices++] = ent;
@@ -267,7 +268,7 @@ void G_UseTargets( gentity_t *ent, gentity_t *activator )
     }
 
     t = NULL;
-    while ( (t = G_Find (t, FOFS(targetname), ent->target)) != NULL )
+    while ( (t = G_Find (t, offsetof(gentity_t, targetname), ent->target)) != NULL )
     {
         if ( t == ent )
         {
